@@ -1,0 +1,162 @@
+extend class PBMarine{
+	//Dynamic Reloads
+	bool CanDoReloadAction(){
+		return !(self.reloadingAction && self.delayFireFx);
+	}
+	void D_DepleteWeaponAmmo(class<PB_WeaponBase> WeaponSelected = null, int depleteamt = 1){
+		if(pb_marinesreload){
+			if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
+			if(WeaponSelected){
+				int weapIndex = GetWeapIndex(WeaponSelected);//WeaponArray.Find(WeaponSelected);
+				//A_Log(string.format("Firing: Weapon name: %s, Index %d/%d", WeaponSelected.GetClassName(), weapIndex, WeaponArray.Size()));
+				if(weapIndex != WeaponArray.Size()){
+					WeaponAmmoLoadedArray[weapIndex] -= depleteamt;
+					WeaponAmmoLoadedArray[weapIndex] = clamp(WeaponAmmoLoadedArray[weapIndex],0,MagazineMaxFillArray[weapIndex]);
+					if(debugLog){A_Log(string.format("Firing Weapon: %s, Ammo %d/%d",WeaponSelected.GetClassName(),WeaponAmmoLoadedArray[weapIndex],MagazineMaxFillArray[weapIndex]));}
+				}
+			}
+		}
+	}
+	void D_DoMarineReloadFX(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null, bool isPartial = false){
+		if(pb_marinesreload){
+			//A_Log("Doing Reload");
+			bool a; actor b;
+			if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
+			if(WeaponSelected){
+				if(!EffectActor){EffectActor = D_GetReloadFX(WeaponSelected);}
+				int weapIndex = GetWeapIndex(WeaponSelected);//WeaponArray.Find(WeaponSelected);
+				if (CanDoReloadAction() && pb_marinesreload && EffectActor && EffectActor is "MarineReloadFX" ){
+					[a,b] = A_SpawnItemEx(EffectActor,0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION);
+					//if(weapIndex != WeaponArray.Size()){WeaponAmmoLoadedArray[weapIndex] = MagazineMaxFillArray[weapIndex];}
+					let b_actor = MarineReloadFX(b);
+					if (b_actor){
+						self.reloadingAction = b_actor;
+						let reload_Action = MarineReloadFX(self.reloadingAction);
+						if(isPartial){if(debugLog){A_Log("Doing Reload Partial");}}
+						int relCount = MagazineMaxFillArray[weapIndex] - WeaponAmmoLoadedArray[weapIndex];
+						if(reload_Action){reload_Action.ReloadCounter = relCount;}
+						if(debugLog){A_Log(string.format("Ammo to load for %s: %d",WeaponSelected.getClassName(),relCount));}
+					}
+					if(weapIndex != WeaponArray.Size()){WeaponAmmoLoadedArray[weapIndex] = MagazineMaxFillArray[weapIndex];}
+				}
+			}
+		}
+	}
+	void D_StartReloadIfEmptyAll(class<Actor> EffectActor = null){
+		Array <int> ReloadableWeaponIndexArray;
+		int selectedIndex;
+		for (int i = 0; i < WeaponArray.Size() && CanDoReloadAction(); i++){
+			if(WeaponAmmoLoadedArray[i] == 0 && WeaponNameArray[i] && CanDoReloadAction()){
+				ReloadableWeaponIndexArray.Push(i);
+			}
+		}
+		if(ReloadableWeaponIndexArray.size() > 1){
+			class<PB_WeaponBase> WeapSelected = WeaponNameArray[ReloadableWeaponIndexArray[random(0,ReloadableWeaponIndexArray.size()-1)]];
+			if(WeapSelected){
+				if(!EffectActor){EffectActor = D_GetReloadFX(WeapSelected);}
+				if(EffectActor){D_DoMarineReloadFX(WeapSelected,EffectActor);}
+			}
+		}else if (ReloadableWeaponIndexArray.size() > 0){
+			class<PB_WeaponBase> WeapSelected = WeaponNameArray[ReloadableWeaponIndexArray[0]];
+			if(WeapSelected){
+				if(!EffectActor){EffectActor = D_GetReloadFX(WeapSelected);}
+				if(EffectActor){D_DoMarineReloadFX(WeapSelected,EffectActor);}
+			}
+		}
+	}
+	void D_StartReloadIfNotFullAll(class<Actor> EffectActor = null){
+		Array <int> ReloadableWeaponIndexArray;
+		int selectedIndex;
+		//WeaponNameArray
+		for (int i = 0; i < WeaponNameArray.Size() && CanDoReloadAction(); i++){
+			if(WeaponAmmoLoadedArray[i] < MagazineMaxFillArray[i] && WeaponNameArray[i] && CanDoReloadAction()){
+				ReloadableWeaponIndexArray.Push(i);
+			}
+		}
+		if(ReloadableWeaponIndexArray.size() > 1){
+			class<PB_WeaponBase> WeapSelected = WeaponNameArray[ReloadableWeaponIndexArray[random(0,ReloadableWeaponIndexArray.size()-1)]];
+			if(WeapSelected){
+				if(!EffectActor){EffectActor = D_GetPartialReloadFX(WeapSelected);}
+				if(EffectActor){D_DoMarineReloadFX(WeapSelected,EffectActor,true);}
+			}
+		}else if (ReloadableWeaponIndexArray.size() > 0){
+			class<PB_WeaponBase> WeapSelected = WeaponNameArray[ReloadableWeaponIndexArray[0]];
+			if(WeapSelected){
+				if(!EffectActor){EffectActor = D_GetPartialReloadFX(WeapSelected);}
+				if(EffectActor){D_DoMarineReloadFX(WeapSelected,EffectActor,true);}
+			}
+		}
+	}
+	void D_StartReloadIfEmpty(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null){
+		if(pb_marinesreload && CanDoReloadAction()){
+			if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
+			if(WeaponSelected && setWeaponArray){
+				if(!EffectActor){EffectActor = D_GetReloadFX(WeaponSelected);}
+				int weapIndex = GetWeapIndex(WeaponSelected);//WeaponArray.Find(WeaponSelected);
+				if (WeaponSelected && EffectActor && weapIndex != WeaponArray.Size() && WeaponAmmoLoadedArray[weapIndex] == 0){
+					D_DoMarineReloadFX(WeaponSelected,EffectActor);
+				}
+			}
+			else{D_StartReloadIfEmptyAll();}
+		}
+	}
+	void D_StartReloadIfNotFull(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null){
+		if(pb_marinesreload && CanDoReloadAction()){
+			if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
+			if(WeaponSelected && setWeaponArray){
+				if(!EffectActor){EffectActor = D_GetPartialReloadFX(WeaponSelected);}
+				int weapIndex = GetWeapIndex(WeaponSelected);//WeaponArray.Find(WeaponSelected);
+				if (WeaponSelected && EffectActor && weapIndex != WeaponArray.Size() && WeaponAmmoLoadedArray[weapIndex] < MagazineMaxFillArray[weapIndex]){
+					D_DoMarineReloadFX(WeaponSelected,EffectActor, true);
+				}
+			}
+			else{D_StartReloadIfNotFullAll();}
+		}
+	}
+	void D_StartReloadIfNotFullIdle(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null){
+		int chance_int = 8;
+		//	1/chance_int D_StartReloadIfNotFullIdle
+		if(random(0,chance_int) > chance_int - 1){
+			if(WeaponSelected){
+				D_StartReloadIfNotFull(WeaponSelected, EffectActor);
+			}else{
+				D_StartReloadIfNotFullAll(EffectActor);
+			}
+		}
+	}
+	bool D_AbortAndReloadIfEmpty(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null, int minAmmo = 1 ,statelabel abortState = "See"){
+		if(!pb_marinesreload || !setWeaponArray){return false;}
+		if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
+		int weapIndex = GetWeapIndex(WeaponSelected);//WeaponArray.Find(WeaponSelected);
+		if (weapIndex == WeaponArray.Size()){return false;}
+		if(WeaponSelected){
+			if (pb_marinesreload && setWeaponArray && WeaponAmmoLoadedArray[weapIndex] < minAmmo){
+				if(!EffectActor){if(WeaponAmmoLoadedArray[weapIndex] > 0){EffectActor = D_GetPartialReloadFX(WeaponSelected);}}
+				else {EffectActor = D_GetReloadFX(WeaponSelected);}
+				D_DoMarineReloadFX(WeaponSelected,EffectActor);
+				State exitState = FindState(abortState);
+				if (exitState) {
+					SetState(exitState);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	bool PBM_IfAmmo(class<PB_WeaponBase> WeaponSelected = null, int minAmmo = 1 ,statelabel abortState = "See"){
+		if(!pb_marinesreload || !setWeaponArray){return false;}
+		if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
+		int weapIndex = GetWeapIndex(WeaponSelected);//WeaponArray.Find(WeaponSelected);
+		if (weapIndex == WeaponArray.Size()){return false;}
+		if(WeaponSelected){
+			if (pb_marinesreload && setWeaponArray && WeaponAmmoLoadedArray[weapIndex] < minAmmo){
+				State exitState = FindState(abortState);
+				if (exitState) {
+					SetState(exitState);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

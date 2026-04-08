@@ -1,0 +1,48 @@
+class PBMarine_MGNail : PB_MGNail{
+	Default{
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+
+class PBMarine_JavelinProjectile : PB_JavelinProjectile{
+	Default{
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_JavelinProjectile_Hot : PB_JavelinProjectile_Hot{
+	Default{
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_MicroMissileProjectile : PB_MicroMissileProjectile{
+	Default{
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}

@@ -1,0 +1,471 @@
+Class ShutTheFuckUp : Inventory{
+	Default{inventory.maxamount 10500;}
+	override void DoEffect(){if(Owner.player != NULL){Owner.player.mo.A_TakeInventory("ShutTheFuckUp",1);}}
+}
+//FORCESECTORDAMAGE
+Class ArmorGetCooldown : PowerUp{Default{Powerup.Duration -2;}}
+Class HealthGetCooldown : PowerUp{Default{Powerup.Duration -2;}}
+Class PBMarine : SwitchableDecoration abstract{
+	PB_GlobalStats Stats;
+	mixin PB_RandomMarineNameHandler;
+	mixin PB_MarineHandler;
+	mixin PB_TierHandler;
+	bool setHealth;
+	property setHealth : setHealth;
+	bool setArmor;
+	property setArmor : setArmor;
+	bool setAmmo;
+	property setAmmo : setAmmo;
+	class<Inventory> AllyCountedInventory;
+	bool setWeaponArray;
+	bool setWeaponArrayUpgraded;
+	class<PB_WeaponBase> MarineWeapon;
+	property MarineWeapon : MarineWeapon;
+	class<Inventory> MarineWeaponUpgrade;
+	property WeaponUpgrade : MarineWeaponUpgrade;
+	bool setVoicePitch;
+	float voicePitch;
+	int refireCount;
+	property AllyCountedInventory : AllyCountedInventory;
+	MarineReloadFX reloadingAction;
+	Actor delayFireFX;
+	Actor fireAction;
+	Actor lastTargetAlly;
+	AllyPathfinder PathfinderPointer;
+	//lastTarget
+	class<Inventory> AllyMapCounter;
+	property AllyMapCounter : AllyMapCounter;
+	int MagazineMaxFill;
+	int WeaponAmmoLoaded;
+	int AllyAttackCooldown;
+	Default{
+		Radius 12;
+		MaxTargetRange 99999;
+		damagefactor "Avoid", 0.0;
+		Height 52;
+		Speed 10;
+		FastSpeed 10;
+		Health 100;
+		PainChance 200;
+		PainChance "Kick", 255;
+		Monster;
+		+FLOORCLIP
+		-NORADIUSDMG
+		+QUICKTORETALIATE
+		+NOBLOCKMONST
+		+DONTHURTSPECIES
+		+THRUSPECIES
+		+FIXMAPTHINGPOS
+		+LOOKALLAROUND
+		+PUSHABLE
+		+SLIDESONWALLS
+		-CANNOTPUSH
+		-COUNTKILL
+		+DONTSPLASH
+		+FIXMAPTHINGPOS
+		+NORADIUSDMG
+		+USESPECIAL
+		+MTHRUSPECIES
+		+DONTHURTSPECIES
+		+DONTHARMSPECIES
+		+NEVERFAST
+		Activation THINGSPEC_Activate;
+		DamageFactor "CauseObjectsToSplash", 0.0;
+		Species "Marines";
+		damagefactor "TeleportRemover", 0.0;
+		damagefactor "GibRemoving", 0.0;
+		Translation "112:127=117:127";
+		damagefactor "Leg", 0.0;
+		damagefactor "Shotgun", 0.0;
+		damagefactor "Cutless", 0.0;
+		damagefactor "SSG", 0.0;
+		damagefactor "Trample", 0.0;
+		damagefactor "bullet", 0.0;
+		damagefactor "cutless", 0.0;
+		damagefactor "shotgun", 0.0;
+		damagefactor "ssg", 0.0;
+		damagefactor "InstakillMarines", 40.0;
+		Scale 0.98;
+		AttackSound "none";
+		MaxStepHeight 52;
+		MaxDropOffHeight 52;
+		ActiveSound "none";
+		damagefactor "Cut", 0.1;
+		BloodType "Brutal_Blood", "BloodSPlatterReplacer", "SawBlood";
+		damagefactor "FriendBullet", 0.0;
+		damagefactor "Blood", 0.0;	damagefactor "GreenBlood", 0.0;	damagefactor "BlueBlood", 0.0;	damagefactor "Taunt", 0.0;	damagefactor "KillMe", 0.0;
+		DeathSound "DSMADTH";
+		PainSound "*pain";
+		damagefactor "Blood", 0.0; damagefactor "BlueBlood", 0.0; damagefactor "GreenBlood", 0.0;
+		damagefactor "Shrapnel", 0.3;
+		damagefactor "SpawnMarine", 0.0;
+		damagefactor "HelperMarineFatallity", 0.0;
+		SeeSound "None";
+		Obituary "%o has been gunned down by a Marine.";
+		MeleeRange 70;
+		Mass 100;
+	}
+	bool TargetIsAttacking(){
+		if(!target){return false;}
+		return TargetIsAttackingRanged() || TargetIsAttackingMelee();
+	}
+	bool TargetIsAttackingRanged(){
+		if(!target){return false;}
+		return target.target == self && InStateSequence(target.curstate, ResolveState("Missile"));
+	}
+	bool TargetIsAttackingMelee(){
+		if(!target){return false;}
+		return target.target == self && InStateSequence(target.curstate, ResolveState("Melee"));
+	}
+	bool DebugIsOn(){return debugLogCustomMarines;}
+	override void PostBeginPlay(){
+		if(!setVoicePitch){
+			voicePitch = randompick(0,frandom(0.7,1.3),frandom(0.8,1.2),frandom(0.9,1.1));
+			setVoicePitch = true;
+		}
+		if(self.GetTag() == self.GetClassName()){
+			if(MarineWeapon){
+				let MarineWeaponToTag = GetDefaultByType(Self.MarineWeapon);
+				if(MarineWeaponToTag){
+					string weaponTag = MarineWeaponToTag.GetTag();
+					SetTag(string.format("%s [%s]",PickRandomName(RANK_MILITARY),weaponTag));
+				}
+			}
+			else{
+				SetTag(PickRandomName(RANK_MILITARY));
+			}
+		}
+		SetWeaponArrays();
+		if(!setArmor && pb_marinesstartingarmor){
+			setArmor = true;
+			if((random(0,1)>0 || self is "EliteMarine_Base") && !pb_marinesgreenarmoronly){
+				A_GiveInventory("PB_BlueArmor");
+			}
+			else{
+				A_GiveInventory("PB_GreenArmor");
+			}
+		}
+		if(!setHealth && !(self is "EliteMarine_Base") && pb_marinesrandomizedhealth){
+			setHealth = true;
+			health = 100 + (random(0,4) * 50);
+		}
+		if(self is "EliteMarine_Base"){
+			A_GiveInventory("AutoshotgunDrumMag",1);
+		}
+		if (self is "Marine_Doom"){
+			self.Translation = GetCommander().Translation;
+		}
+		A_GiveInventory("TargetIsAMarine");
+		Super.PostBeginPlay();
+	}
+	override void Tick(){
+		if (bNODROPOFF && bSHOOTABLE && bSOLID && target && Distance3D(target) && target.bISMONSTER && !target.bFRIENDLY && !(target is "PlayerPawn" || target.GetSpecies() == "Marines" || target.GetSpecies() == "Marine")){
+			self.PBMarine_Execute_Tick();self.bNODROPOFF = false;self.bSHOOTABLE = false; self.bSOLID = false;
+		}
+		if(waterlevel > 1){if(!bFLOAT||!bNOGRAVITY){bFLOAT = true;bNOGRAVITY = true;}}
+		else if(bFLOAT||bNOGRAVITY){bFLOAT = false;bNOGRAVITY = false;}
+		
+		if(CheckMarinePickup()){
+			if(!FindInventory("HealthGetCooldown") && CheckProximity("Health",pb_marinepickuprange,1,CPXF_ANCESTOR)){
+				if(Health < 100){
+					if(CheckProximity("PB_Medikit",pb_marinepickuprange,1)){
+						if(!pb_quietmarinepickups){A_StartSound("misc/L_HP_pickup");}
+						GiveBody(25,100);
+						GiveInventory("HealthGetCooldown",1);
+					}
+					else if(CheckProximity("PB_Stimpack",pb_marinepickuprange,1)){
+						if(!pb_quietmarinepickups){A_StartSound("misc/N_HP_pickup");}
+						GiveBody(10,100);
+						GiveInventory("HealthGetCooldown",1);
+					}
+				}
+				if(Health < 200){
+					if(CheckProximity("PB_SoulSphere",pb_marinepickuprange,1)){
+						if(!pb_quietmarinepickups){A_StartSound("SSPH");}
+						GiveBody(100,200);
+						GiveInventory("HealthGetCooldown",1);
+					}
+					else if(CheckProximity("PB_Megasphere",pb_marinepickuprange,1)){
+						if(!pb_quietmarinepickups){A_StartSound("misc/N_HP_pickup");}
+						A_GiveInventory("PB_BlueArmor");
+						GiveBody(200,200);
+						GiveInventory("HealthGetCooldown",1);
+					}
+				}
+				if(Health < 400 && CheckProximity("PB_HealthBonus",pb_marinepickuprange,1,CPXF_ANCESTOR)){
+					if(!pb_quietmarinepickups){A_StartSound("misc/hbonus_PickUp");}
+					GiveBody(2,400);
+					GiveInventory("HealthGetCooldown",1);
+				}
+			}
+			if(!FindInventory("PB_PowerStrength") && CheckProximity("PB_Berserk",pb_marinepickuprange,1,CPXF_ANCESTOR)){
+				if(!pb_quietmarinepickups){A_StartSound("BERSPKUP");}
+				//GiveInventory("PB_Berserk",1);
+				self.A_GiveInventory("PB_PowerStrength");
+				self.GiveBody(100,0);
+			}
+			if(!FindInventory("ArmorGetCooldown") && CheckProximity("BasicArmor",pb_marinepickuprange,1,CPXF_ANCESTOR)){
+				/*
+				int armoramount;
+				if(FindInventory("BasicArmor",true)){armoramount = FindInventory("BasicArmor",true).Amount;}
+				else {armoramount = 0;}
+				*/
+				//CountInv("BasicArmor") < 300 && 
+				if(CheckProximity("PB_ArmorBonus",pb_marinepickuprange,1)){
+					if(!pb_quietmarinepickups){A_StartSound("misc/abonus_PickUp");}
+					GiveInventory("PB_ArmorBonus",5);
+					GiveInventory("ArmorGetCooldown",1);
+				}
+				if(CountInv("BasicArmor") < 200 && CheckProximity("PB_BlueArmor",pb_marinepickuprange,1)){
+					if(!pb_quietmarinepickups){A_StartSound("ARMOR");}
+					GiveInventory("PB_BlueArmor",1);
+					GiveInventory("ArmorGetCooldown",1);
+				}
+				if(CountInv("BasicArmor") < 100 && CheckProximity("PB_GreenArmor",pb_marinepickuprange,1)){
+					if(!pb_quietmarinepickups){A_StartSound("ARMOR");}
+					GiveInventory("PB_GreenArmor",1);
+					GiveInventory("ArmorGetCooldown",1);
+				}
+			}
+		}
+		if(health > 0){
+			if(!master){master = GetClosestPlayer();}
+			if(master && bUSESPECIAL){
+				if(bBOSS){
+					if (speed > 0){
+						if(master.FindInventory("GuardOrderBoss")){
+							State Active = FindState('Active');
+							if (Active) SetState(Active);
+							bUSESPECIAL = false;
+						}
+						if( master.FindInventory("TeleportOrderBoss") && !CheckSight(master,SF_IGNOREVISIBILITY|SF_SEEPASTSHOOTABLELINES|SF_SEEPASTBLOCKEVERYTHING && !PathfinderPointer) ){
+							State GetToPlayer = FindState('GetToPlayer');
+							if (GetToPlayer) SetState(GetToPlayer);
+						}
+					}
+					else if (master.FindInventory("MobilizeOrderBoss") && speed <= 0 && (!bICECORPSE) ){
+						State Active = FindState('Active');
+						if (Active) SetState(Active);
+						bUSESPECIAL = false;
+					}
+				}
+				else{
+					if (speed > 0){
+						if(master.FindInventory("GuardOrder")){
+							State Active = FindState('Active');
+							if (Active) SetState(Active);
+							bUSESPECIAL = false;
+						}
+						if(master.FindInventory("TeleportOrder")){
+							target = master;
+							State GetToPlayer = FindState('GetToPlayer');
+							if (GetToPlayer) SetState(GetToPlayer);
+						}
+					}
+					else if (master.FindInventory("MobilizeOrder") && speed <= 0 && (!bICECORPSE) ){
+						State Active = FindState('Active');
+						if (Active) SetState(Active);
+						bUSESPECIAL = false;
+					}
+				}
+			}
+		}
+		Super.Tick();
+	}
+	//FlamethrowerMissileNew
+	bool IsPlayerOrMarine(actor checkActor){
+		return (checkActor == master || checkActor is "PlayerPawn" || checkActor.GetSpecies() == "Marines" || checkActor.GetSpecies() == "Marine");
+	}
+	override bool CanCollideWith(Actor other, bool passive){
+		if(!other){return false;}
+		//UnmakerDoomSeeker
+		if(other.getClassName() == "FlamethrowerMissileNew" || other.getClassName() == "NukageMissile"){return false;}
+		if(other.bMISSILE && other.target && IsPlayerOrMarine(other.target)){return false;}
+		if(other.bMISSILE && other.target && other.target.bISMONSTER && !other.target.bFRIENDLY && !IsPlayerOrMarine(other.target)){return true;}
+		//pb_friendlyfirefromplayer
+		if(other is "PlayerPawn"){return false;}
+		else return Super.CanCollideWith(other, passive);
+	}
+	bool CollisionFlameFriendly(Actor inflictor, actor source){
+		return (inflictor && (inflictor is "FlamethrowerMissileNew" || inflictor is "NukageMissile" || inflictor is "NukeBlob" || inflictor is "NukageStreamMissile" || inflictor is "NukageSplashParticle") && (source is "PlayerPawn" || inflictor.target is "PlayerPawn"));
+	}
+	override int TakeSpecialDamage(Actor inflictor, Actor source, int damage, name damagetype){
+		if(CollisionFlameFriendly(inflictor, source)) return 0;
+		if(source is "PlayerPawn" || inflictor is "PlayerPawn"||source is "PBMarine" || inflictor is "PBMarine" 
+		||
+		(master && (source == master || inflictor == master ))) return 0;
+		return super.TakeSpecialDamage(inflictor, source, damage, damagetype);
+	}
+	override int DamageMobj(Actor inflictor, Actor source, int damage, Name mod, int flags, double angle){
+		if(CollisionFlameFriendly(inflictor, source)) return 0;
+		if(source is "PlayerPawn" || inflictor is "PlayerPawn" || (master && (source == master || inflictor == master ) ) ) return 0;
+		if(source && source.bBOSS){damage *= pb_marine_damage_taken_boss;}
+		return super.DamageMobj(inflictor, source, damage * pb_marine_damage_taken, mod, flags, angle);
+	}
+	
+	Override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath){
+		bBRIGHT=false;
+		if(delayFireFX){delayFireFX.Destroy();}
+		if(fireAction){fireAction.Destroy();}
+		if (AllyCountedInventory){
+			if(master && master is "PlayerPawn"){master.A_TakeInventory(AllyCountedInventory,1);}
+		}
+		if(self is "Marine_Minigun" || self is "Marine_Doom"){A_StopSound(1);}
+		if(self is "Marine_Nailgun" || self is "Marine_Flamethrower" || self is "Marine_Doom"){A_StopSound(CHAN_BODY);}
+		bUSESPECIAL = false;
+		if(tracer){tracer.Destroy();}
+		if(reloadingAction){reloadingAction.Destroy();}
+		if(delayFireFX){delayFireFX.Destroy();}
+		string deathReport = string.format("%s KILLED IN ACTION",self.GetTag());
+		if(source){
+			deathReport.AppendFormat("\nKILLER: %s", source.GetTag());
+		}
+		if(inflictor && inflictor != source){
+			deathReport.AppendFormat("\nCAUSE OF DEATH: %s", inflictor.GetTag());
+		}
+		Console.PrintF(deathReport);
+		bUSESPECIAL = false;
+		bFRIENDLY = false;
+		Super.Die(source, inflictor, dmgflags, MeansOfDeath);
+		//if(!players[0].mo.FindInventory("MarineManager")){players[0].mo.A_GiveInventory("MarineManager",1);}
+		/*
+		Actor theCommander;
+		if (master && master is "PlayerPawn"){theCommander = master;}
+		else{theCommander = players[0].mo;}
+		let Marine_Manager = MarineManager(theCommander.FindInventory("MarineManager"));
+		if (Marine_Manager) {
+			if(Marine_Manager.MarineList.Find(self) != Marine_Manager.MarineList.Size()){
+				Marine_Manager.MarineList.Delete(Marine_Manager.MarineList.Find(self));
+			}
+		}
+		*/
+	}
+	void SetWeaponArrays(){
+		bool ammoParsed = WeaponAmmoLoadedArray.size() > 0;
+		bool weaponsParsed = setWeaponArray && WeaponArray.Size() > 0 && WeaponNameArray.Size() > 0 && MagazineMaxFillArray.Size() > 0;
+	 
+		if (ammoParsed && weaponsParsed) {
+			return;
+		}
+	 
+		for (int i = 0; i < WeaponNames.Size(); i++){
+			class<PB_WeaponBase> MarineWeaponToAdd = WeaponNames[i];
+			if (!MarineWeaponToAdd) {
+				continue;
+			}
+			
+			let weapdef = GetDefaultByType(MarineWeaponToAdd);
+			bool WeaponCanBeAdded, AmmoCanBeAdded;
+			/*
+			if(weapdef.MagazineMaxFill){
+				if (!weaponParsed){
+					MagazineMaxFillArray.Push(weapdef.MagazineMaxFill);
+					WeaponCanBeAdded = true;
+				}
+				if (!ammoParsed){
+					WeaponAmmoLoadedArray.Push(weapdef.MagazineMaxFill);
+					AmmoCanBeAdded = true;
+				}
+			}
+			else 
+			*/
+			if(weapdef.AmmoType2){
+				let am2def = GetDefaultByType(weapdef.AmmoType2);
+				if (!weaponsParsed){
+					MagazineMaxFillArray.Push(am2def.MaxAmount);
+					WeaponCanBeAdded = true;
+				}
+				if (!ammoParsed){
+					WeaponAmmoLoadedArray.Push(am2def.MaxAmount);
+					AmmoCanBeAdded = true;
+				}
+			}
+			if(!weaponsParsed && WeaponCanBeAdded){
+				WeaponArray.Push(MarineWeaponToAdd);
+				WeaponNameArray.Push(weapdef.GetClassName());
+			}
+		}
+		/*
+		if(self is "EliteMarine_Base"){
+			static const String UpgradeableCapacityWeaponNames[] =  {"PB_Shotgun","PB_Autoshotgun"};
+			static const int WeaponCapacityUpgrades[] = {11,24};
+			for (int i = 0; i < UpgradeableCapacityWeaponNames.Size(); i++){
+				class<Weapon> cls = UpgradeableCapacityWeaponNames[i];
+				if(cls && WeaponArray.Find(cls) != WeaponArray.Size()){
+					MagazineMaxFillArray[WeaponArray.Find(cls)] = WeaponCapacityUpgrades[i];
+					setWeaponArrayUpgraded = true;
+				}
+			}
+		}
+		*/
+		setWeaponArray = true;
+	}
+
+
+	/*
+	void SetWeaponArrays(){
+		if(!setWeaponArray || WeaponArray.Size() < 1 || WeaponNameArray.Size() < 1 || MagazineMaxFillArray.Size() < 1 ){
+			for (int i = 0; i < WeaponNames.Size(); i++){
+				class<PB_WeaponBase> MarineWeaponToAdd = WeaponNames[i];
+				if(MarineWeaponToAdd){
+					bool WeaponCanBeAdded = false;
+					
+					if(MarineWeaponToAdd.MagazineMaxFill){
+						MagazineMaxFillArray.Push(MarineWeaponToAdd.MagazineMaxFill);
+						WeaponCanBeAdded = true;
+					}
+					else 
+					
+					if(MarineWeaponToAdd.AmmoType2){
+						class<Ammo> cls = GetDefaultByType(MarineWeaponToAdd.AmmoType2);
+						if (cls){
+							MagazineMaxFillArray.Push(GetDefaultByType(cls).MaxAmount);
+							WeaponCanBeAdded = true;
+						}
+					}
+					if(WeaponCanBeAdded && MarineWeaponToAdd){
+						WeaponArray.Push(MarineWeaponToAdd);
+						WeaponNameArray.Push(MarineWeaponToAdd.GetClassName());
+					}
+				}
+			}
+			
+			if(self is "EliteMarine_Base"){
+				static const String UpgradeableCapacityWeaponNames[] =  {"PB_Shotgun","PB_Autoshotgun"};
+				static const int WeaponCapacityUpgrades[] = {11,24};
+				for (int i = 0; i < UpgradeableCapacityWeaponNames.Size(); i++){
+					class<Weapon> cls = UpgradeableCapacityWeaponNames[i];
+					if(cls && WeaponArray.Find(cls) != WeaponArray.Size()){
+						MagazineMaxFillArray[WeaponArray.Find(cls)] = WeaponCapacityUpgrades[i];
+						setWeaponArrayUpgraded = true;
+					}
+				}
+			}
+			
+			setWeaponArray = true;
+		}
+		if(WeaponAmmoLoadedArray.size() < 1){
+			for (int i = 0; i < WeaponNames.Size(); i++){
+				class<PB_WeaponBase> MarineWeaponToAdd = WeaponNames[i];
+				if(MarineWeaponToAdd){
+					bool WeaponCanBeAdded = false;
+					
+					if(MarineWeaponToAdd.MagazineMaxFill){
+						WeaponAmmoLoadedArray.Push(MarineWeaponToAdd.MagazineMaxFill);
+						WeaponCanBeAdded = true;
+					}
+					else 
+					
+					if(MarineWeaponToAdd.AmmoType2){
+						class<Ammo> cls = GetDefaultByType(MarineWeaponToAdd.AmmoType2);
+						if (cls){
+							WeaponAmmoLoadedArray.Push(GetDefaultByType(cls).MaxAmount);
+							WeaponCanBeAdded = true;
+						}
+					}
+				}
+			}
+		}
+	}
+	*/
+}

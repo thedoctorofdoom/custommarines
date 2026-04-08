@@ -1,0 +1,185 @@
+class MarineFX : actor abstract{
+	int ShotCount;
+	property ShotCount:ShotCount;
+	override void PostBeginPlay(){
+		if(!master){if(!CheckProximity("PBMarine",600.0,1,CPXF_ANCESTOR|CPXF_NOZ|CPXF_SETMASTER)){Destroy();}}
+		//if(!master){Destroy();}
+		let marineMaster = PBMarine(master);
+		if(marineMaster){
+			let selfReloadFX = MarineReloadFX(self);
+			let selfFireFX = MarineFireFX(self);
+			let selfDelayFireFX = MarineDelayFireFX(self);
+			if(selfReloadFX && marineMaster.reloadingAction != self){marineMaster.reloadingAction = selfReloadFX;}
+			if(selfFireFX && marineMaster.fireAction != self){marineMaster.fireAction = selfFireFX;}
+			if(selfDelayFireFX && marineMaster.delayFireFX != self){marineMaster.delayFireFX = selfDelayFireFX;}
+		}
+		Super.PostBeginPlay();
+	}
+	override void Tick(){
+		if(!master){if(!CheckProximity("PBMarine",600.0,1,CPXF_ANCESTOR|CPXF_NOZ|CPXF_SETMASTER)){Destroy();}}
+		if(master){A_Warp(AAPTR_MASTER);}
+		else if(target){A_Warp(AAPTR_TARGET);}
+		Super.Tick();
+	}
+	
+	Action void A_SetMarineSprite(String str){
+		if(master){
+			master.sprite = GetSpriteIndex(str);
+		}
+	}
+	Action void A_SetMarineFrame(int frame){
+		if(master){
+			master.frame = frame;
+		}
+	}
+	Action PBMarine Marine(){
+		let marine = PBMarine(invoker.master);
+		if(marine){return marine;}
+		else return null;
+	}
+	Action void PB_SpawnCasing(String Missile,Double ShellX,Double ShellY,Double ShellZ,Double ShellV_X,Double ShellV_Y,Double ShellV_Z){
+		if(pbmarine_Casing_Enabled){
+			master.A_SpawnItemEX(Missile,cos(pitch)*ShellX,ShellY,((ShellZ))-(sin(pitch)*ShellX),ShellV_X,ShellV_Y,ShellV_Z,0,SXF_TRANSFERPITCH,0);
+		}
+	}
+	Action void PBM_Missile(String Missile,double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET){
+		PBCM_SpawnProjectile(Missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);
+		//master.A_SpawnProjectile(Missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);
+	}
+	Action void PBM_MuzzleFlash(String Missile,double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET){
+		flags |= CMF_AIMDIRECTION;
+		PBM_Missile(Missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);
+	}
+	Action void D_DepleteWeaponAmmo(class<PB_WeaponBase> WeaponSelected = null, int depleteamt = 1){
+		if(Marine()){Marine().D_DepleteWeaponAmmo(WeaponSelected,depleteamt);}
+	}
+	Action bool D_AbortAndReloadIfEmpty(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null, int minAmmo = 1 ,statelabel abortState = "See"){
+		bool returnval = false;
+		if(Marine()){returnval = Marine().D_AbortAndReloadIfEmpty(WeaponSelected, EffectActor, minAmmo,abortState);}
+		return returnval;
+	}
+	Action void A_SpawnGravityProjectile(String Missile,double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET){
+		if(Marine()){Marine().A_SpawnGravityProjectile(Missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);}
+	}
+	Action void PBCM_SpawnProjectile(String Missile,double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET){
+		if(Marine()){Marine().PBCM_SpawnProjectile(Missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);}
+	}
+	Action void PBCM_SpawnProjectiles(int shots, class<Actor> missile, double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET){
+		if(Marine()){Marine().PBCM_SpawnProjectiles(shots, Missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);}
+	}
+	Action void PBM_StartSound(sound whattoplay, int slot = CHAN_BODY, int flags = CHANF_DEFAULT, double volume = 1.0, double attenuation = ATTN_NORM, double pitch = 0, double startTime = 0){
+		master.A_StartSound(whattoplay, slot, flags, volume, attenuation, pitch, startTime);
+	}
+	Action void A_AllyAlertMonsters(float maxrange = 0 , int flags = AMF_TARGETEMITTER){
+		if(Marine()){Marine().A_AllyAlertMonsters(maxrange,flags);}
+	}
+	Action bool PBM_IfAmmo(class<PB_WeaponBase> WeaponSelected = null, int minAmmo = 1 ,statelabel abortState = "See"){
+		bool returnval = false;
+		if(Marine()){returnval = Marine().PBM_IfAmmo(WeaponSelected, minAmmo,abortState);}
+		return returnval;
+	}
+	Action Void D_DoMarineDelayFireFX(class<Actor> EffectActor){
+		if(Marine()){Marine().D_DoMarineDelayFireFX(EffectActor);}
+	}
+	State A_JumpIfShotCounter(statelabel JumpState){
+		if(ShotCount > 0){
+			ShotCount -= 1;
+			State jump_State = FindState(JumpState);
+			if(jump_State && master.target && master.target.health > 0 && !(master.target is "PlayerPawn") && ResolveState(JumpState)) {
+				return ResolveState(JumpState);
+			}
+		}
+		//if(debugLog){A_Log(string.format("%d",ShotCount);}
+		//D_DoMarineFireFX
+		return ResolveState(Null);
+	}
+	Default{
+		+NOCLIP
+		+INVISIBLE
+		+NOGRAVITY
+	}
+	States{
+	Spawn:
+	Death:
+		TNT1 A 1;
+		stop;
+	}
+}
+class MarineDelayFireFX : MarineFX abstract{
+	override void PostBeginPlay(){
+		if(!master){
+			if(!CheckProximity("PBMarine",600.0,1,CPXF_ANCESTOR|CPXF_NOZ|CPXF_SETMASTER)){Destroy();}
+		}
+		if(!master){Destroy();}
+		if(master && master is "PBMarine"){
+			let marineMaster = PBMarine(master);
+			marineMaster.delayFireFX = self;
+		}
+		Super.PostBeginPlay();
+	}
+	Default{
+		+NOCLIP
+		+INVISIBLE
+		+NOGRAVITY
+	}
+	States{
+	Spawn:
+	Death:
+		TNT1 A 1;
+		stop;
+	}
+}
+class MarineFireFX : MarineFX abstract{}
+Class MarineRailFx : MonsterBeamAim{
+	override void PB_DoRailThings(){
+		PB_DoVisualRail(0,-20,18,3000,TargetAim);
+	}
+}
+class MarineReloadFX : MarineFX abstract{
+	int MarineAttackCooldown;
+	property MarineAttackCooldown:MarineAttackCooldown;
+	Default{MarineReloadFX.MarineAttackCooldown 0;}
+	int ReloadCounter;
+	override void PostBeginPlay(){
+		if(!master){
+			if(!CheckProximity("PBMarine",600.0,1,CPXF_ANCESTOR|CPXF_NOZ|CPXF_SETMASTER)){
+				Destroy();
+			}
+		}
+		if(!master){Destroy();}
+		//if(master && master.tracer != self){master.tracer = self;}//A_SetSize(master.radius,master.height);
+		if(master && master is "PBMarine"){
+			let marineMaster = PBMarine(master);
+			marineMaster.reloadingAction = self;
+		}
+		Super.PostBeginPlay();
+	}
+	State A_JumpIfReloadCounter(statelabel JumpState){
+		if(ReloadCounter > 0){
+			ReloadCounter -= 1;
+			State jump_State = FindState(JumpState);
+			if(jump_State) {return ResolveState(JumpState);}
+		}
+		return ResolveState(Null);
+	}
+	State A_JumpIfReloadPartial(statelabel JumpState, bool isOpenBolt = false){
+		if(ReloadCounter > isOpenBolt?0:1){
+			State jump_State = FindState(JumpState);
+			if(jump_State) {return ResolveState(JumpState);}
+		}
+		return ResolveState(Null);
+	}
+	PlayerPawn GetClosestPlayer() {
+		int lastrange = int.max; // or is it int.max() ???
+		PlayerPawn closest = null;
+		int range = lastrange;
+		foreach(pl : players) {
+			bool valid = (pl.mo && pl.mo.health > 0);// && self.CheckSight(pl.mo)); // you can remove this if LoS isn't a concern
+				if(valid) {
+					range = pl.mo.Distance3D(self);// <= rad;
+					if(range < lastrange) { closest = pl.mo; }
+				}
+			}
+		return closest;
+	}
+}

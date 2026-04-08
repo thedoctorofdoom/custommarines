@@ -1,0 +1,92 @@
+ACTOR PBMarineMuzzle1{
+	Speed 0
+	PROJECTILE
+	+NOCLIP
+	+NOGRAVITY
+	Speed 5
+	States{
+	Spawn:
+		TNT1 A 4
+		TNT1 A 0 A_Stop
+		PLMZ A 1 BRIGHT
+		PLMZ A 1 BRIGHT A_SetScale(0.6)
+		Stop
+	}
+}
+ACTOR PBMarineMuzzlePlas{
+	Speed 0
+	PROJECTILE
+	+NOCLIP
+	+NOGRAVITY
+	Speed 5
+	States{
+	Spawn:
+		TNT1 A 4
+		TNT1 A 0 A_Stop
+		PLMZ P 1 BRIGHT
+		PLMZ P 1 BRIGHT A_SetScale(0.6)
+		Stop
+	}
+}
+ACTOR PBMarineMuzzleRed{
+	Speed 0
+	PROJECTILE
+	+NOCLIP
+	+NOGRAVITY
+	Speed 5
+	States{
+	Spawn:
+		TNT1 A 4
+		TNT1 A 0 A_Stop
+		PLMZ D 1 BRIGHT
+		PLMZ D 1 BRIGHT A_SetScale(0.6)
+		Stop
+	}
+}
+ACTOR PBMarineMuzzleGreen{
+	Speed 0
+	PROJECTILE
+	+NOCLIP
+	+NOGRAVITY
+	Speed 5
+	States{
+	Spawn:
+		TNT1 A 4
+		TNT1 A 0 A_Stop
+		PLMZ C 1 BRIGHT
+		PLMZ C 1 BRIGHT A_SetScale(0.6)
+		Stop
+	}
+}
+ACTOR PBMarineMuzzle2{
+	Speed 0
+	PROJECTILE
+	+NOCLIP
+	+NOGRAVITY
+	Speed 5
+	Scale 1.8
+	States{
+	Spawn:
+		TNT1 A 4
+		TNT1 A 0 A_Stop
+		PLMZ A 2 BRIGHT
+		Stop
+	}
+}
+
+ACTOR PBMarineMuzzle3
+{
+	Speed 0
+	PROJECTILE
+	+NOCLIP
+	+NOGRAVITY
+	Speed 5
+	States
+	{
+	Spawn:
+		TNT1 A 4
+		TNT1 A 0 A_Stop
+		PLMZ A 1 BRIGHT
+		Stop
+	}
+}

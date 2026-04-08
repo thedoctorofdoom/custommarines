@@ -1,0 +1,29 @@
+class PBMarine_556x45mm : PB_556x45mm{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_556x45mmAP : PB_556x45mmAP{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_762x51mm : PB_762x51mm{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_762x51mmAP : PB_762x51mmAP{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_792x57mm : PB_792x57mm{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}

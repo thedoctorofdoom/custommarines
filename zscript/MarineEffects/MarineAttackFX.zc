@@ -1,0 +1,496 @@
+Class MarineFragThrow: MarineFireFX{
+	States{
+	Spawn:
+		PLA1 A 1 {master.SetInventory("PlayerIsThrowingAGrenade",1);master.A_StartSound("OPNGRN",CHAN_AUTO);}
+		PLA1 ABBCCDDAA 1 {master.A_FaceTarget();}
+		PLA1 E 6 BRIGHT {A_StartSound("THRGRN",CHAN_AUTO);A_SpawnGravityProjectile("MarineThrownGrenade");}
+		#### # 0 {master.SetInventory("PlayerIsThrowingAGrenade",0);}
+		stop;
+	}
+}
+class MarineASGFire : MarineFireFX{
+	States{
+	Spawn:
+		PASG F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_Autoshotgun")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_Autoshotgun");
+			PBM_StartSound("weapons/AutoShotgun");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			for(int i = 0; i < 8; i++){
+				PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, frandom(-1*frandom(5.84,6.45),frandom(5.84,6.45)), 1, frandom(-1*frandom(5.2,6.75),frandom(5.2,6.75)));
+			}
+			PBCM_SpawnProjectile("ShotgunWad", 32,random(-1,1),random(-1,1),0,random(-1,1));
+			}
+		}
+		PASG E 7 {master.bBRIGHT=false;master.A_FaceTarget();PB_SpawnCasing("ShotgunCasing",25,3,27,0,3,3);}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineRifleFire : MarineFireFX{
+	States{
+	Spawn:
+		PLAY F 3 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DMR")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_DMR");
+			PBM_StartSound("weapons/rifle");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			PBM_Missile("PBMarine_556x45mm", 40, 0, 0, 0);
+			PB_SpawnCasing("PB_EmptyBrass",26,2,28,0,Frandom(5,8),Frandom(1,4));
+			}
+		}
+		PLAY E 3 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineHDMRFire : MarineFireFX{
+	States{
+	Spawn:
+		PLAY F 3 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DMR")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_DMR");
+			PBM_StartSound("weapons/hdmr/fire");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			PBM_Missile("PBMarine_762x51mm", 40, 0, 0, 0);
+			PB_SpawnCasing("LMGCasingStandard",26,2,28,0,Frandom(5,8),Frandom(1,4));
+			}
+		}
+		PLAY E 3 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineHDMRSniperFire : MarineFireFX{
+	States{
+	Spawn:
+		PLAY F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DMR",null,2)){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_DMR",2);
+			PBM_StartSound("weapons/rifle/sniperfire");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			PBM_Missile("PBMarine_762x51mmAP", 40, 0, 0, 0);
+			PB_SpawnCasing("LMGCasingStandard",26,2,28,0,Frandom(5,8),Frandom(1,4));
+			}
+		}
+		PLAY E 21 {master.bBRIGHT=false;master.A_FaceTarget();}
+		stop;
+	}
+}
+class MarineCarbineFire : MarineFireFX{
+	States{
+	Spawn:
+		PLAY F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_Carbine")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_Carbine");
+			PBM_StartSound("Weapons/Carbine/Fire");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			PBM_Missile("PBMarine_556x45mm", 40, 0, random(-1,1), 0,random(-1,1));
+			PB_SpawnCasing("EmptyBrass",32,-2,30,Frandom(4,7),Frandom(6,9),Frandom(0,5));
+			}
+		}
+		PLAY E 1 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineCarbineBurst : MarineFireFX{
+	States{
+	Spawn:
+		PLAY F 1 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_Carbine")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_Carbine");
+			PBM_StartSound("Weapons/Carbine/Fire");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			PBM_Missile("PBMarine_556x45mm", 40, 0, 0, 0,0);
+			PB_SpawnCasing("EmptyBrass",32,-2,30,Frandom(4,7),Frandom(6,9),Frandom(0,5));
+			}
+		}
+		PLAY E 1 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineLMGFire : MarineFireFX{
+	States{
+	Spawn:
+		PLAY F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_LMG")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_LMG");
+			PBM_StartSound("LFIRE");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			PBM_Missile("PBMarine_762x51mm", 40, 0, random(-1,1), 0,random(-1,1));
+			PB_SpawnCasing("LMGCasingStandard", 29,-2,18.7,frandom(0,2),frandom(3,5),frandom(6,9));
+			PB_SpawnCasing("LMGBeltLink",29,-2,19.65,frandom(0,2),frandom(3,5),frandom(6,9));
+			}
+		}
+		PLAY E 2 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineLMGFireMM : MarineFireFX{
+	States{
+	Spawn:
+		PLAY F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_LMG",null,3)){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_LMG");
+			PBM_StartSound("LMISFIR");
+			PBM_MuzzleFlash("PBMarineMuzzle1",34);
+			A_SpawnGravityProjectile("PBMarine_MicroMissileProjectile", 40, 0, random(-1,1), 0,random(-1,1));
+			PB_SpawnCasing("LMGCasingRocket",29,-2,19.65,frandom(0,2),frandom(3,5),frandom(6,9));
+			PB_SpawnCasing("LMGMissileBeltLink",29,-2,19.65,frandom(0,2),frandom(3,5),frandom(6,9));
+			}
+		}
+		PLAY E 3 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineMinigunFire : MarineFireFX{
+	States{
+	Spawn:
+	SpawnLoop:
+		PL42 F 1 {
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			master.A_PlaySound("CHGNSHOT",CHAN_BODY, 1.0, False);
+			PBCM_SpawnProjectile("PBMarine_556x45mmAP", 32, 0, random(-8, 8), 1, random(-3, 3)); PB_SpawnCasing("PB_EmptyBrass", 19,-13,24,0,-frandom(3,6),frandom(-1,1)); PB_SpawnCasing("LMGBeltLink", 19,-13,24,0,-frandom(1,2),frandom(-3,3));
+		}
+		PL42 E 2 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("SpawnLoop");
+		stop;
+	}
+}
+class MarineMinigunFire2 : MarineFireFX{
+	States{
+	Spawn:
+		TNT1 A 0 NODELAY {master.A_StartSound("weapons/minigunfire", CHAN_BODY, CHANF_LOOP);}
+	SpawnLoop:
+		PL42 F 1 {
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			PBCM_SpawnProjectile("PBMarine_556x45mmAP", 32, 0, frandom(-8.5, 8.5), 1, frandom(-3.5, 3.5)); PB_SpawnCasing("PB_EmptyBrass", 19,-13,24,0,-frandom(3,6),frandom(-1,1)); PB_SpawnCasing("LMGBeltLink", 19,-13,24,0,-frandom(1,2),frandom(-3,3));
+		}
+		PL42 E 1 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("SpawnLoop");
+		TNT1 A 0 {
+			master.A_StopSound(CHAN_BODY);
+			master.A_PlaySound("CHAINSTO",CHAN_BODY, 1.0, False);
+		}
+		stop;
+	}
+}
+class MarineSMGFire : MarineFireFX{
+	States{
+	Spawn:
+	SpawnLoop:
+		PLAY F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_SMG")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_SMG");
+			PBM_StartSound("ZSpecOps/MGun");
+			PBM_MuzzleFlash("PBMarineMuzzle3",30);
+			PBM_Missile("PBMarine_9x19mmSubsonic", 40, 0, frandom(-2,2), 0,frandom(-2,2));//PBMarine_45ACP
+			PB_SpawnCasing("EmptyBrassPistol",20,-10,32,Frandom(-1,1),Frandom(2,5),Frandom(0,2));
+			}
+		}
+		PLAY E 1 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("SpawnLoop");
+		stop;
+	}
+}
+class MarineMP40Fire : MarineFireFX{
+	States{
+	Spawn:
+		MRMP F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_MP40")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_MP40");
+			PBM_StartSound("weapons/mp40_fire");
+			PBM_MuzzleFlash("PBMarineMuzzle3",32);
+			PBM_Missile("PBMarine_9x19mm", 40, 0, frandom(-0.1,0.1), 0, frandom(-0.1,0.1));
+			PB_SpawnCasing("EmptyBrassPistol",20,-10,32,Frandom(-1,1),Frandom(2,5),Frandom(0,2));
+			}
+		}
+		MRMP E 2 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineRLFire : MarineFireFX abstract{
+	States{
+	FireEnd:
+		MRGL A 4 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIf(D_AbortAndReloadIfEmpty(null,null,1,null),"Firing_Empty");
+		goto Firing_Normal_Single;
+	Firing_Normal_Single:
+		TNT1 A 7 {master.A_StartSound("weapons/rocket/innercycle", CHAN_AUTO, CHANF_OVERLAP);}
+		TNT1 A 5 {master.A_StartSound("RLCYCLE2", CHAN_AUTO, CHANF_OVERLAP);}
+		TNT1 A 9 {master.A_StartSound("weapons/rocket/loadingmechanism2", 1);}
+		goto FireFinish;
+	Firing_Empty:
+		TNT1 A 21;
+		goto FireFinish;
+	FireFinish:
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineRocketFire : MarineRLFire{
+	States{
+	Spawn:
+		MRGL A 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_RocketLauncher")){
+			PBM_MuzzleFlash("PBMarineMuzzle1",50);
+			A_AllyAlertMonsters(500,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			master.A_StartSound("0SRFIRE");
+			PBCM_SpawnProjectile("PBMarine_Rocket",50,0,0,0);
+			D_DepleteWeaponAmmo("PB_RocketLauncher");
+			}
+		}
+		goto FireEnd;
+	}
+}
+class MarineRLFireHoming : MarineRLFire{
+	States{
+	Spawn:
+		MRGL A 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_RocketLauncher")){
+			PBM_MuzzleFlash("PBMarineMuzzle1",50);
+			A_AllyAlertMonsters(500,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			master.A_StartSound("0SRFIRE");
+			PBCM_SpawnProjectile("PBMarine_HomingRocket_1",50,0,0,0);
+			D_DepleteWeaponAmmo("PB_RocketLauncher");
+			}
+		}
+		goto FireEnd;
+	}
+}
+class MarineGLFire : MarineFireFX abstract{
+	States{
+	Spawn:
+	FireEnd:
+		MRGL A 1 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_SuperGL")){
+			A_AllyAlertMonsters(500,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			master.A_PlaySound("weapons/firegrenade");
+			D_DepleteWeaponAmmo("PB_SuperGL");
+			}
+		}
+		MRGL A 2 PB_SpawnCasing("EmptyGrenadeBrass", 30, 0, 34, -frandom(1, 3), -frandom(2, 4), 5);
+		TNT1 A 14 {master.bBRIGHT=false;master.A_FaceTarget();master.A_StartSound("RLCYCLE2", 13);}
+		TNT1 A 8 {master.A_StartSound("weapons/sgl/cycle", 9);}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineGLFireFrag : MarineGLFire{
+	States{
+	Spawn:
+		TNT1 A 0 NODELAY A_SpawnGravityProjectile("PBMarine_FragGrenade");
+		goto FireEnd;
+	}
+}
+class MarineGLFireAcid : MarineGLFire{
+	States{
+	Spawn:
+		TNT1 A 0 NODELAY A_SpawnGravityProjectile("PBMarine_AcidGrenade");
+		goto FireEnd;
+	}
+}
+class MarineGLFireCryo : MarineGLFire{
+	States{
+	Spawn:
+		TNT1 A 0 NODELAY A_SpawnGravityProjectile("PBMarine_CryoGrenade");
+		goto FireEnd;
+	}
+}
+class MarineGLFireIncendiary : MarineGLFire{
+	States{
+	Spawn:
+		TNT1 A 0 NODELAY A_SpawnGravityProjectile("PBMarine_IncendiaryGrenade");
+		goto FireEnd;
+	}
+}
+class MarinePlasmaFire : MarineFireFX{
+	States{
+	Spawn:
+		MRMP F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_M1Plasma");
+			PBM_StartSound("PLSM9");
+			PBM_MuzzleFlash("PBMarineMuzzlePlas",34);
+			PBM_Missile("PBMarine_PlasmaBall",40,0,0,0);
+			}
+			A_SetMarineSprite("PLA6");A_SetMarineFrame(5);
+		}
+		//MRMP F 1 {A_SetMarineSprite("PLA6");A_SetMarineFrame(5);}
+		MRMP E 1 {master.bBRIGHT=false;master.A_FaceTarget();}//A_SetMarineSprite("PLA6");A_SetMarineFrame(4);}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarinePulseFire : MarineFireFX{
+	States{
+	Spawn:
+		MRMP F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_M1Plasma");
+			PBM_StartSound("PAILGF2");
+			PBM_MuzzleFlash("PBMarineMuzzlePlas",34);
+			PBM_Missile("PBMarine_PulseCannonBall",40,0,0,0);
+			}
+		}
+		MRMP E 1 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}
+class MarineFlamethrowerFire : MarineFireFX{
+	States{
+	Spawn:
+		TNT1 A 0 A_StartSound("weapons/flamethrower/loop", CHAN_BODY, CHANF_LOOPING);
+	SpawnLoop:
+		MRMP F 3 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_Flamethrower",null,3)){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_Flamethrower",3);
+			//PBM_MuzzleFlash("PBMarineMuzzlePlas",34);
+			PBCM_SpawnProjectile("PBMarine_FlamethrowerMissile",32,0,0,0);A_CustomMissile("ShotgunParticles",32,0,random(-11,11),0,random(-15,-2));
+			}
+		}
+		TNT1 A 0 A_JumpIfShotCounter("SpawnLoop");
+		MRMP E 0 {
+			master.bBRIGHT=false;master.A_FaceTarget();
+			//master.A_StartSound("weapons/flamethrower/stop", CHAN_BODY);
+			A_StartSound("weapons/flamethrower/stop", CHAN_BODY);
+		}
+		stop;
+	}
+}
+class MarineFlamethrowerAcid : MarineFireFX{
+	States{
+	Spawn:
+		TNT1 A 0 {A_StartSound("weapons/flamethrower/acidloop", CHAN_BODY, CHANF_LOOPING, 0.5 );A_StartSound("weapons/flamethrower/acidsprayloop", CHAN_5, CHANF_LOOPING , 1.0 );}
+	SpawnLoop:
+		MRMP F 3 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_Flamethrower",null,2)){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_Flamethrower",2);
+			//PBM_MuzzleFlash("PBMarineMuzzlePlas",34);
+			A_SpawnGravityProjectile("PBMarine_NukageStreamMissile",32,0,0,0);A_SpawnGravityProjectile("PBMarine_NukageStreamMissile",32,0,0,0);
+			}
+		}
+		TNT1 A 0 A_JumpIfShotCounter("SpawnLoop");
+		MRMP E 0 {
+			master.bBRIGHT=false;master.A_FaceTarget();
+			//master.A_StartSound("weapons/flamethrower/stop", CHAN_BODY);
+			A_StopSound(CHAN_5);A_StopSound(CHAN_BODY);A_StartSound("weapons/flamethrower/acidstop", CHAN_BODY );
+		}
+		stop;
+	}
+}
+class MarineDemonTechFire : MarineFireFX{
+	States{
+	Spawn:
+		PLA6 F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DemonTech")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_DemonTech");
+			PBM_StartSound("HRFire");
+			PBM_MuzzleFlash("PBMarineMuzzleRed",34);
+			PBM_Missile("PBMarine_HellBullet",40,0,0,0);
+			}
+		}
+		PLA6 E 2 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		TNT1 A 0 D_DoMarineDelayFireFX("MarineDemonTechWeaponCooldown");
+		stop;
+	}
+}
+
+class MarineDemonTechFire2 : MarineFireFX{
+	States{
+	Spawn:
+		PLA6 F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DemonTech")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_DemonTech");
+			PBM_StartSound("8FGGFIRE");
+			PBM_MuzzleFlash("PBMarineMuzzleGreen",34);
+			PBM_Missile("PBMarine_Hellbullet2",40,0,0,0);
+			}
+		}
+		PLA6 E 2 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		TNT1 A 0 D_DoMarineDelayFireFX("MarineDemonTechWeaponCooldown");
+		stop;
+	}
+}
+
+class MarineNailgunFire : MarineFireFX{
+	States{
+	Spawn:
+	SpawnLoop:
+		PL42 F 1 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_Nailgun")){
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			D_DepleteWeaponAmmo("PB_Nailgun");
+			A_SpawnGravityProjectile("PBMarine_MGNail", 34, random(-2,2), random(-6, 6), 0, random(-2, 2));
+			}
+		}
+		PL42 E 2 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("SpawnLoop");
+		stop;
+	}
+}
+
+class MarineRevenantFire : MarineFireFX{
+	States{
+	Spawn:
+		MHML B 3 NODELAY {
+			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
+			master.bBRIGHT=true;
+			master.A_FaceTarget();
+			A_PlaySound("hellishmissle/fire", CHAN_WEAPON);
+			A_SpawnProjectile("DoomerRevenantSeeker3",50,0,0,0);
+			A_SpawnProjectile("DoomerRevenantSeeker2",50,0,0,0);
+		}
+		MHML D 3 {master.bBRIGHT=false;master.A_FaceTarget();}
+		TNT1 A 0 A_JumpIfShotCounter("Spawn");
+		stop;
+	}
+}

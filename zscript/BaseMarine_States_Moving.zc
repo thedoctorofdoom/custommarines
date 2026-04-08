@@ -1,0 +1,129 @@
+extend class PBMarine{
+	States{
+		SpawnGuarding:
+			---- D 1 NODELAY {A_ChangeFlag("FRIENDLY", 1);A_Look();}//MARN D
+			---- A 0 A_Jump(256,"SeeGuarding");
+		SeeGuarding:
+			---- A 0 A_MakeNotShootable();
+			---- A 0 A_ChangeFlag("SOLID", 0);
+			---- A 0 D_StartReloadIfEmpty;//A_StartReloadIfEmpty("MarineCarbineReload")
+			#### DDDDDDDDDDEEEEEEEEE 1 A_AllyChaseGuard;
+			---- A 0 {A_ClearTarget();A_SetAngle(random(90, -90) + angle);}
+			Loop;
+		See:
+			---- A 0 {
+				if(self is "Marine_Doom" || self is "Marine_Flamethrower"){A_StopSound(CHAN_BODY);}
+				let def = GetDefaultByType(self.GetClass());
+				if(def){
+					self.sprite = def.spawnstate.sprite;
+					self.frame = def.spawnstate.frame;
+				}
+				if(speed <= 0){return ResolveState("SeeGuarding");}
+				D_StartReloadIfEmpty();
+				return ResolveState(Null);
+			}
+			---- A 0 {A_ChangeFlag("NODROPOFF", 0);A_ChangeFLag("FRIENDLY", 1);}
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			---- A 0 {A_ChangeFlag("MISSILEMORE", 1);A_ChangeFlag("MISSILEEVENMORE", 1);}
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			#### AA 1 A_AllyChaseSee;
+			---- A 0 A_ChangeFlag("FASTER", 0);
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			#### BB 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			#### BB 1 A_AllyChaseSee;
+			---- A 0 A_ChangeFLag("FRIENDLY", 0);
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			#### CC 1 A_AllyChaseSee;
+			---- A 0 A_ChangeFLag("FRIENDLY", 1);
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			#### CC 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			#### DD 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			#### DD 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_CheckSight("ForgetTarget");
+			---- A 0 A_JumpIfTargetIsMarine("FollowPlayer");
+			---- A 0 A_CheckSight("FollowPLayer");
+			---- A 0 A_ChangeFLag("FRIENDLY", 0);
+			---- A 0 A_MakeNotShootable();
+			#### AA 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_JumpIfCloser(200, "Waits");
+			---- A 0 A_CheckSight("CheckIfPlayerSee");
+			#### BB 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_FollowIfPlayer;
+			---- A 0 A_JumpIfCloser(200, "Waits");
+			---- A 0 A_CheckSight("CheckIfPlayerSee");
+			#### CC 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_FollowIfPlayer;
+			---- A 0 A_JumpIfCloser(200, "Waits");
+			---- A 0 A_CheckSight("CheckIfPlayerSee");
+			#### DD 1 A_AllyChaseSee;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_FollowIfPlayer;
+			---- A 0 A_JumpIfCloser(200, "Waits");
+			---- A 0 A_CheckSight("CheckIfPlayerSee");
+			---- A 0 A_JumpIfCloser(200, "Waits");
+			---- A 0 A_FollowIfPlayer;
+			---- A 0 A_Jump(256,"See");
+		FollowPlayer:
+			---- A 0 {
+				let def = GetDefaultByType(self.GetClass());
+				if(def){
+					self.sprite = def.spawnstate.sprite;
+					self.frame = def.spawnstate.frame;
+				}
+				A_ChangeFlag("FRIENDLY", 0);A_ChangeFlag("FASTER", 1);
+				A_MakeNotShootable();
+			}
+			---- A 0 A_JumpIfCloser(150, "Waits");
+			---- A 0 {A_ChangeFlag("MISSILEMORE", 0);A_ChangeFlag("MISSILEEVENMORE", 0);}
+			#### A 1 A_AllyChaseFollow;
+			---- AA 0 PB_MarineStep;
+			#### AA 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### BB 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### BB 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### CC 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### CC 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### DD 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### DD 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### AA 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### BB 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### BB 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### CC 1 A_AllyChaseFollow;
+			---- A 0 A_CheckSight("CheckIfPlayerSee");
+			---- A 0 PB_MarineStep;
+			#### CC 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### DD 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			#### DD 1 A_AllyChaseFollow;
+			---- A 0 PB_MarineStep;
+			---- A 0 A_ChangeFlag("FRIENDLY", 1);
+			---- A 0 A_JumpIfTargetInLOS("See");
+			---- A 0 A_ChangeFlag("FRIENDLY", 0);
+			---- A 0 A_CheckSight("CheckIfPlayerSee");
+			Loop;
+	}
+}

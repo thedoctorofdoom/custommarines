@@ -1,0 +1,802 @@
+extend class PBMarine{
+	void A_SetMarineSprite(String str){self.sprite = GetSpriteIndex(str);}
+	void A_SetMarineFrame(int frame){self.frame = frame;}
+	void A_DebugLog(string toLog){if(DebugIsOn()){A_Log(toLog);}}
+	void D_DoMarineFireFX(class<Actor> EffectActor, int ShotCount = 0){
+		bool a; actor b;
+		[a,b] = A_SpawnItemEx(EffectActor,0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION);
+		if(b){
+			self.fireAction = b;
+			let fire_Action = MarineFireFX(self.fireAction);
+			if(fire_Action && ShotCount > 0){fire_Action.ShotCount = ShotCount;}
+		}
+	}
+	state A_JumpIfFireAction(statelabel JumpState){
+		if(fireAction){
+			return ResolveState(JumpState);
+		}else{return ResolveState(null);}
+	}
+	void A_MakeNotShootable(){
+		//A_ChangeFlag("SHOOTABLE", 0);
+		bSHOOTABLE = false;
+		//bNOTARGET = true;
+	}
+	void A_MakeShootable(){
+		//A_ChangeFlag("SHOOTABLE", 1);
+		bSHOOTABLE = true;
+		//bNOTARGET = false;
+	}
+	action void PB_SetMarineExecutionProperties() {
+		A_StopSound(CHAN_7);A_StopSound(CHAN_WEAPON);A_Stop();self.bNODAMAGE = true;
+	}
+		/*
+		PlayerInfo self = PlayerPawn(self).player;
+		self.vel *= 0;
+		self.cheats |= CF_TOTALLYFROZEN|CF_NOTARGET|CF_GODMODE|CF_DOUBLEFIRINGSPEED|CF_INSTANTWEAPSWITCH|CF_FRIGHTENING  ;
+		SetPlayerProperty(0, 1, PROP_INVULNERABILITY); //This breaks the invulnerability power up. -JM
+		A_GiveInventory("PB_NoEffectInvul",1); //Use PB_NoEffectInvul so that it doesn't break the REAL invulnerability -JM
+		SetPlayerProperty(0, 1, PROP_TOTALLYFROZEN );
+		SetPlayerProperty(0, 1, PROP_FLY);
+		PB_SetExecutingEnemy(true);
+		*/
+	//A_JumpIfInTargetInventory("IsPlayer", 1, "FollowPlayer")
+	state A_FollowIfPlayer(statelabel followState = "FollowPlayer"){
+		A_DebugLog("A_FollowIfPlayer called");
+		if(target && target == master && ResolveState(followState)){
+			A_DebugLog("A_FollowIfPlayer results in FollowState");
+			return ResolveState(followState);
+		}else{return ResolveState(null);}
+	}
+	action void PB_MarineStep(double multiplier = 1.0, double initialSpeed = 1.0, int repetitions = 1){
+		if(pb_marinestepenabled){
+			invoker.A_DebugLog("PB_MarineStep");
+			for (int i = 0; i < repetitions; i++){
+				A_Recoil(-1 * initialSpeed * multiplier);
+			}
+		}
+	}
+	action void PB_MarineStepDefault(int repetitions = 1){
+		for (int i = 0; i < repetitions; i++){A_Recoil(-1);}
+	}
+	actor GetCommander(){
+		if(master){return master;}
+		else return GetClosestPlayer();
+	}
+	bool CheckTargetClass(string classname){return CheckClass(classname,AAPTR_TARGET,true);}
+	bool CheckTargetSpecies(name species){
+		if(target && target.GetSpecies() == species)return true;
+		else return false;
+	}
+	int CheckPlayerinSurroundings(double rad = 256) {
+		int ret = 0;
+		foreach(pl : players) {
+			bool valid = (pl.mo && pl.mo.health > 0 && pl.mo.Distance3D(self) <= rad && self.CheckSight(pl.mo));
+			if (valid) { ret++; }
+		}
+		return ret;
+	}
+	action PlayerPawn GetClosestPlayer() {
+		invoker.A_DebugLog("GetClosestPlayer called");
+		int lastrange = int.max; // or is it int.max() ???
+		PlayerPawn closest = null;
+		int range = lastrange;	
+		foreach(pl : players) {
+			bool valid = (pl.mo && pl.mo.health > 0);// && self.CheckSight(pl.mo)); // you can remove this if LoS isn't a concern
+				if (valid) {
+					range = pl.mo.Distance3D(self);// <= rad;
+					if (range < lastrange) { closest = pl.mo; }
+				}
+			}
+		return closest;
+	}
+	double GetTargetDamageFactor(name dmgtype){
+		A_DebugLog("GetTargetDamageFactor called");
+		if (!target) return -1;
+		let val = target.ApplyDamageFactor(dmgtype, 1000);
+		return val * 0.001;
+	}
+	void A_FindPlayerTarget(){
+		A_DebugLog("A_FindPlayerTarget called");
+		if (target is "PlayerPawn") return;
+		target = GetClosestPlayer();//players[0].mo;
+		return;
+	}
+	state A_MarineRefire(int chancecontinue, statelabel abortstate = "See"){
+		A_DebugLog("A_MarineRefire called");
+		if(target && target is "PlayerPawn" || target is "PBMarine" || target is "PB_CapturedMarine"){refireCount = 0; return ResolveState(abortstate);}
+		if(target && target.health <= 0){refireCount = 0;A_ClearTarget(); target = null; return ResolveState(abortstate);}
+		if(!target){return ResolveState(abortstate);}
+		state toReturn = A_MonsterRefire(chancecontinue, abortstate);
+		if(toReturn) refireCount = 0;
+		else refireCount += 1;
+		return toReturn;
+	}
+	action int I_SquadCount(){
+		int marineCount = 0;
+		//if (!master){ master = GetCommander(); }
+		marineCount += invoker.GetCommander().CountInv("NumberOfAllies");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesCarbine");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesLMG");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesSMG");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesMP40");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesSuperShotgun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesRevolver");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesShotgun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesAutoShotgun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesNailgun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesMinigun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesMG42");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesRocket");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesGL");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesPlasmaGun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesM2Plasma");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesPulseCannon");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAllies");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesRailgun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesFlamethrower");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesBFG");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesDemontech");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesEliteCarbine");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesEliteMinigun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesEliteShotgun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesEliteAutoshotgun");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesEliteRifle");
+		marineCount += invoker.GetCommander().CountInv("NumberOfAlliesMarshall");
+		return marineCount;
+	}
+	action float GetMarineEnemyRatio(){
+		return I_SquadCount()/(level.total_monsters - level.killed_monsters);
+	}
+	action bool CheckMarinePickup(){
+		if(pb_marinespickupitems){
+			if(pb_marine_behavior_num_adaptation){
+				if(I_SquadCount() < pickup_enable_squad_num){
+					return true;
+				}
+				else{return false;}
+			}
+			else{return true;}
+		}
+		else{return false;}
+	}
+	action bool isDoingAction(){
+		return (invoker.reloadingAction || invoker.delayFireFX || invoker.fireAction);
+	}
+	action bool A_CannotFire(){
+		return (invoker.reloadingAction || invoker.delayFireFX);
+	}
+	bool ChaseFireAbility(){
+		return delayFireFX || (reloadingAction && reloadingAction is "MarineReloadFX");
+	}
+	action bool CheckMarineExecution(){
+		invoker.A_DebugLog("CheckMarineExecution called");
+		if(pb_marinesglorykill){
+			if (pb_marine_behavior_num_adaptation){
+				if(
+					I_SquadCount() < execution_enable_squad_num || invoker.health < 200
+					&& !isDoingAction()){return true;}
+				else{return false;}
+			}
+			else{return true;}
+		}
+		else{return false;}
+	}
+	action state PBMarine_Execute() {
+		A_FaceTarget();
+		if(!CheckMarineExecution()){return null;}
+		if(target != NULL){
+			if(target.bCountKill){
+				LookExParams look;
+				look.FOV = 360;
+				Actor monster = target;
+				if (monster.IsVisible(self, true, look) && CheckSight(monster) && Distance3D(monster) < 200 ){
+					
+					int targetMaxHealth = monster.spawnHealth();
+					int targetCurrentHealth = monster.health;
+					
+					if (actorCanBeExecuted(monster)){
+						// Move Monster and Player toward each other
+						monster.A_Stop();
+						double spd = 27.;
+						vector3 delta = ( monster.pos.x - pos.x, monster.pos.y - pos.y, monster.pos.z - pos.z );
+						double angleToMonster = AngleTo(monster);
+						double pitchToMonster = VectorAngle( sqrt(delta.y * delta.y + delta.x * delta.x), delta.z );
+						monster.A_SetPitch(pitchToMonster, SPF_INTERPOLATE);
+						monster.A_SetAngle(angleToMonster+180,SPF_INTERPOLATE);
+						vector3 neworigin = Vec3Offset(cos(angleToMonster) * spd,  sin(angleToMonster) * spd, sin(pitchToMonster) * spd);
+						monster.SetOrigin(neworigin,true);
+						A_SetAngle(AngleTo(monster));
+						pitchToMonster = VectorAngle( sqrt(delta.y * delta.y + delta.x * delta.x), delta.z );
+						A_SetPitch(-pitchToMonster);
+						PB_SetMarineExecutionProperties();
+						StateLabel st = "AttackExecute";//PB_ExecutionHandlerString(monster);
+						monster.A_Die("Execution");
+						return ResolveState(st);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	action void PBMarine_Execute_Tick() {
+		if(!CheckMarineExecution()){return;}
+		if(target != NULL){
+			if(target.bCountKill){
+				LookExParams look;
+				look.FOV = 360;
+				Actor monster = target;
+				if (monster.IsVisible(self, true, look) && Distance3D(monster) < 200 ){
+					
+					int targetMaxHealth = monster.spawnHealth();
+					int targetCurrentHealth = monster.health;
+					
+					if (actorCanBeExecuted(monster)){
+						// Move Monster and Player toward each other
+						monster.A_Stop();
+						double spd = 27.;
+						vector3 delta = ( monster.pos.x - pos.x, monster.pos.y - pos.y, monster.pos.z - pos.z );
+						double angleToMonster = AngleTo(monster);
+						double pitchToMonster = VectorAngle( sqrt(delta.y * delta.y + delta.x * delta.x), delta.z );
+						monster.A_SetPitch(pitchToMonster, SPF_INTERPOLATE);
+						monster.A_SetAngle(angleToMonster+180,SPF_INTERPOLATE);
+						vector3 neworigin = Vec3Offset(cos(angleToMonster) * spd,  sin(angleToMonster) * spd, sin(pitchToMonster) * spd);
+						monster.SetOrigin(neworigin,true);
+						A_SetAngle(AngleTo(monster));
+						pitchToMonster = VectorAngle( sqrt(delta.y * delta.y + delta.x * delta.x), delta.z );
+						A_SetPitch(-pitchToMonster);
+						PB_SetMarineExecutionProperties();
+						StateLabel st = "AttackExecute";//PB_ExecutionHandlerString(monster);
+						monster.A_Die("Execution");
+						SetState(ResolveState(st));
+						return;
+					}
+				}
+			}
+		}
+		return;
+	}
+	State A_JumpIfReloading(Statelabel jumpstate){
+		State stateToJump = ResolveState(jumpstate);
+		if(reloadingAction && stateToJump) return stateToJump;
+		return ResolveState(null);
+	}
+	State A_JumpIfCannotFire(Statelabel jumpstate){
+		State stateToJump = ResolveState(jumpstate);
+		if(A_CannotFire() && stateToJump) return stateToJump;
+		return ResolveState(null);
+	}
+	/*
+	action StateLabel PB_ExecutionHandlerString(Actor monster) {
+		name enemy = monster.getClassName();
+		return PB_ExecuteGeneric();
+	}
+	*/
+	void D_DoMarineDelayFireFX(class<Actor> EffectActor){
+		bool a; actor b;
+		if(EffectActor){
+			if (!self.delayFireFX && EffectActor && (EffectActor is "MarineDelayFireFX" || EffectActor is "MarineFireFX") ){
+				[a,b] = A_SpawnItemEx(EffectActor,0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION);
+				if(b){self.delayFireFX = b;}
+			}
+		}
+	}
+	//MarineWeaponFX.zc
+	action bool actorCanBeExecuted(Actor monster) {
+		if(monster is "PlayerPawn" || monster.GetSpecies() == "Marines" || monster.GetSpecies() == "Marine"){return false;}
+		int targetMaxHealth = monster.spawnHealth();
+		int targetCurrentHealth = monster.health;
+		if(CheckInventory("PB_PowerStrength",1) && (targetCurrentHealth <= targetMaxHealth*0.25 || targetCurrentHealth <= 150)) {
+			return true;
+		}
+		if(targetCurrentHealth < targetMaxHealth*0.20 || targetCurrentHealth <= 60) {
+			return true;
+		}
+		return false;
+	}
+	action StateLabel PB_ExecuteGeneric() {
+		StateLabel result;
+		int selector = (random(1,4));
+		FLineTraceData RemoteRay;
+		bool wallcheck = LineTrace(
+			angle,
+			120,
+			pitch,
+			TRF_THRUACTORS,
+			offsetz: height-12,
+			data: RemoteRay
+		);
+		result = "Execution_Generic";
+		return result;
+	}
+	action void PB_UnsetMarineExecutionProperties(){
+		//PlayerInfo self = PlayerPawn(self).player;
+		//self.cheats &= ~(CF_TOTALLYFROZEN|CF_NOTARGET|CF_GODMODE|CF_INSTANTWEAPSWITCH|CF_DOUBLEFIRINGSPEED|CF_FRIGHTENING  );
+		self.bNODAMAGE = false;
+		self.bNOPAIN = false;
+		//PB_SetExecutingEnemy(false);
+		//Determine how much health is returned (risk vs. reward)
+		if (self.health < 25) {
+			A_GiveInventory("HealthBonus",20);
+		}
+		else if (self.health < 50 && self.health >= 25) {
+			A_GiveInventory("HealthBonus",15);
+		}
+		else if (self.health < 100 && self.health >= 50) {
+			A_GiveInventory("HealthBonus",10);
+		}
+		else if (self.health < 200 && self.health >= 100) {
+			A_GiveInventory("HealthBonus",5);
+		}
+		else {
+			A_GiveInventory("HealthBonus",1);
+		}
+	}
+	void A_AllyChaseSee(statelabel melee = '_a_chase_default', statelabel missile = '_a_chase_default',int flags = 0){//ChaseFireAbility()
+		A_DebugLog("A_AllyChaseSee called");
+		if( ((AllyAttackCooldown > 0) || A_CannotFire() ) //delayFireFX || (reloadingAction && reloadingAction is "MarineReloadFX")
+		&& !(target is "PlayerPawn" || target is "PBMarine" || target is "PB_CapturedMarine") ){A_Chase("Missile.NoFire","Missile.NoFire",flags);}
+		else{A_Chase(melee,missile,flags);}
+		return;
+	}
+	void A_AllyChaseFollow(statelabel melee = '_a_chase_default', statelabel missile = '_a_chase_default',int flags = 0){
+		A_DebugLog("A_AllyChaseFollow called");
+		A_Chase(melee,missile,flags);
+		return;
+	}
+	void A_AllyChaseGuard(statelabel melee = '_a_chase_default', statelabel missile = '_a_chase_default',int flags = 0){
+		A_DebugLog("A_AllyChaseGuard called");
+		flags |= CHF_DONTMOVE;
+		if( ((AllyAttackCooldown > 0) || A_CannotFire() )
+		&& !(target is "PlayerPawn" || target is "PBMarine" || target is "PB_CapturedMarine") ){A_Chase("Missile.NoFire","Missile.NoFire",flags);}
+		else if(target is "PlayerPawn" || target is "PBMarine" || target is "PB_CapturedMarine") {A_Chase("MarineSequenceGuarding","MarineSequenceGuarding",flags);}
+		else{A_Chase(melee,missile,flags);}
+		return;
+	}
+	/*
+	int GetActorCount(class<Actor> type, bool skipdead = true){
+		int count;
+		foreach(Actor mo : ThinkerIterator.Create("Actor")){
+			if (mo && (!skipdead || mo.health > 0) && mo is type){
+				count++;
+			}
+		}
+		return count;
+	}
+	int GetActorCount(class<Actor> type, bool skipdead = true){
+		int count;
+		foreach(Actor mo : ThinkerIterator.Create("Actor")){
+			if (mo && (!skipdead || mo.health > 0) && mo is type){
+				count++;
+			}
+		}
+		return count;
+	}
+	int getMarineCount(){
+		return GetActorCount("PBMarine");
+	}
+	int GetMonsterNumber(){
+		return level.total_monsters - level.killed_monsters;
+	}
+	*/
+	 void D_DoMarineWeaponDelayFX(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null){
+		A_DebugLog("D_DoMarineWeaponDelayFX called");
+		bool a; actor b;
+		if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
+		if(WeaponSelected && EffectActor){ //comment out EffectActor when fully implemented
+			//if(!EffectActor){EffectActor = D_GetReloadFX(WeaponSelected);} //replace with a fire delay fx
+			int weapIndex = WeaponArray.Find(WeaponSelected);
+			if (!self.delayFireFX && EffectActor && EffectActor is "MarineDelayFireFX" ){
+				[a,b] = A_SpawnItemEx(EffectActor,0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION);
+				if (b){self.delayFireFX = b;}
+			}
+		}
+	}
+	Action Void PB_SpawnCasing(String Missile,Double ShellX,Double ShellY,Double ShellZ,Double ShellV_X,Double ShellV_Y,Double ShellV_Z,bool ejectionSmoke = true){
+		if(pbmarine_Casing_Enabled){
+			bool x; actor pCase;
+			[x, pCase] = A_SpawnItemEX(Missile,cos(pitch)*ShellX,ShellY,((ShellZ))-(sin(pitch)*ShellX),ShellV_X,ShellV_Y,ShellV_Z,0,SXF_TRANSFERPITCH,0);
+		}
+		/*
+		if(pCase){
+			pCase.vel = svel;
+			pCase.angle = self.angle;
+
+			let pPBCase = PB_CasingBase(pCase);
+
+			if(!pPBCase || pPBCase.bNEVERSMOKE || !ejectionSmoke) return;
+
+			let pSmoke = PB_GunFireSmoke(Spawn('PB_GunFireSmoke', spos));
+
+			if(pSmoke) {
+				pSmoke.vel = svel * 0.3;
+				pSmoke.alpha = 0.5;
+				pSmoke.blowSpeed = 1.1;
+				pSmoke.scale *= 0.1;
+				pSmoke.master = self;
+			}
+		}
+		*/
+	}
+	void A_SpawnGravityProjectile(class<Actor> missile, double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET){
+		if (!target)return;
+		A_FaceTarget();
+		actor proj = A_SpawnProjectile(missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);
+		if (proj){
+			double dist = proj.Distance2D(target); // horizontal distance
+			double flyTime = dist / Clamp(proj.speed, 0.1, 100); //time of flight
+			double heightfactor = 0.5;
+			if(target.pos.z + target.height > self.pos.z + spawnheight){
+				heightfactor = 1;
+			}
+			double vdiff = target.pos.z + target.height * heightfactor - proj.pos.z;
+			double vvel = (vdiff + 0.5 * flyTime * flyTime) / flyTime;
+			vvel *= proj.GetGravity();
+			double hvel = dist / flyTime;
+			proj.VelFromAngle(hvel, proj.AngleTo(target));
+			proj.vel.z = vvel;
+			proj.bCANBOUNCEWATER = false;
+			proj.bNOGRAVITY = false;
+			proj.bUSEBOUNCESTATE = false;
+			proj.bBOUNCEONWALLS = false;
+			proj.bBOUNCEONFLOORS = false;
+			proj.bBOUNCEONCEILINGS = false;
+			proj.species = GetCommander().GetSpecies();
+			proj.bDONTHARMCLASS = true;proj.bDONTHARMSPECIES = true;proj.bTHRUSPECIES = true;proj.bMTHRUSPECIES = true;proj.bDOHARMSPECIES = false;
+		}
+	}
+	bool MissileLinesUp(actor target, double spawnheight = 32){
+		if(!target)return false;
+		bool linesUp = false;
+		//float centerPos = (self.pos.z + self.height)/2;
+		float firePos = (self.pos.z + spawnheight);
+		float targetPosTop = target.pos.z + target.height;
+		linesUp = (target.pos.z == self.pos.z);// || (firePos > target.pos.z && firePos < targetPosTop);
+		return linesUp;
+	}
+	void PBCM_SpawnProjectile(class<Actor> missile, double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET, int directionmode = 0){
+		//CMF_AIMDIRECTION
+		if(!target)return;
+		if(directionmode == 0){
+			if(random(0,1)>0 && target && MissileLinesUp(target,spawnheight)){
+				A_Face(target,0,270,0,0,FAF_TOP);
+				A_FaceTarget(0,270,0,FAF_TOP);
+				flags |= CMF_AIMDIRECTION;
+			}else{A_FaceTarget();}
+		}
+		actor proj = A_SpawnProjectile(missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr);
+		if (proj){
+			proj.species = GetCommander().GetSpecies();
+			proj.bDONTHARMCLASS = true;proj.bDONTHARMSPECIES = true;proj.bTHRUSPECIES = true;proj.bMTHRUSPECIES = true;proj.bDOHARMSPECIES = false;
+		}
+	}
+	void PBCM_SpawnProjectiles(int shots, class<Actor> missile, double spawnheight = 32, double spawnofs_xy = 0, double angle = 0, int flags = 0, double pitch = 0, int ptr = AAPTR_TARGET){
+		if(random(0,1)>0){
+			A_Face(target,0,270,0,0,FAF_TOP);
+			flags |= CMF_AIMDIRECTION;
+		}else{
+			A_FaceTarget();
+		}
+		for (int i = 0; i < shots; i++){
+			PBCM_SpawnProjectile(missile, spawnheight, spawnofs_xy, angle, flags, pitch, ptr, 1);
+		}//directionmode
+	}
+	Action state A_JumpStrafeLeft(statelabel strafeLeft = "StrafeLeft"){
+		State strafeLeftState = ResolveState(strafeLeft);
+		if (!CheckBlock(0, AAPTR_DEFAULT, 0, -self.radius) && strafeLeftState){
+			return strafeLeftState;
+		}
+		return ResolveState(null);
+	}
+	//A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")
+	Action state A_JumpIfTargetIsMarine(statelabel jumpState){
+		State toJump = ResolveState(jumpState);
+		if ( target && (target is "PBMarine" || target is "PB_CapturedMarine") && toJump){
+			return toJump;
+		}
+		return ResolveState(null);
+	}
+	//A_JumpIfInTargetInventory("IsPlayer", 1, "CheckRangeToWait")
+	Action state A_JumpIfTargetIsPlayer(statelabel jumpState){
+		State toJump = ResolveState(jumpState);
+		if ( target && (target is "PlayerPawn") && toJump){
+			return toJump;
+		}
+		return ResolveState(null);
+	}
+	/*
+	Action state A_JumpIfTargetHasAmmo(statelabel jumpState){
+		State toJump = ResolveState(jumpState);
+		if ( target && (target is "PlayerPawn") && toJump){
+			return toJump;
+		}
+		return ResolveState(null);
+	}
+	*/
+	bool MarineTargetWeaponCheck(){
+	//PB_Carbine
+		bool downgradeCheck;
+		if(!pb_keepweapons && target && self.MarineWeapon){
+			downgradeCheck = (self.MarineWeapon is "PB_Carbine" && target.FindInventory("PB_LMG") || self.MarineWeapon is "PB_Revolver" && target.FindInventory("PB_Deagle") || self.MarineWeapon is "PB_SSG" && target.FindInventory("PB_QuadSG"));
+		}
+		return (target && self.MarineWeapon && !downgradeCheck);
+	}
+	bool PlayerDoingWeaponRespect(){
+		if(GetCommander().player.FindPSprite(PSP_WEAPON) && InStateSequence(GetCommander().player.FindPSprite(PSP_WEAPON).curstate, GetCommander().player.readyweapon.FindState("WeaponRespect"))){
+			A_DebugLog("WeaponRespect");
+			return true;
+		}
+		return false;
+	}
+	bool PlayerDoingHelmetAnim(){
+		if(GetCommander().player && GetCommander().FindInventory("DoingHelmetAnim") ){
+			A_DebugLog("DoingHelmetAnim");
+			return true;
+		}
+		return false;
+		//return //(
+		//return self.target.FindInventory("PB_Pistol") && self.target.FindInventory("RespectPistol") && self.target.FindInventory("RespectRifle");
+	}
+	state A_JumpIfTargetHasNoMarineWeapon(statelabel jumpState){
+		State toJump = ResolveState(jumpState);
+		if ( pb_marinesgiveweapons && self.target && self.target is "PlayerPawn" && toJump && MarineTargetWeaponCheck() && !PlayerDoingHelmetAnim() && !PlayerDoingWeaponRespect() && 
+		(
+			!self.target.FindInventory(MarineWeapon) && 
+			!self.target.FindInventory(PB_WeaponBase(GetDefaultByType(MarineWeapon)).respectInventoryItem) 
+		)
+		){return toJump;}
+		return ResolveState(null);
+	}
+	void A_GiveTargetMarineWeapon(){
+		if ( self.target && self.target is "PlayerPawn" && self.MarineWeapon && (!self.target.FindInventory(MarineWeapon)) ){
+			self.target.A_GiveInventory(MarineWeapon);
+		}
+	}
+	Action state A_JumpStrafeRight(statelabel strafeRight = "StrafeRight"){
+		State strafeRightState = ResolveState(strafeRight);
+		if (!CheckBlock(0, AAPTR_DEFAULT, 0, self.radius) && strafeRightState){
+			return strafeRightState;
+		}
+		return ResolveState(null);
+	}
+	Action state A_JumpStrafeRetreat(statelabel strafeLeft = "StrafeLeft",statelabel strafeRight = "strafeRight",statelabel retreat = "Retreat"){
+		bool LeftAvailable = false;
+		bool RightAvailable = false;
+		bool RetreatAvailable = false;
+		State strafeLeftState = ResolveState(strafeLeft);
+		State strafeRightState = ResolveState(strafeRight);
+		State retreatState = ResolveState(retreat);
+		if (!CheckBlock(0, AAPTR_DEFAULT, 0, -self.radius) && strafeLeftState){
+			LeftAvailable = true;
+		}
+		if (!CheckBlock(0, AAPTR_DEFAULT, 0, self.radius) && strafeRightState){
+			RightAvailable = true;
+		}
+		if (!CheckBlock(0, AAPTR_DEFAULT, -self.radius) && retreatState){
+			RetreatAvailable = true;
+		}
+		if(invoker.TargetIsAttackingMelee() && RetreatAvailable){
+			return retreatState;
+		}
+		if (RetreatAvailable && LeftAvailable && RightAvailable){
+			int randomInt = random(0,2);
+			if (randomInt == 0){
+				return retreatState;
+			} else if (randomInt == 1){
+				return strafeLeftState;
+			} else if (randomInt == 2){
+				return strafeRightState;
+			}
+		}
+		if (RetreatAvailable && LeftAvailable && !RightAvailable){
+			if (random(0,1)>0){return strafeLeftState;}
+			else{return retreatState;}
+		}
+		if (RetreatAvailable && RightAvailable && !LeftAvailable){
+			if (random(0,1)>0){return strafeRightState;}
+			else{return retreatState;}
+		}
+		if (!RetreatAvailable && RightAvailable && LeftAvailable){
+			if (random(0,1)>0){return strafeRightState;}
+			else{return strafeLeftState;}
+		}
+		if (!RetreatAvailable && LeftAvailable && !RightAvailable){
+			return strafeLeftState;
+		}
+		if (!RetreatAvailable && RightAvailable && !LeftAvailable){
+			return strafeRightState;
+		}
+		if (RetreatAvailable && !RightAvailable && !LeftAvailable){
+			return retreatState;
+		}
+		return ResolveState(null);
+	}
+	Action state A_JumpStrafe(statelabel strafeLeft = "StrafeLeft",statelabel strafeRight = "StrafeRight"){
+		bool LeftAvailable = false;
+		bool RightAvailable = false;
+		State strafeLeftState = ResolveState(strafeLeft);
+		State strafeRightState = ResolveState(strafeRight);
+		if (!CheckBlock(0, AAPTR_DEFAULT, 0, -self.radius) && strafeLeftState){
+			LeftAvailable = true;
+		}
+		if (!CheckBlock(0, AAPTR_DEFAULT, 0, self.radius) && strafeRightState){
+			RightAvailable = true;
+		}
+		if (RightAvailable && LeftAvailable){
+			if (random(0,1)>0){return strafeRightState;}
+			else{return strafeLeftState;}
+		}
+		if (LeftAvailable && !RightAvailable){
+			return strafeLeftState;
+		}
+		if (RightAvailable && !LeftAvailable){
+			return strafeRightState;
+		}
+		return ResolveState(null);
+	}
+	Action state A_JumpStrafeChance(int chance, statelabel strafeLeft = "StrafeLeft",statelabel strafeRight = "StrafeRight"){
+		if ( invoker.speed > 0 && (random(0,255) < chance || invoker.TargetIsAttackingRanged()) ){return A_JumpStrafe(StrafeLeft,StrafeRight);}
+		else{return ResolveState(null);}
+	}
+	Action void A_AllySpawnProjectile(class<Actor> missiletype,double spawnheight = 32,double spawnofs_xy = 0,double angle = 0,int flags = CMF_AIMDIRECTION,double pitch = 0,int ptr = AAPTR_TARGET){
+		if(!missiletype){return;}
+		class<Actor> missileToFire = GetReplacement(missiletype); 
+		actor proj;
+		if (target && target.health > 0){A_FaceTarget(0,180,0,0);proj = A_SpawnProjectile(missileToFire,spawnheight,spawnofs_xy,angle,0,pitch,ptr);}
+		else{proj = A_SpawnProjectile(missileToFire,spawnheight,spawnofs_xy,angle,flags,pitch,ptr);}
+		if (proj){
+			proj.species = invoker.GetCommander().GetSpecies();
+			proj.bDONTHARMCLASS = true;proj.bDONTHARMSPECIES = true;proj.bTHRUSPECIES = true;proj.bMTHRUSPECIES = true;proj.bDOHARMSPECIES = false;
+		}
+	}
+	Action void A_StartVoiceLine(sound whattoplay, int slot = CHAN_BODY, int flags = CHANF_DEFAULT, double volume = 1.0, double attenuation = ATTN_NORM, double pitch = 0, double startTime = 0){
+		if(pb_quietmarines)return;
+		else if(master && invoker.GetCommander().CountInv("ShutTheFuckUp") < 1){
+			//flags |= CHANF_SINGULAR;
+			//CHANF_SINGULAR
+			if(pitch == 0 && invoker.setVoicePitch){
+				A_StartSound(whattoplay, slot, flags, volume, attenuation, invoker.voicePitch, startTime);
+			}else{
+				A_StartSound(whattoplay, slot, flags, volume, attenuation, pitch, startTime);
+			}
+			if(Distance3D(master) <= 1000){
+				int sndtics = S_GetLength(whattoplay) * TICRATE;
+				master.A_SetInventory("ShutTheFuckUp",sndtics);
+			}
+		}
+		return;
+	}
+	Action void A_StartSoundIfNoVoice(sound whattoplay, int slot = CHAN_BODY, int flags = CHANF_DEFAULT, double volume = 1.0, double attenuation = ATTN_NORM, double pitch = 0, double startTime = 0){
+		if(pb_quietmarines){A_StartSound(whattoplay, slot, flags, volume, attenuation, pitch, startTime);}
+		return;
+	}
+	void A_AllyAlertMonsters(float maxrange,int flags){
+		//flags |= AMF_TARGETEMITTER;
+		bSHOOTABLE = true;
+		self.A_AlertMonsters(0,AMF_TARGETEMITTER);
+		PB_AlertMonsters();
+	}
+	action void PB_AlertMonsters(){
+		invoker.A_AlertMonsters(0,AMF_TARGETEMITTER);
+	}
+	int CheckTargetSurroundingEnemies(double rad = 256){
+		if (!target)
+			return 0;
+		int ret = 0;
+		let itr = BlockThingsIterator.Create(target, rad);
+		while (itr.Next()){
+			let thing = itr.thing;
+			if (thing && thing.bISMONSTER && thing.health > 0 && thing.GetSpecies() != "Marines" && thing.Distance3D(target) <= rad && target.CheckSight(thing)){
+				ret++;
+			}
+		}
+		return ret;
+	}
+	int CheckTargetSurroundingAllies(double rad = 256){
+		if (!target) return 0;
+		int ret = 0;
+		let itr = BlockThingsIterator.Create(target, rad);
+		while (itr.Next()){
+			let thing = itr.thing;
+			if (thing && thing.health > 0 && thing.GetSpecies() == "Marines" && thing.Distance3D(target) <= rad && target.CheckSight(thing)){
+				ret++;
+			}
+		}
+		return ret;
+	}
+	/*
+	void DoMarineLoadFX(class<Actor> EffectActor){
+		//bool a; actor b;
+		//[a,b] = 
+		A_SpawnItemEx(EffectActor,0,0,0,0,0,0,0,SXF_SETMASTER|SXF_NOCHECKPOSITION|SXF_ISTRACER);
+		//if (b){tracer = b;}
+	}
+	*/
+	/*
+	Array <class<PB_WeaponBase> > WeaponArray;
+	Array <int> WeaponAmmoLoadedArray;
+	Array <int> MagazineMaxFillArray;
+	*/
+			/*
+			Actor theCommander;
+			if (master && master is "PlayerPawn"){theCommander = master;}
+			else{theCommander = players[0].mo;}
+			let Marine_Manager = MarineManager(theCommander.FindInventory("MarineManager"));
+			if (Marine_Manager && Marine_Manager.MarineList.Find(self) != Marine_Manager.MarineList.Size()) {
+				Marine_Manager.MarineList[Marine_Manager.MarineList.Find(self)] = marineSpawnedActor;
+			}
+			*/
+	//"PB_Revolver","PB_SMG","PB_Shotgun","PB_SSG","PB_Rifle","Rifle","PB_Carbine","PB_Autoshotgun","PB_Minigun","PB_Nailgun","PB_RocketLauncher","PB_SuperGL","PB_M1Plasma","PB_M2Plasma","PB_Flamethrower","PB_Railgun","PB_BFG9000"
+	void MarineModeSpawn(class<Actor> marineActor){
+		if(self is "Marine_Minigun"){A_StopSound(1);}
+		if(self is "Marine_Nailgun"){A_StopSound(CHAN_BODY);}
+		actor marineSpawned; bool b;
+		[b, marineSpawned] = A_SpawnItemEx(marineActor,0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS|SXF_TRANSFERTRANSLATION|SXF_TRANSFERALPHA|SXF_TRANSFERRENDERSTYLE|SXF_TRANSFERSCALE|SXF_NOCHECKPOSITION);
+		let marineSpawnedActor = PBMarine(marineSpawned);
+		if (marineSpawnedActor) {
+			marineSpawnedActor.setHealth = true;
+			marineSpawnedActor.health = self.health;
+			if(marineSpawnedActor.target && marineSpawnedActor.target is "PlayerPawn" && marineSpawnedActor.speed == 0){
+				marineSpawnedActor.A_ClearTarget();
+				marineSpawnedActor.SetState(ResolveState("Spawn"));
+				//ForgetTarget
+			}
+			if (WeaponAmmoLoaded && setAmmo){
+				marineSpawnedActor.WeaponAmmoLoaded = self.WeaponAmmoLoaded;
+				marineSpawnedActor.setAmmo = true;
+			}
+			if(tracer){tracer.master = marineSpawnedActor;marineSpawnedActor.tracer = self.tracer;}
+			if(reloadingAction){reloadingAction.master = marineSpawnedActor;reloadingAction.target = marineSpawnedActor;marineSpawnedActor.reloadingAction = self.reloadingAction;}
+			if(delayFireFX){delayFireFX.master = marineSpawnedActor;delayFireFX.target = marineSpawnedActor;marineSpawnedActor.delayFireFX = self.delayFireFX;}
+			if(fireAction){fireAction.master = marineSpawnedActor;fireAction.target = marineSpawnedActor;marineSpawnedActor.fireAction = self.fireAction;}
+			if(self.GetTag() != self.GetClassName()){
+				marineSpawnedActor.SetTag(self.GetTag());
+			}
+			if(setWeaponArray){
+				marineSpawnedActor.WeaponArray.Copy(self.WeaponArray);
+				marineSpawnedActor.WeaponAmmoLoadedArray.Copy(self.WeaponAmmoLoadedArray);
+				marineSpawnedActor.MagazineMaxFillArray.Copy(self.MagazineMaxFillArray);
+				marineSpawnedActor.setWeaponArray = true;
+				marineSpawnedActor.setVoicePitch = setVoicePitch;
+				marineSpawnedActor.voicePitch = voicePitch;
+			}
+			if(FindInventory("PB_PowerStrength")){
+				marineSpawnedActor.GiveInventory("PB_PowerStrength",1);
+			}
+			marineSpawnedActor.EnemyArray.Copy(self.EnemyArray);
+			if (setArmor){
+				marineSpawnedActor.setArmor = true;
+				Let ArmorPtr = BasicArmor(marineSpawnedActor.FindInventory("BasicArmor"));
+				if (ArmorPtr){
+					marineSpawnedActor.GiveInventory("BasicArmor", CountInv("BasicArmor"));
+					if(marineSpawnedActor.FindInventory("BasicArmor")){
+						Let ArmorPtrNew = BasicArmor(marineSpawnedActor.FindInventory("BasicArmor"));
+						if(ArmorPtrNew){
+							ArmorPtrNew.SavePercent = ArmorPtr.SavePercent;
+						}
+					}
+				}
+			}
+		}
+	}
+	void A_Pathfind(){
+		if(PathfinderPointer){return;}
+		if(self is "Marine_Minigun"){A_StopSound(1);}
+		if(self is "Marine_Nailgun"){A_StopSound(CHAN_BODY);}
+		A_DebugLog("A_Pathfind called");
+		actor pathfinder; bool b;
+		if (target is "PlayerPawn"){
+			[b, pathfinder] = A_SpawnItemEx("AllyPathfinder",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPOINTERS,0);
+		}
+		let pathfinderActor = AllyPathfinder(pathfinder);
+		if (pathfinderActor){
+			pathfinderActor.master = self;
+			if(self.master && self.master is "PlayerPawn"){
+				pathfinderActor.target = self.master;
+			}
+			pathfinderActor.allyClass = self.getClass();
+			pathfinderActor.A_SetSize(GetDefaultbyType(self.getClass()).height,GetDefaultbyType(self.getClass()).radius);
+			PathfinderPointer = pathfinderActor;
+			
+		}
+	}
+}

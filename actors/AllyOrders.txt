@@ -1,0 +1,79 @@
+Actor ImportedOrders : CustomInventory{
+	States{
+	Pickup:
+		TNT1 A 0 A_GiveInventory("OrderToGuard")
+		TNT1 A 0 A_GiveInventory("OrderToMobilize")
+		TNT1 A 0 A_GiveInventory("OrderToTeleport")
+		TNT1 A 0 A_GiveInventory("OrderBossToGuard")
+		TNT1 A 0 A_GiveInventory("OrderBossToMobilize")
+		TNT1 A 0 A_GiveInventory("OrderBossToTeleport")
+		stop
+	}
+}
+Actor OrderToGuard : CustomInventory {
+	+INVENTORY.PERSISTENTPOWER
+	+INVENTORY.UNDROPPABLE
+	+INVENTORY.UNTOSSABLE
+	States{
+	Use:
+		TNT1 A 0 A_GiveInventory("GuardOrder")
+		fail
+	}
+}
+Actor OrderToMobilize : CustomInventory {
+	+INVENTORY.PERSISTENTPOWER
+	+INVENTORY.UNDROPPABLE
+	+INVENTORY.UNTOSSABLE
+	States{
+	Use:
+		TNT1 A 0 A_GiveInventory("MobilizeOrder")
+		fail
+	}
+}
+Actor OrderToTeleport : CustomInventory {
+	+INVENTORY.PERSISTENTPOWER
+	+INVENTORY.UNDROPPABLE
+	+INVENTORY.UNTOSSABLE
+	States{
+	Use:
+		TNT1 A 0 A_GiveInventory("TeleportOrder")
+		fail
+	}
+}
+Actor OrderBossToGuard : CustomInventory {
+	+INVENTORY.PERSISTENTPOWER
+	+INVENTORY.UNDROPPABLE
+	+INVENTORY.UNTOSSABLE
+	States{
+	Use:
+		TNT1 A 0 A_GiveInventory("GuardOrderBoss")
+		fail
+	}
+}
+Actor OrderBossToMobilize : CustomInventory {
+	+INVENTORY.PERSISTENTPOWER
+	+INVENTORY.UNDROPPABLE
+	+INVENTORY.UNTOSSABLE
+	States{
+	Use:
+		TNT1 A 0 A_GiveInventory("MobilizeOrderBoss")
+		fail
+	}
+}
+Actor OrderBossToTeleport : CustomInventory {
+	+INVENTORY.PERSISTENTPOWER
+	+INVENTORY.UNDROPPABLE
+	+INVENTORY.UNTOSSABLE
+	States{
+	Use:
+		TNT1 A 0 A_GiveInventory("TeleportOrderBoss")
+		fail
+	}
+}
+Actor GuardOrder : PowerUp{Powerup.Duration 1}
+Actor MobilizeOrder : PowerUp{Powerup.Duration 1}
+Actor TeleportOrder : PowerUp{Powerup.Duration 1}
+Actor ForceTeleportOrder : PowerUp{Powerup.Duration 1}
+Actor GuardOrderBoss : PowerUp{Powerup.Duration 1}
+Actor MobilizeOrderBoss : PowerUp{Powerup.Duration 1}
+Actor TeleportOrderBoss : PowerUp{Powerup.Duration 1}

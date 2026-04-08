@@ -1,0 +1,5 @@
+class PB_MarineShrapnel : PB_Shrapnel{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}

@@ -1,0 +1,44 @@
+ACTOR MarineRevolverAmmo : Ammo{
+	Inventory.MaxAmount 6
+}
+ACTOR MarineShotgunAmmo : Ammo{
+	Inventory.MaxAmount 9
+	Ammo.BackpackMaxAmount 11
+}
+ACTOR MarineRifleAmmo : Ammo{
+	Inventory.MaxAmount 31
+}
+ACTOR MarineCarbineAmmo : Ammo{
+	Inventory.MaxAmount 41
+}
+ACTOR MarineSMGAmmo : Ammo{
+	Inventory.MaxAmount 51
+}
+ACTOR MarineSSGAmmo : Ammo{
+	Inventory.MaxAmount 2
+}
+ACTOR MarineASGAmmo : Ammo{
+	Inventory.MaxAmount 12
+	Ammo.BackpackMaxAmount 24
+}
+ACTOR MarineNailgunAmmo : Ammo{
+	Inventory.MaxAmount 120
+}
+ACTOR MarineRocketLauncherAmmo : Ammo{
+	Inventory.MaxAmount 6
+}
+ACTOR MarineGrenadeLauncherAmmo : Ammo{
+	Inventory.MaxAmount 7
+}
+ACTOR MarineM1PlasmaAmmo : Ammo{
+	Inventory.MaxAmount 60
+}
+ACTOR MarineM2PlasmaAmmo : Ammo{
+	Inventory.MaxAmount 50
+}
+ACTOR MarineRailgunAmmo : Ammo{
+	Inventory.MaxAmount 60
+}
+ACTOR MarineFlamethrowerAmmo : Ammo{
+	Inventory.MaxAmount 90
+}

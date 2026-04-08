@@ -1,0 +1,14 @@
+Class Marine_WeaponDrop : Actor abstract{
+	States{
+	Spawn:
+		TNT1 A 1 NODELAY A_JumpIf(pb_marinesdropweapons,"DropWeapon");
+		TNT1 A 1 A_Jump(256,"DropAmmo");
+		Stop;
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_Weapon");
+		Stop;
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Ammo");
+		Stop;
+	}
+}

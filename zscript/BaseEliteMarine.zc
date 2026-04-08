@@ -1,0 +1,16 @@
+class EliteMarine_Base : PBMarine{
+	override void PostBeginPlay(){
+		Super.PostBeginPlay();
+		if(!setWeaponArrayUpgraded){
+			static const String UpgradeableCapacityWeaponNames[] =  {"PB_Shotgun","PB_Autoshotgun"};
+			static const int WeaponCapacityUpgrades[] = {11,24};
+			for (int i = 0; i < UpgradeableCapacityWeaponNames.Size(); i++){
+				class<PB_WeaponBase> cls = UpgradeableCapacityWeaponNames[i];
+				if(cls && WeaponArray.Find(cls) != WeaponArray.Size()){
+					MagazineMaxFillArray[WeaponArray.Find(cls)] = WeaponCapacityUpgrades[i];
+					setWeaponArrayUpgraded = true;
+				}
+			}
+		}
+	}
+}

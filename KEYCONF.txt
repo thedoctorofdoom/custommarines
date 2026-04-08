@@ -1,0 +1,27 @@
+	addkeysection "Project Brutality Marines" PBMarineControls   
+	addmenukey "Activate Marine Beacon" PB_SummonMarineToggle
+	alias PB_SummonMarineToggle "use AllySummoner"
+	/*
+	//addmenukey "Command Allies to Guard (Experimental)" PB_MarineGuardToggle
+	//alias PB_MarineGuardToggle "use MarineCommandGuard"
+	//addmenukey "Command Allies to Follow (Experimental)" PB_MarineFollowToggle
+	//alias PB_MarineFollowToggle "use MarineCommandFollow"
+	*/
+	AddMenuKey "Order Allies to guard" OrderGuard
+	Alias OrderGuard "use OrderToGuard"
+	AddMenuKey "Order Allies to mobilize" OrderMobilize
+	Alias OrderMobilize "use OrderToMobilize"
+	AddMenuKey "Order Allies to teleport to player" OrderTeleport
+	Alias OrderTeleport "use OrderToTeleport"
+	/*
+	//AddMenuKey "Order Boss-Level Allies to guard" OrderGuardBoss
+	//Alias OrderGuardBoss "use OrderBossToGuard"
+	//AddMenuKey "Order Boss-Level Allies to mobilize" OrderMobilizeBoss
+	//Alias OrderMobilizeBoss "use OrderBossToMobilize"
+	//AddMenuKey "Order Boss-Level Allies to teleport to player" OrderTeleportBoss
+	//Alias OrderTeleportBoss "use OrderBossToTeleport"
+	*/
+	//AddMenuKey "Force Allies to spawn where their pathfinders are" OrderTeleportSpawn
+	//Alias OrderTeleportSpawn "Give ForceTeleportOrder"
+	//addmenukey "Command Allies to Teleport" PB_MarineWarpToggle
+	//alias PB_MarineWarpToggle "use MarineCommandTeleport"

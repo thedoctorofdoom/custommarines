@@ -1,0 +1,105 @@
+extend class PBMarine{
+	States{
+	GetToPlayerOld:
+		---- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Chase(null,'_a_chase_default',CHF_FASTCHASE);
+		#### # 0 A_ChangeFlag("SHOOTABLE", 0);
+		#### # 0 A_ChangeFlag("FRIENDLY", 0);
+		#### # 0 A_CheckSight("Pathfind");
+		#### # 0 A_JumpIfCloser(800, "FollowPlayer");
+		#### # 0 A_ChangeFlag("FRIENDLY", 0);
+		#### # 0 A_JumpIfTargetIsPlayer(2);
+		#### # 0 A_Jump(256, "FollowPlayer");
+		#### # 0 {A_ChangeFlag("SHOOTABLE", 0);A_ChangeFlag("NOBLOCKMAP", 1);A_ChangeFlag("NOCLIP", 1);A_ChangeFlag("SOLID", 0);A_Noblocking();}
+	PathfindTry:
+		#### # 0 A_Jump(256,"Pathfind");
+	CheckIfPlayerSee:
+		---- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_FastChase;
+		#### # 0 A_ChangeFlag("SHOOTABLE", 0);
+		#### # 0 A_ChangeFLag("FRIENDLY", 0);
+		#### # 0 A_JumpIfCloser(800, "FollowPlayer");
+		#### # 0 A_Jump(256, "Pathfind");
+	CheckRangeToWait:
+		#### # 0 A_JumpIfCloser(150, 2);
+		#### # 0 A_Jump(256,"CheckRangeToWaitContinue");
+		#### # 0 A_JumpIfTargetHasNoMarineWeapon("GiveWeaponCRTW");
+		#### # 0 A_JumpIf(!pb_marinesgiveammo, 3);
+		#### # 0 A_JumpIfInTargetInventory("PB_LowCalMag", 20, 2);
+		#### # 0 A_Jump(256,"GiveAmmoCRTW");
+		#### # 0 A_JumpIf(!pb_marinesgivehealth, 2);
+		#### # 0 A_JumpIfHealthLower(40, "GiveHealthCRTW",AAPTR_MASTER);
+		#### # 0 A_Jump(256, "CheckRangeToWaitContinue");
+	GiveAmmoCRTW:
+		MR7S BCA 10 A_FaceTarget;
+		MR8S C 15 A_StartVoiceLine("MRNGI1",CHAN_VOICE);
+		MR8S D 15;
+		goto HandOverAmmoCRTW;
+	HandOverAmmoCRTW:
+		#### # 0 A_GiveToTarget("PB_LowCalMag", 20);
+		#### # 0 A_Jump(256,"CheckRangeToWaitContinue");
+	GiveWeaponCRTW:
+		MR7S BCA 10 A_FaceTarget;
+		MR8S CD 15;
+		goto HandOverWeaponCRTW;
+	HandOverWeaponCRTW:
+		#### # 0 A_GiveTargetMarineWeapon;
+		#### # 0 A_Jump(256,"CheckRangeToWaitContinue");
+	GiveHealthCRTW:
+		MR7S BCA 10 A_FaceTarget;
+		MR8S A 15 A_StartVoiceLine("MRNGI2",CHAN_VOICE);
+		MR8S B 15;
+		goto HandOverStimpackCRTW;
+	HandOverStimpackCRTW:
+		#### # 0 A_GiveToTarget("PB_Stimpack");
+		#### # 0 A_Jump(256,"CheckRangeToWaitContinue");
+	CheckRangeToWaitContinue:
+		#### # 0 A_JumpIfCloser(150, "Waits");
+		#### # 0 A_Jump(256, "FollowPlayer");
+	ForgetTarget:
+		#### # 0 {
+			if(target && (!(target is "PlayerPawn" || target is "PBMarine")) && target.health > 0){EnemyArray.push(target);}
+			A_ClearTarget();
+		}
+		#### # 0 A_Jump(256,"See");
+	GetToPlayer:
+	Pathfind:
+		#### # 0 A_ChangeFLag("FRIENDLY", 0);
+		#### # 0 A_JumpIfTargetIsPlayer(2);
+		#### # 0 A_Jump(256,"FollowPlayer");
+		#### # 0 {
+			A_ChangeFlag("SHOOTABLE", 0);
+			A_ChangeFlag("NOBLOCKMAP", 1);
+			A_ChangeFlag("NOCLIP", 1);
+			A_ChangeFlag("SOLID", 0);
+		}
+		#### # 0 A_Pathfind;
+		#### # 0 A_JumpIf(pb_marineswarp, "Warped");
+		#### # 0 A_NoBlocking(false);
+		Stop;
+	Warped:
+		#### # 0 {
+			A_ChangeFlag("SHOOTABLE", 1);
+			A_ChangeFlag("NOBLOCKMAP", 0);
+			A_ChangeFlag("NOCLIP", 0);
+			A_ChangeFlag("SOLID", 1);
+		}
+		#### # 0 A_Jump(256, "Spawn");
+	BecomeEnemy23:
+		---- A 1 {
+			if(self.sprite == GetSpriteIndex("TNT1")){
+				let def = GetDefaultByType(self.GetClass());
+				if(def){
+					self.sprite = def.spawnstate.sprite;
+					self.frame = def.spawnstate.frame;
+				}
+			}
+		}
+	BecomeEnemy24:
+		#### # 0 {
+			if(target && (!(target is "PlayerPawn" || target is "PBMarine")) && target.health > 0){EnemyArray.push(target);}
+			A_ClearTarget();
+			A_ChangeFlag("SHOOTABLE", 0);
+			A_ChangeFLag("FRIENDLY", 0);
+		}
+		#### # 0 A_Jump(256,"FollowPlayer");
+	}
+}

@@ -1,0 +1,348 @@
+ACTOR Marine_Rocket: PBMarine{
+	DropItem "RocketMarineDrop"
+	Translation "112:127=144:151"
+	PBMarine.MarineWeapon "PB_RocketLauncher"
+	PBMarine.AllyCountedInventory "NumberOfAlliesRocket"
+	PBMarine.AllyMapCounter "NumberOfAlliesRocketThisMap"
+	Obituary "%o has been gunned down by a Rocket Marine."
+	States{
+	Active:
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP", 1)
+		TNT1 A 0 A_StartSoundIfNoVoice("marine/radiostatic",2,CHANF_OVERLAP)
+		TNT1 A 0 A_StartVoiceLine("MarineGuard", 2)
+		TNT1 A 0 A_CustomMissile ("OrderTitle2", 50, 0, 0, 2, 90)
+		PL5S A 30
+		TNT1 A 0 A_ChangeFLag("NOBLOCKMAP", 1)
+		TNT1 A 0 MarineModeSpawn ("RocketMarineGuarding")//,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		Stop
+		
+	Spawn:
+		PL5S A 1 A_Look
+		TNT1 A 0 A_Jump(256,"See")
+	//See:
+		TNT1 A 0 A_ChangeFlag("NODROPOFF", 0)	
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 1)
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		TNT1 A 0 D_StartReloadIfEmpty
+		TNT1 A 0 //D_StartReloadIfEmpty2//D_StartReloadIfEmpty("PB_DMR")
+		TNT1 A 0 //D_StartReloadIfNotFull2
+		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 1)
+		TNT1 A 0 A_ChangeFlag("MISSILEEVENMORE", 1)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		PL5S AA 1 A_AllyChaseSee
+		TNT1 A 0 A_ChangeFlag("FASTER", 0)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		PL5S BB 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		PL5S BB 1 A_AllyChaseSee
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 0)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		PL5S CC 1 A_AllyChaseSee
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 1)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		PL5S CC 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		PL5S DD 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		PL5S DD 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_CheckSight("ForgetTarget")
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		TNT1 A 0 A_CheckSight("FollowPLayer")
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 0)
+		TNT1 A 0 A_MakeNotShootable()
+		
+		PL5S AA 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		
+		PL5S BB 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_FollowIfPlayer
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		
+		PL5S CC 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_FollowIfPlayer
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		
+		PL5S DD 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		
+		TNT1 A 0 A_FollowIfPlayer
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		
+		
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_FollowIfPlayer
+		TNT1 A 0 A_Jump(256,"See")
+	//BecomeEnemy23:
+		PL5S A 1
+		goto BecomeEnemy24
+		
+	//FollowPlayer:
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		TNT1 A 0 A_ChangeFlag("FASTER", 1)
+		TNT1 A 0 A_MakeNotShootable()
+		TNT1 A 0 A_JumpIfCloser(150, "Waits")
+		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 0)
+		TNT1 A 0 A_ChangeFlag("MISSILEEVENMORE", 0)
+		PL5S A 1 A_AllyChaseFollow
+		TNT1 AA 0 PB_MarineStep
+		PL5S AA 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S CC 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S CC 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		
+		PL5S AA 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S CC 1 A_AllyChaseFollow
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		TNT1 A 0 PB_MarineStep
+		PL5S CC 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PL5S DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 1)
+		TNT1 A 0 A_JumpIfTargetInLOS("See")
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		
+		
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		Loop
+	Waits:
+		PL5S E 1 D_StartReloadIfNotFullIdle
+		TNT1 A 0 A_JumpIfTargetIsPlayer(3)
+		TNT1 A 0 A_ClearTarget
+		TNT1 A 0 A_Jump(256,"See")
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 1)
+		TNT1 A 0 A_ChangeFlag("MISSILEEVENMORE", 1)
+		TNT1 A 0 A_MakeNotShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 0)
+		TNT1 A 0 A_JumpIfTargetIsMarine("BecomeEnemy23")
+		TNT1 A 0 A_Jump(32, "Waits2")
+		TNT1 A 0 A_Jump(32, "Waits3")
+		
+		PL5S EE 8 A_Stop
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_CheckSight("FollowPlayer")
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 1);A_ClearTarget;A_MakeShootable();}
+		MARN D 0 A_Look
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 0);A_MakeNotShootable();}
+		PL5S E 1 A_LookEx(0, 0, 0, 0, 0, "FollowPlayer")
+		TNT1 A 0 A_CheckSIght("FollowPlayer")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		Goto FollowPlayer
+	
+	Waits2:
+		TNT1 A 0 A_SetAngle(random(90, -90) + angle)
+		PL5S E 8 A_Stop
+		TNT1 A 0 A_StartVoiceLine("MRNWT", 2)
+		PL5S E 8 A_Stop
+		TNT1 A 0 A_CheckSight("FollowPlayer")
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 1);A_ClearTarget;A_MakeShootable();}
+		MARN D 0 A_Look
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 0);A_MakeNotShootable();}
+		PL5S E 1 A_LookEx(0, 0, 0, 0, 0, "FollowPlayer")
+		TNT1 A 0 A_CheckSIght("FollowPlayer")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_JumpIfCloser(300, "Waits")
+		Goto FollowPLayer
+	Waits4:
+		TNT1 A 0 A_SetAngle(random(90, -90) + angle)
+		PL5S E 8 A_Stop
+		TNT1 A 0 A_StartVoiceLine("MRNWC", 2)
+		PL5S E 8 A_Stop
+		TNT1 A 0 A_CheckSight("FollowPlayer")
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 1);A_ClearTarget;A_MakeShootable();}
+		MARN D 0 A_Look
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 0);A_MakeNotShootable();}
+		PL5S E 1 A_LookEx(0, 0, 0, 0, 0, "FollowPlayer")
+		TNT1 A 0 A_CheckSIght("FollowPlayer")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_JumpIfCloser(300, "Waits")
+		Goto FollowPLayer
+	
+	GiveAmmo:
+		PL5S A 10 A_FaceTarget
+		PL5S I 30 A_StartVoiceLine("MRNGI1")
+		goto HandOverAmmo
+	//Missile:		//PL5S E 1
+		TNT1 A 0 A_ChangeFlag("NODROPOFF", 1)
+		TNT1 A 0 A_SpawnItem("KillMeSmall")
+		TNT1 A 0 A_JumpIf(CheckTargetSpecies("Mastermind")||CheckTargetClass("SpiderMastermind")||CheckTargetClass("PB_Mastermind")||
+				CheckTargetSpecies("CyberDemon")||CheckTargetClass("CyberDemon")||CheckTargetClass("PB_Cyberdemon")||
+				CheckTargetSpecies("BigFatAss")||CheckTargetClass("PB_Mancubus")||CheckTargetClass("Fatso")||
+				CheckTargetClass("BaronofHell")||CheckTargetClass("PB_Baron"),"CheckRetreat")
+		TNT1 A 0 A_JumpIfTargetIsMarine("FollowPlayer")
+		TNT1 A 0 A_JumpIfTargetIsPlayer("CheckRangeToWait")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		TNT1 A 0 A_JumpIfCloser(60, "AttackKick")
+		TNT1 A 0 A_JumpIfCloser(300, "Retreat")
+		TNT1 A 0 A_StartVoiceLine("MRNAT", 2)
+		
+	Missile2:
+	Missile.Rocket:
+		TNT1 A 0 A_JumpIf(CheckTargetSurroundingAllies(170)>0,"MissileBackup")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 D_AbortAndReloadIfEmpty
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		PL5S EEE random(0,5) A_FaceTarget
+		TNT1 A 0 A_Jump(92,2)
+		TNT1 A 0 A_CheckFlag("NOGRAVITY","Missile.Rocket.Homing")
+	Missile.Rocket.Normal:
+		//PL5S E 0 BRIGHT D_DoMarineFireFX("MarineRLFireHoming",0)
+		TNT1 A 0 PBCM_SpawnProjectile("PBMarine_Rocket",50,0,0,0)
+		/*
+		TNT1 A 0 {
+			if(random(0,63)>23 && target.bNOGRAVITY){
+				PBCM_SpawnProjectile("PBMarine_HomingRocket_1",50,0,0,0);
+			}else{
+				PBCM_SpawnProjectile("PBMarine_Rocket",50,0,0,0);
+			}
+		}
+		*/
+		PL5S E 0 BRIGHT D_DoMarineDelayFireFX("MarineRLFireDelay")
+		TNT1 A 0 A_Jump(256,"See")
+	Missile.Rocket.Homing:
+		//PL5S E 0 BRIGHT D_DoMarineFireFX("MarineRocketFire",0)
+		TNT1 A 0 PBCM_SpawnProjectile("PBMarine_HomingRocket_1",50,0,0,0)
+		PL5S E 0 BRIGHT D_DoMarineDelayFireFX("MarineRLFireDelay")
+		TNT1 A 0 A_Jump(256,"See")
+	StrafeLeft:
+		PL5S A 3 A_FaceTarget
+		PL5S B 3 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PL5S C 3 A_FaceTarget
+		PL5S D 3 ThrustThing(angle*256/360+192, 3, 0, 0)		Goto Missile2
+	StrafeRight:
+		PL5S A 3 A_FaceTarget
+		PL5S B 3 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PL5S C 3 A_FaceTarget
+		PL5S D 3 ThrustThing(angle*256/360+64, 3, 0, 0)		Goto Missile2
+		
+	Retreat:
+		PL5S A 3 A_FaceTarget
+		PL5S B 3 A_Recoil(5)		TNT1 A 0 A_Recoil(5)
+		PL5S CD 3 A_FaceTarget
+		Goto MIssile2
+	Pain:
+		PL5S G 3
+		TNT1 A 0 A_ChangeFlag("NODROPOFF", 0)
+		PL5S G 3 A_Pain
+		Goto FollowPlayer
+	Death.Blast:
+	Death.SuperPunch:
+	Death.SSG:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("USESPECIAL", 0)
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		PL5S O 2 A_FaceTarget		TNT1 AAAA 0 A_CustomMissile ("XDeath1", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("XDeath2", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("XDeath3", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("Brutal_FlyingBlood", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("Brutal_FlyingBloodFaster", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("Brutal_FlyingBloodMuchFaster", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("SuperWallRedBlood", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("SuperWallRedBlood", 46, 0, random (170, 190), 2, random (0, 40))
+		TNT1 A 0 A_CustomMissile ("XDeathArm1", 32, 0, random (170, 190), 2, random (0, 40))		TNT1 A 0 A_XScream
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 //A_SpawnItemEx("RemoveMarineRocket",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)		PL5S OPQRSTU 8
+		//TNT1 A 0 A_SpawnItem ("MediumBloodSpot")		PL5S U -1		Stop
+	}
+}
+
+
+
+
+ACTOR RocketMarineGuarding: Marine_Rocket{
+	FastSpeed 0
+	MaxStepHeight 0
+	+FRIENDLY
+	+MISSILEMORE
+	+NODROPOFF
+	+MISSILEEVENMORE
+	+SHOOTABLE
+	Speed 0
+	States{
+	Active:
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP", 1)
+		TNT1 A 0 A_StartVoiceLine("MarineFollow", 2)
+		TNT1 A 0 A_CustomMissile ("OrderTitle1", 50, 0, 0, 2, 90)
+		TNT1 A 0 A_StartSoundIfNoVoice("marine/radiostatic",2,CHANF_OVERLAP)
+		PL5S A 30
+		TNT1 A 0 MarineModeSpawn("Marine_Rocket")
+		Stop
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 1)
+		TNT1 A 0 A_GiveInventory("TargetIsAMarine")
+		PL5S E 1 A_Look
+		TNT1 A 0 A_Jump(256,"See")
+	See:
+		//TNT1 A 0 A_SetAngle(random(90, -90) + angle)
+		TNT1 A 0 A_MakeNotShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 0)
+		TNT1 A 0 D_StartReloadIfEmpty//A_StartReloadIfEmpty("MarineRocketLauncherReload")
+		PL5S EEEEEEEEEEEEEEEEEE 1 A_AllyChaseGuard
+		TNT1 A 0 A_ClearTarget
+		Loop
+	//Missile:
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 1)
+		TNT1 A 0 A_SpawnItem("KillMeSmall")
+		TNT1 A 0 A_JumpIf(CheckTargetSpecies("Mastermind")||CheckTargetClass("SpiderMastermind")||CheckTargetClass("PB_Mastermind")||
+				CheckTargetSpecies("CyberDemon")||CheckTargetClass("CyberDemon")||CheckTargetClass("PB_Cyberdemon"),"CheckRetreat")
+		TNT1 A 0 A_JumpIfTargetIsMarine("Spawn")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		goto Missile2
+		
+	Pain:
+		PL5S G 3
+		PL5S G 3 A_Pain
+		TNT1 A 0 A_Jump(128, "StrafeLeft", "StrafeRight")
+		TNT1 A 0 A_Jump(256,"See")
+		
+	StrafeLeft:
+		PL5S A 3 A_FaceTarget
+		PL5S B 3 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PL5S C 3 A_FaceTarget
+		PL5S D 3 ThrustThing(angle*256/360+192, 3, 0, 0)		Goto Missile2
+		
+	StrafeRight:
+		PL5S A 3 A_FaceTarget
+		PL5S B 3 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PL5S C 3 A_FaceTarget
+		PL5S D 3 ThrustThing(angle*256/360+64, 3, 0, 0)		Goto Missile2		
+	}
+}

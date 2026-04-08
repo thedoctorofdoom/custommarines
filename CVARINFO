@@ -1,0 +1,47 @@
+server bool pb_quietmarines = false;
+
+server bool pb_explosivemarines = true;
+
+server bool pb_bfgmarines = true;
+
+server bool pb_autospawnmarines = true;
+server bool pb_marinesdropweapons = true;
+
+server bool pb_marineswarp = true;
+
+server bool pb_marinesstartingarmor = true;
+server bool pb_marinesgreenarmoronly = true;
+server bool pb_marinesrandomizedhealth = true;
+
+server bool pb_enablemarinealtfire = true;
+server bool pb_marinestepenabled = true;
+server bool pb_friendlyfirefromplayer = false;
+server bool pb_friendlyfirefrommarine = false;
+server bool debugLog = false;
+server bool debugLogCustomMarines = false;
+
+server bool pb_marine_behavior_num_adaptation = true;
+
+server float pb_marine_damage_factor = 1.0;
+server float pb_marine_boss_damage_factor = 1.0;
+server float pb_marine_damage_taken = 1.0;
+server float pb_marine_damage_taken_boss = 1.0;
+
+server int execution_enable_squad_num = 8;
+server int pickup_enable_squad_num = 8;
+server bool pb_marinespickupitems = true;
+server bool pb_mapstartnewmarine = false;
+server bool pb_mapstartnewmarinekeep = false;
+server int marine_spawns_per_map = 1;
+server int maps_per_marine_spawn = 1;
+server bool pb_quietmarinepickups = false;
+server int pb_marinemapspawnlimit = 10;
+server int pb_marinepickuprange = 60;
+server bool pb_elitemarines = false;
+server bool pb_marinesreload = true;
+server bool pb_marinesglorykill = true;
+server bool pb_useArrays = false;
+server bool pb_marinesgiveammo = true;
+server bool pb_marinesgivehealth = true;
+server bool pb_marinesgiveweapons = true;
+server bool pbmarine_Casing_Enabled = true;

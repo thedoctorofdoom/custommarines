@@ -1,0 +1,331 @@
+/*
+Credit goes completely to Arie for figuring out how the hell to spawn marines in the beginning of each map.
+*/
+Class AllyMarinesHandler : EventHandler{
+	Array<String> MarineTypeCount;
+	bool NazisExist;
+	mixin PB_MarineSpawnHandler;
+	/*
+	override void OnRegister(){
+		MarineTypeCount.Clear();
+		foreach(cls : AllActorClasses) {
+			if(cls is "Marine_Base" && cls.GetClassName()!="Marine_Base"){
+				string classer = cls.GetClassName(); MarineTypeCount.Push(classer);
+			}
+		}
+	}
+	*/
+	override void checkreplacement(replaceevent e){
+		if(e.replacee is "PB_BlurSpawner" && level.MapTime <= 1)
+			e.replacement = "PB_CapturedMarine";
+	}
+	Override Void WorldThingSpawned(WorldEvent e){
+		/*
+		if(!(e.Thing is "PBMarine" || e.Thing.bFRIENDLY) && e.Thing.bISMONSTER  && e.Thing.bCOUNTKILL ){
+			e.Thing.bSEEFRIENDLYMONSTERS = true;
+		}
+		*/
+		if(e.Thing && e.Thing.GetSpecies() == "Nazi"){
+			NazisExist = true;
+		}
+		if(e.Thing &&(e.Thing is "FlamethrowerMissileNew" || e.Thing is "NukageMissile" || e.Thing is "NukeBlob" || e.Thing is "NukageStreamMissile" || e.Thing is "NukageSplashParticle") && e.Thing.target is "PlayerPawn"){
+			e.Thing.Species = "Marines";
+			e.Thing.bMTHRUSPECIES = true;
+		}
+	}
+	Override Void PlayerEntered(PlayerEvent e){
+		//marn.Translation = pl.Translation;
+		if(Level.mapname != "TITLEMAP"){
+			Let pl = players[e.PlayerNumber].mo;
+			int marineCount = 0;
+			// Rifle Marines
+			if(!pl.FindInventory("MarineManager")){pl.A_GiveInventory("MarineManager",1);}
+			if(!pl.FindInventory("MarineCommandGuard")){pl.A_GiveInventory("MarineCommandGuard",1);}
+			if(!pl.FindInventory("MarineCommandFollow")){pl.A_GiveInventory("MarineCommandFollow",1);}
+			if(!pl.FindInventory("ImportedOrders")){pl.A_GiveInventory("ImportedOrders",1);}
+			if(pl.species != "Marines"){pl.species == "Marines";}
+			let Marine_Manager = MarineManager(pl.FindInventory("MarineManager"));
+			if(Marine_Manager){Marine_Manager.MarineList.Clear();} 
+// 			static const String Marine_T1_List_Initial[] = {"Marine_Rifle","Marine_Shotgun","Marine_Minigun","Marine_SMG"};
+// 			static const String Marine_T2_List_Initial[] = {"Marine_Carbine","Marine_Revolver","Marine_Carbine","Marine_AutoShotgun","Marine_SuperShotgun","Marine_PlasmaGun"};
+// 			static const String Marine_T3_List_Initial[] = {"Marine_SuperShotgun","Marine_Nailgun","Marine_M2Plasma","Marine_Flamethrower"};
+// 			static const String Marine_Explosive_List_Initial[] = {"Marine_Rocket","Marine_GrenadeLauncher"};
+// 			static const String Marine_T4_List_Initial[] = {"Marine_LMG","Marine_Demontech","Marine_PulseCannon","Marine_Railgun"};
+			//PB_GlobalStats Stats = ;
+			if(pb_autospawnmarines){
+				//Rifle Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAllies"); i++){
+					Let marn = pl.Spawn("Marine_Rifle", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//HDMR Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesHDMR"); i++){
+					Let marn = pl.Spawn("Marine_HDMR", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//Revolver Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesRevolver"); i++){
+					Let marn = pl.Spawn("Marine_Revolver", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//Deagle Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesDeagle"); i++){
+					Let marn = pl.Spawn("Marine_Deagle", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//Carbine Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesCarbine"); i++){
+					Let marn = pl.Spawn("Marine_Carbine", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//LMG Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesLMG"); i++){
+					Let marn = pl.Spawn("Marine_LMG", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//SMG Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesSMG"); i++){
+					Let marn = pl.Spawn("Marine_SMG", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//MP40 Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesMP40"); i++){
+					Let marn = pl.Spawn("Marine_MP40", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Shotgun Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesShotgun"); i++){
+					Let marn = pl.Spawn("Marine_Shotgun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Auto Shotgun Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesAutoShotgun"); i++){
+					Let marn = pl.Spawn("Marine_AutoShotgun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//SSG Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesSuperShotgun"); i++){
+					Let marn = pl.Spawn("Marine_SuperShotgun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Nailgun Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesNailgun"); i++){
+					Let marn = pl.Spawn("Marine_Nailgun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Minigun Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesMinigun"); i++){
+					Let marn = pl.Spawn("Marine_Minigun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// MG42 Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesMG42"); i++){
+					Let marn = pl.Spawn("Marine_MG42", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Rocket Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesRocket"); i++){
+					Let marn = pl.Spawn("Marine_Rocket", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Grenade Launcher Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesGL"); i++){
+					Let marn = pl.Spawn("Marine_GrenadeLauncher", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Plasma Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesPlasmaGun"); i++){
+					Let marn = pl.Spawn("Marine_PlasmaGun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				//M2 Plasma Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesM2Plasma"); i++){
+					Let marn = pl.Spawn("Marine_M2Plasma", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Dark Matter Rifle Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesPulseCannon"); i++){
+					Let marn = pl.Spawn("Marine_PulseCannon", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Flamethrower Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesFlamethrower"); i++){
+					Let marn = pl.Spawn("Marine_Flamethrower", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Railgun Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesRailgun"); i++){
+					Let marn = pl.Spawn("Marine_Railgun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// BFG Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesBFG"); i++){
+					Let marn = pl.Spawn("Marine_BFG", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Demontech Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesDemonTech"); i++){
+					Let marn = pl.Spawn("Marine_DemonTech", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Doom Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesMarine"); i++){
+					Let marn = pl.Spawn("Marine_Doom", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				// Elite Marines
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesEliteCarbine"); i++){
+					Let marn = pl.Spawn("EliteMarine_Carbine", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesEliteMinigun"); i++){
+					Let marn = pl.Spawn("EliteMarine_Minigun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesEliteShotgun"); i++){
+					Let marn = pl.Spawn("EliteMarine_Shotgun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesEliteAutoshotgun"); i++){
+					Let marn = pl.Spawn("EliteMarine_AutoShotgun", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesEliteRifle"); i++){
+					Let marn = pl.Spawn("EliteMarine_Rifle", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				for(int i = 0; i < pl.CountInv("NumberOfAlliesMarshall"); i++){
+					Let marn = pl.Spawn("TheMarshall", pl.pos);
+					If(marn){marn.Master = pl;marn.A_FaceMaster();
+						//let MarinePB = PBMarine(marn);
+						//if(Marine_Manager && MarinePB){Marine_Manager.MarineList.Insert(0,MarinePB);}
+					}
+				}
+				pl.A_GiveInventory("CalledInAllies",1);
+			}
+			int mapCount = PB_GlobalStats.Get().Counters[PB_GlobalStats.Counter_LevelsCompleted];
+			if(mapCount%maps_per_marine_spawn == 0 && pb_mapstartnewmarine){
+				//marine_spawns_per_map
+				marineCount += getMarineNumberCount(pl);
+				for(int i = 0; i < marine_spawns_per_map && pb_marinemapspawnlimit >= marineCount; i++){//if(pb_marinemapspawnlimit > marineCount){
+					if(pb_mapstartnewmarinekeep){
+						Let marn = pl.Spawn("PBMarineMapSpawner", pl.pos);
+						If(marn){marn.Master = pl;marn.Target = pl;marn.A_FaceMaster();}
+					}else{
+						Let marn = pl.Spawn("PBMarineSpawnerNoKeep", pl.pos);
+						If(marn){marn.Master = pl;marn.Target = pl;marn.A_FaceMaster();}
+					}
+				}
+			}
+		}
+	}
+	/*
+	Override Void WorldThingSpawned(WorldEvent e)
+	{
+		let thing = e.Thing;
+		if(thing)
+		{
+			if(thing is "CapturedMarine")
+			{
+				thing.Translation = players[0].mo.Translation;
+				return;
+			}
+			if(thing is "PB_BlurSphere")
+			{
+				if(RANDOM(1, 255) <= 126)
+				{
+					thing.Spawn("CapturedMarine", thing.pos);
+					return;
+				};
+			}
+		}
+	}
+	*/
+}

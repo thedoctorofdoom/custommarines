@@ -1,0 +1,523 @@
+ACTOR TheMarshall: EliteMarine_Base{
+	Health 1000
+	Speed 10
+	DamageFactor 0.05
+	Dropitem "UpgradeSpawner"
+	Translation "112:122=82:92", "123:127=101:105"
+	PBMarine.AllyCountedInventory "NumberOfAlliesMarshall"
+	PBMarine.AllyMapCounter "NumberOfAlliesMarshallThisMap"
+	Tag "The Marshall"
+	States{
+	Active:
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP", 1)
+		TNT1 A 0 A_CustomMissile ("OrderTitle2", 50, 0, 0, 2, 90)
+		TNT1 A 0 A_StartSoundIfNoVoice("marine/radiostatic",2,CHANF_OVERLAP)
+		PSTN A 30
+		TNT1 A 0 MarineModeSpawn("MarshallGuarding")
+		Stop
+	Spawn:
+		PSTN A 1 NODELAY A_Look
+		Goto See
+	See:
+		TNT1 A 0 A_ChangeFlag("NODROPOFF", 0)	
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 1)
+		//TNT1 A 0 D_StartReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")
+		TNT1 A 0 D_StartReloadIfEmpty
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 1)
+		TNT1 A 0 A_ChangeFlag("MISSILEEVENMORE", 1)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		PSTN AA 1 A_AllyChaseSee
+		TNT1 A 0 A_ChangeFlag("FASTER", 0)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		PSTN BB 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		PSTN BB 1 A_AllyChaseSee
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 0)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		PSTN CC 1 A_AllyChaseSee
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 1)
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		PSTN CC 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		PSTN DD 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		PSTN DD 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_CheckSight("ForgetTarget")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		TNT1 A 0 A_CheckSight("FollowPLayer")
+		TNT1 A 0 A_ChangeFLag("FRIENDLY", 0)
+		TNT1 A 0 A_MakeNotShootable()
+		PSTN AA 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		PSTN BB 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_FollowIfPlayer
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		PSTN CC 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_FollowIfPlayer
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		PSTN DD 1 A_AllyChaseSee
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_FollowIfPlayer
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		TNT1 A 0 A_FollowIfPlayer
+		Goto See
+	BecomeEnemy23:
+		PSTN A 1
+		goto BecomeEnemy24
+	FollowPlayer:
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		TNT1 A 0 A_ChangeFlag("FASTER", 1)
+		TNT1 A 0 A_MakeNotShootable()
+		TNT1 A 0 A_JumpIfCloser(150, "Waits")
+		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 0)
+		TNT1 A 0 A_ChangeFlag("MISSILEEVENMORE", 0)
+		PSTN A 1 A_AllyChaseFollow
+		TNT1 AA 0 PB_MarineStep
+		PSTN AA 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN CC 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN CC 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN AA 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN BB 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN CC 1 A_AllyChaseFollow
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		TNT1 A 0 PB_MarineStep
+		PSTN CC 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		PSTN DD 1 A_AllyChaseFollow
+		TNT1 A 0 PB_MarineStep
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 1)
+		TNT1 A 0 A_JumpIfTargetInLOS("See")
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		TNT1 A 0 A_CheckSight("CheckIfPlayerSee")
+		Loop
+	Waits:
+		PSTN E 1 D_StartReloadIfNotFullIdle
+		TNT1 A 0 A_JumpIfInTargetInventory("IsPlayer", 1, 2)
+		TNT1 A 0 A_ClearTarget
+		Goto See
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 1)
+		TNT1 A 0 A_ChangeFlag("MISSILEEVENMORE", 1)
+		TNT1 A 0 A_MakeNotShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 0)
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "BecomeEnemy23")
+		TNT1 A 0 A_Jump(32, "Waits2")
+		TNT1 A 0 A_Jump(32, "Waits3")
+		PSTN EE 8 A_Stop
+		TNT1 A 0 A_Stop
+		TNT1 A 0 A_CheckSight("FollowPlayer")
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 1);A_ClearTarget;A_MakeShootable();}
+		TNT1 D 0 A_Look
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 0);A_MakeNotShootable();}
+		PSTN E 1 A_LookEx(0, 0, 0, 0, 0, "FollowPlayer")
+		TNT1 A 0 A_CheckSIght("FollowPlayer")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_JumpIfCloser(200, "Waits")
+		Goto FollowPlayer
+	Waits2:
+		TNT1 A 0 A_SetAngle(random(90, -90) + angle)
+		PSTN E 8 A_Stop
+		
+		PSTN E 8 A_Stop
+		TNT1 A 0 A_CheckSight("FollowPlayer")
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 1);A_ClearTarget;A_MakeShootable();}
+		TNT1 D 0 A_Look
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 0);A_MakeNotShootable();}
+		PSTN E 1 A_LookEx(0, 0, 0, 0, 0, "FollowPlayer")
+		TNT1 A 0 A_CheckSIght("FollowPlayer")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_JumpIfCloser(300, "Waits")
+		Goto FollowPLayer
+	Waits4:
+		TNT1 A 0 A_SetAngle(random(90, -90) + angle)
+		PSTN E 8 A_Stop
+		PSTN E 8 A_Stop
+		TNT1 A 0 A_CheckSight("FollowPlayer")
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 1);A_ClearTarget;A_MakeShootable();}
+		TNT1 D 0 A_Look
+		TNT1 A 0 {A_ChangeFLag("FRIENDLY", 0);A_MakeNotShootable();}
+		PSTN E 1 A_LookEx(0, 0, 0, 0, 0, "FollowPlayer")
+		TNT1 A 0 A_CheckSIght("FollowPlayer")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_JumpIfCloser(300, "Waits")
+		Goto FollowPLayer
+	GiveAmmo:
+		PSTN E 10 A_FaceTarget
+		PSTN Y 30
+		goto HandOverAmmo
+	GiveHealth:
+		PLA6 A 10 A_FaceTarget
+		PLA6 J 30
+		goto HandOverStimpack
+	Missile:
+		//PSTN E 1
+		TNT1 A 0 A_ChangeFlag("NODROPOFF", 1)
+		TNT1 A 0 A_SpawnItem("KillMeSmall")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsACyberdemon", 1, "Missile2")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMastermind", 1, "Missile2")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsABaronOfHell", 1, "EngageWithPulseCannon")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMancubus", 1, "EngageWithAutoShotgun")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
+		TNT1 A 0 A_JumpIfInTargetInventory("IsPlayer", 1, "CheckRangeToWait")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		TNT1 A 0 A_JumpIfCloser(60, "AttackKick")
+		TNT1 A 0 A_JumpIfCloser(300, "Retreat")
+		
+	EngageWithPulseCannon:
+	Missile2:	
+		TNT1 A 0 A_Jump(128, "EngageWithAutoShotgun", "EngageWithHDMR")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		PSTN E 5 A_FaceTarget
+		TNT1 A 0 A_AllyAlertMonsters(200,AMF_TARGETEMITTER)
+		TNT1 A 0 A_PlaySound("PAILGF2", CHAN_WEAPON)
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		PSTN F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN E 2 A_FaceTarget
+		TNT1 A 0 A_Jump(256,"See")
+	StrafeLeft:
+	MissileLeft:
+		PSTN A 3 A_FaceTarget
+		TNT1 A 0 A_AllyAlertMonsters(500,AMF_TARGETEMITTER)
+		TNT1 A 0 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PSTN C 3 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN A 3 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN C 3 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		Goto See
+	EngageWithAutoShotgun:
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		TNT1 A 0 A_PlaySound("H4SGCOCK", CHAN_WEAPON)
+		PASG E 5 A_FaceTarget
+		TNT1 A 0 A_AllyAlertMonsters(500,AMF_TARGETEMITTER)
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 2 BRIGHT
+		PASG E 6 {A_FaceTarget;PB_SpawnCasing("ShotgunCasing",25,3,27,0,3,3);}
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 5 A_FaceTarget
+		PASG F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")){D_DepleteWeaponAmmo("PB_AutoShotgun");A_PlaySound("weapons/AutoShotgun", 1);A_SpawnProjectile("ShotgunWad", 32);}}
+		TNT1 AAAAAA 0 PBCM_SpawnProjectile("PBMarine_12GAPellet_ASG", 32, 0, random(-6, 6), 1, random(-3, 3))
+		PASG F 3 BRIGHT
+		PASG E 6 A_FaceTarget
+		Goto See
+	EngageWithHDMR:
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		TNT1 A 0 A_PlaySound("weapons/rifle/up", CHAN_WEAPON)
+		PLAY E 5 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 2 A_FaceTarget
+		PLAY F 1 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_DMR")){D_DepleteWeaponAmmo("PB_DMR");A_CustomMissile("MarineMuzzle1", 34);A_PlaySound("weapons/hdmr/fire");PBCM_SpawnProjectile("PBMarine_762x51mm", 40, 0, 0, 0);PB_SpawnCasing("EmptyBrass",28,0,30,3,Frandom(5,8),Frandom(1,4));}}
+		PLAY E 5 A_FaceTarget
+		Goto See
+	StrafeRight:
+	MissileRight:
+		PSTN A 3 A_FaceTarget
+		TNT1 A 0 A_AllyAlertMonsters(500,AMF_TARGETEMITTER)
+		TNT1 A 0 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PSTN C 3 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN A 3 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN C 3 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PSTN B 3 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 A_MakeShootable()
+		Goto See
+	Retreat:
+		TNT1 A 0
+		PSTN A 2 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 A_Recoil(5)
+		PSTN B 2 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 A_Recoil(5)
+		PSTN C 2 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN B 2 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN A 2 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 A_Recoil(5)
+		PSTN B 2 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		PSTN C 2 {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_FaceTarget;A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 A_Recoil(5)
+		PSTN B 2 BRIGHT {if(!D_AbortAndReloadIfEmpty("PB_M1Plasma")){D_DepleteWeaponAmmo("PB_M1Plasma");A_PlaySound("PAILGF2", CHAN_WEAPON, CHANF_OVERLAP);PBCM_SpawnProjectile("PBMarine_PulseCannonBall",40,0,0,0);}}
+		TNT1 A 0 A_Jump(128, "MissileRight", "MissileLeft")
+		Goto See
+		/*
+	StrafeLeft:
+		PSTN A 3 A_FaceTarget
+		PSTN B 3 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PSTN C 3 A_FaceTarget
+		PSTN D 3 ThrustThing(angle*256/360+192, 3, 0, 0)
+		Goto Missile2
+	StrafeRight:
+		PSTN A 3 A_FaceTarget
+		PSTN B 3 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PSTN C 3 A_FaceTarget
+		PSTN D 3 ThrustThing(angle*256/360+64, 3, 0, 0)
+		Goto Missile2
+	Retreat:
+		TNT1 A 0
+		PSTN D 3 A_FaceTarget
+		TNT1 A 0 A_Recoil(5)
+		PSTN C 3
+		TNT1 A 0 A_Recoil(5)
+		PSTN BA 3 A_FaceTarget
+		Goto MIssile2
+		*/
+	Pain:
+		PSTN G 3
+		TNT1 A 0 A_ChangeFlag("NODROPOFF", 0)
+		PSTN G 3 A_Pain
+		Goto FollowPlayer
+	Death:
+	Death.Bullet:
+		TNT1 A 0 A_CustomMissile ("MuchBlood", 50, 0, random (0, 360), 2, random (0, 160))
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		TNT1 A 0 A_ChangeFlag("USESPECIAL", 0)
+		PSTN H 10 A_PlayerScream
+		PSTN I 10 A_NoBlocking
+		PSTN J 10 
+		TNT1 A 0 //A_SpawnItemEx("RemoveMarinePulseCannon",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		PSTN KLM 10
+		TNT1 A 0 A_SpawnItem ("MediumBloodSpot")
+		PSTN N -1
+		Stop
+	Death.Blast:
+	Death.SuperPunch:
+	Death.SSG:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
+		TNT1 A 0 A_ChangeFlag("USESPECIAL", 0)
+		PSTN O 2 A_FaceTarget
+		TNT1 AAAA 0 A_CustomMissile ("XDeath1", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("XDeath2", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("XDeath3", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("Brutal_FlyingBlood", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("Brutal_FlyingBloodFaster", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("Brutal_FlyingBloodMuchFaster", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("SuperWallRedBlood", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 AAAA 0 A_CustomMissile ("SuperWallRedBlood", 46, 0, random (170, 190), 2, random (0, 40))
+		TNT1 A 0 A_CustomMissile ("XDeathArm1", 32, 0, random (170, 190), 2, random (0, 40))
+		TNT1 A 0 A_XScream
+		TNT1 A 0 A_NoBlocking
+		TNT1 A 0 //A_SpawnItemEx("RemoveMarinePulseCannon",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0)
+		PSTN OPQRSTU 8
+		TNT1 A 0 A_SpawnItem ("MediumBloodSpot")
+		PSTN U -1
+		Stop
+	}
+}
+
+ACTOR MarshallGuarding: TheMarshall
+{
+	FastSpeed 0
+	MaxStepHeight 0
+	+FRIENDLY
+	+MISSILEMORE
+	+NODROPOFF
+	+MISSILEEVENMORE
+	+SHOOTABLE
+	Speed 0
+	States
+	{
+	Active:
+		TNT1 A 0 A_ChangeFlag("NOBLOCKMAP", 1)
+		TNT1 A 0 A_CustomMissile ("OrderTitle1", 50, 0, 0, 2, 90)
+		TNT1 A 0 A_StartSoundIfNoVoice("marine/radiostatic",2,CHANF_OVERLAP)
+		PSTN A 30
+		TNT1 A 0 MarineModeSpawn("TheMarshall")
+		Stop
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 1)
+		TNT1 A 0 A_GiveInventory("TargetIsAMarine")
+		PSTN E 1 A_Look
+		Goto See
+	See:	
+		//TNT1 A 0 A_SetAngle(random(90, -90) + angle)
+		TNT1 A 0 A_MakeNotShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 0)
+		//TNT1 A 0 D_StartReloadIfEmpty("PB_AutoShotgun","MarineASGReloadDrum")
+		TNT1 A 0 D_StartReloadIfEmpty
+		PSTN EEEEEEEEEE 1 A_AllyChaseGuard
+		TNT1 A 0 A_SetAngle(random(90, -90) + angle)
+		TNT1 A 0 A_ClearTarget
+		Loop
+		
+	Missile:
+		TNT1 A 0 A_ChangeFlag("FRIENDLY", 1)
+		TNT1 A 0 A_SpawnItem("KillMeSmall")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsACyberdemon", 1, "CheckRetreat")
+		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMastermind", 1, "CheckRetreat")
+		TNT1 A 0 A_MakeShootable()
+		TNT1 A 0 A_ChangeFlag("SOLID", 1)
+		goto Missile2
+		
+	Pain:
+		PSTN G 3
+		PSTN G 3 A_Pain
+		TNT1 A 0 A_Jump(128, "StrafeLeft", "StrafeRight")
+		Goto See
+		
+	StrafeLeft:
+		PSTN A 3 A_FaceTarget
+		PSTN B 3 ThrustThing(angle*256/360+192, 3, 0, 0)
+		PSTN C 3 A_FaceTarget
+		PSTN D 3 ThrustThing(angle*256/360+192, 3, 0, 0)
+		Goto Missile2
+		
+	StrafeRight:
+		PSTN A 3 A_FaceTarget
+		PSTN B 3 ThrustThing(angle*256/360+64, 3, 0, 0)
+		PSTN C 3 A_FaceTarget
+		PSTN D 3 ThrustThing(angle*256/360+64, 3, 0, 0)
+		Goto Missile2		
+	}
+}

@@ -1,0 +1,44 @@
+class PBMarine_12GAPellet : PB_12GAPellet{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_12GAPellet_ASG : PB_12GAPellet_ASG{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_12GASlug : PB_12GASlug{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+// [gng] LP projectiles have more damage and use a more gory damage type
+// used for when you shoot an enemy from close range.
+
+class PBMarine_10GAPellet : PB_10GAPellet{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_10GAPellet_LP : PB_10GAPellet_LP{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_8GAPellet : PB_8GAPellet{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+
+class PBMarine_8GAPellet_LP : PB_8GAPellet_LP{
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}

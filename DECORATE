@@ -1,0 +1,48 @@
+//#include "actors/Friendly Projectiles/MarineTracerDefault.dec"
+#include "actors/Friendly Marines/CapturedMarine.dec"
+//#include "actors/RedundantActors.dec"
+//#include "actors/Friendly Projectiles/PBMarineProjectiles.dec"
+//#include "actors/Friendly Marines/Marine-Base.dec"
+#include "actors/Friendly Marines/Marine-Rifle.dec"
+#include "actors/Friendly Marines/Marine-HDMR.dec"
+#include "actors/Friendly Marines/Marine-Carbine.dec"
+#include "actors/Friendly Marines/Marine-Revolver.dec"
+#include "actors/Friendly Marines/Marine-Deagle.dec"
+#include "actors/Friendly Marines/Marine-SMG.dec"
+#include "actors/Friendly Marines/Marine-Shotgun.dec"
+#include "actors/Friendly Marines/Marine-SuperShotgun.dec"
+#include "actors/Friendly Marines/Marine-AutoShotgun.dec"
+#include "actors/Friendly Marines/Marine-Minigun.dec"
+#include "actors/Friendly Marines/Marine-Nailgun.dec"
+#include "actors/Friendly Marines/Marine-LMG.dec"
+#include "actors/Friendly Marines/Marine-Rocket.dec"
+#include "actors/Friendly Marines/Marine-GrenadeLauncher.dec"
+#include "actors/Friendly Marines/Marine-Plasmagun.dec"
+#include "actors/Friendly Marines/Marine-M2Plasma.dec"
+#include "actors/Friendly Marines/Marine-PulseCannon.dec"
+#include "actors/Friendly Marines/Marine-Flamethrower.dec"
+#include "actors/Friendly Marines/Marine-Railgun.dec"
+#include "actors/Friendly Marines/Marine-BFG.dec"
+#include "actors/Friendly Marines/Marine-Doom.dec"
+#include "actors/Friendly Marines/Marine-MP40.dec"
+#include "actors/Friendly Marines/Marine-MG42.dec"
+#include "actors/Friendly Marines/Marine-Demontech.dec"
+//Specifically for the Elite Marines, credit goes to AresFallen for his work in coding them.
+#include "actors/Friendly Marines/Elites/Elite-Autoshotgun.dec"
+#include "actors/Friendly Marines/Elites/Elite-Carbine.dec"
+#include "actors/Friendly Marines/Elites/Elite-HDMR.dec"
+#include "actors/Friendly Marines/Elites/Elite-Minigun.dec"
+#include "actors/Friendly Marines/Elites/Elite-Shotgun.dec"
+#include "actors/Friendly Marines/Elites/The-Marshall.dec"
+
+#include "actors/AllyOrders.txt"
+#include "actors/MarineDrops.dec"
+#include "actors/MarineSpawners.dec"
+#include "actors/AllyCount.dec"
+#include "actors/FX.dec"
+
+Actor TargetIsAMarine : Inventory{inventory.maxamount 1}
+Actor BotIsChasingYou : Inventory{inventory.maxamount 1}
+Actor MarinesDispenser : Inventory{inventory.maxamount 2}
+Actor MarinesChaingunDispenser : Inventory{inventory.maxamount 1}
+Actor CheckMarines : Inventory{inventory.maxamount 1}

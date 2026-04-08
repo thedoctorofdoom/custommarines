@@ -1,0 +1,98 @@
+Class PBMarineMapSpawnerNoKeep : PBMarineSpawner{
+	States{
+	Tier4:
+		TNT1 A 0 A_Jump(4, "SpawnMarineDoom");
+		TNT1 A 0 A_Jump(256, "SpawnTier4Randomizer");
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnTier3Randomizer");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnTier2Randomizer");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnTier1Randomizer");
+	SpawnTier1Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerNoKeepT1");
+		Stop;
+	SpawnTier2Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerNoKeepT2");
+		Stop;
+	SpawnTier3Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerNoKeepT3");
+		Stop;
+	SpawnTier4Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerNoKeepT4");
+		Stop;
+	}
+}
+
+class PB_MarineMapSpawnerNoKeepT1 : PB_MarineSpawner{
+	Default{
+		DropItem 'Marine_Rifle', 255, 1;
+		DropItem 'Marine_SMG', 255, 1;
+		DropItem 'Marine_Minigun', 255, 1;
+		DropItem 'Marine_Shotgun', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerNoKeepT2 : PB_MarineSpawner{
+	Default{
+		DropItem 'PB_MarineMapSpawnerNoKeepT1', 255, 4;
+		DropItem 'Marine_Revolver', 255, 1;
+		DropItem 'Marine_Carbine', 255, 1;
+		DropItem 'Marine_AutoShotgun', 255, 1;
+		DropItem 'Marine_SuperShotgun', 255, 1;
+		DropItem 'Marine_PlasmaGun', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerNoKeepExplosives : PB_MarineSpawner{
+	Default{
+		DropItem 'Marine_Rocket', 255, 1;
+		DropItem 'Marine_GL', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerNoKeepT3B : PB_MarineSpawner{
+	Default{
+		DropItem 'PB_MarineMapSpawnerNoKeepT2', 255, 9;
+		DropItem 'Marine_Deagle', 255, 1;
+		DropItem 'Marine_Revolver', 255, 1;
+		DropItem 'Marine_Nailgun', 255, 1;
+		DropItem 'Marine_M2Plasma', 255, 1;
+		DropItem 'Marine_Flamethrower', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerNoKeepT3 : PB_MarineSpawner{
+	Default{
+		DropItem 'PB_MarineMapSpawnerNoKeepT2', 255, 9;
+		DropItem 'Marine_Deagle', 255, 1;
+		DropItem 'Marine_Revolver', 255, 1;
+		DropItem 'Marine_Nailgun', 255, 1;
+		DropItem 'Marine_M2Plasma', 255, 1;
+		DropItem 'Marine_Flamethrower', 255, 1;
+		DropItem 'Marine_Rocket', 255, 1;
+		DropItem 'Marine_GL', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerNoKeepT4 : PB_MarineSpawner{
+	Default{
+		//DropItem 'PB_EliteMarineSpawnerNoKeep',255,1;
+		DropItem 'Marine_Rifle', 255, 1;
+		DropItem 'Marine_SMG', 255, 1;
+		DropItem 'Marine_Minigun', 255, 1;
+		DropItem 'Marine_Shotgun', 255, 1;
+		DropItem 'Marine_Revolver', 255, 1;
+		DropItem 'Marine_Carbine', 255, 1;
+		DropItem 'Marine_AutoShotgun', 255, 1;
+		DropItem 'Marine_SuperShotgun', 255, 1;
+		DropItem 'Marine_PlasmaGun', 255, 1;
+		DropItem 'Marine_Revolver', 255, 1;
+		DropItem 'Marine_SuperShotgun', 255, 1;
+		DropItem 'Marine_Nailgun', 255, 1;
+		DropItem 'Marine_M2Plasma', 255, 1;
+		DropItem 'Marine_Flamethrower', 255, 1;
+		DropItem 'Marine_Rocket', 255, 1;
+		DropItem 'Marine_GL', 255, 1;
+		DropItem 'Marine_Demontech', 255, 2;
+		DropItem 'Marine_LMG', 255, 2;
+		DropItem 'Marine_PulseCannon', 255, 2;
+		DropItem 'Marine_Railgun', 255, 2;
+		DropItem 'Marine_BFG', 255, 1;
+	}
+}

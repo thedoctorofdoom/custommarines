@@ -1,0 +1,382 @@
+class PBMarine_PlasmaBall: PBMarineFastProjectile{
+	Default{
+	Radius 10;
+	Height 2;
+	Speed 60;
+	Damage 8;
+	DamageType "Plasma";
+	Decal "SmallerScorch";
+	Gravity 0;
+	+RANDOMIZE
+	+NOBLOCKMAP
+	+NOBLOOD
+	+NORADIUSDMG
+	+THRUSPECIES
+	+MTHRUSPECIES
+	damagefactor "Blood", 0.0; damagefactor "BlueBlood", 0.0; damagefactor "GreenBlood", 0.0; damagefactor "Taunt", 0.0; damagefactor "KillMe", 0.0; damagefactor "Shrapnel", 0.0;
+	Health 5;
+	renderstyle "Add";
+	Scale 0.19;
+	DeathSound "weapons/plasmax";
+	//SeeSound "PLSM9"
+	SeeSound "None";
+	Obituary "$OB_MPPLASMARIFLE";
+	}
+	States{
+		Spawn:
+			DB19 ABC 1 BRIGHT Light("PLASMABALLSMALL");
+			Loop;
+		Die:
+		XDie:
+			TNT1 A 0;
+			stop;
+		Xdeath:
+			TNT1 A 0 A_SpawnItem("Plasma_Puff", 0);
+			TNT1 A 0 A_CustomMissile("BluePlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 AAAA 0 A_CustomMissile("RailGunTrailSpark", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 A 5 A_Explode(8,50,0);
+			TNT2 AAA 9 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+			Stop;
+		Death:
+			TNT1 B 1 A_SpawnItem("Plasma_Puff", 0);
+			TNT1 A 0 A_SpawnItemEx("DetectFloorCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+			TNT1 A 0 A_SpawnItemEx("DetectCeilCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+			TNT1 A 0 A_CustomMissile("BluePlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 AAA 0 A_CustomMissile("BluePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 B 4;
+			TNT2 AAAAAA 9 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+			Stop;
+	}
+}
+class PBMarine_HeavyPlasmaBall: PBMarine_PlasmaBall{
+	Default{
+	Height 10;
+	Speed 80;
+	Damage 10;
+	Decal "Scorch";
+	Scale 0.2;
+	//Translation "0:255=%[0,0,0]:[0,0,1]"
+	DeathSound "weapons/plasmax";
+	//SeeSound "PLSM8"
+	}
+	States
+	{
+	Spawn:
+		DB20 ABCDEFGHIJLMNOPQRSTUVWXYZ 2 BRIGHT {
+			//A_SpawnItem("BluePlasmaFireSmall2",0,0);
+			//A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);
+		}
+		Loop;
+
+	Xdeath:
+		TNT1 A 0 A_SpawnItem("Plasma_Puff", 0);
+		TNT1 AAAA 0 A_CustomMissile("BluePlasmaFireSmall2", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAA 0 A_CustomMissile("SuperPlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAAAA 0 A_CustomMissile("BluePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAAAA 0 A_CustomMissile("CryoRifleTrailSparksSmall", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 A 0 A_Explode(6,90,0);
+		TNT1 A 1 Light("LightningImpactLight");
+		TNT1 B 4;
+		TNT1 A 0 A_Jump(256, "XDie");
+		Stop;
+
+	Death:
+		TNT1 A 0 A_SpawnItem("Plasma_Puff", 0);
+		TNT1 A 0 A_Explode(6,90,0);
+		TNT1 AAAA 0 A_CustomMissile("BluePlasmaFireSmall2", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAA 0 A_CustomMissile("SuperPlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAAAAAAAAAAAAAA 0 A_CustomMissile("BluePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 A 0 A_SpawnItemEx("DetectFloorCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+		TNT1 A 0 A_SpawnItemEx("DetectCeilCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+		TNT1 A 1 Light("LightningImpactLight");
+		TNT1 B 4;
+		TNT1 A 0 A_Jump(256, "Die");
+		Stop;
+	Die:
+		TNT2 AAAA 4 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+		Stop;
+	}
+}
+
+class PBMarine_AltHeavyPlasmaBall: PBMarine_HeavyPlasmaBall{
+	Default{
+		Damage 12;
+		DamageType "SuperPlasma";
+	}
+	States{
+	Spawn:
+		DB20 ABCDEFGHIJLMNOPQRSTUVWXYZ 1 BRIGHT 
+		{	
+			//A_SpawnItem("BluePlasmaFireSmall2",0,0);
+			//A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);
+		}
+		Loop;
+		/*
+		TNT1 A 0 A_SpawnItem("Plasma_Puff", 0);
+		TNT1 AAAA 0 {
+			A_CustomMissile("BluePlasmaFireSmall2", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("SuperPlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("BluePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("CryoRifleTrailSparksSmall", 0, 0, random(0, 360), 2, random(0, 360));
+		}
+		TNT1 A 0 A_CustomMissile("SuperPlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAA 0 {A_CustomMissile("BluePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));A_CustomMissile("CryoRifleTrailSparksSmall", 0, 0, random(0, 360), 2, random(0, 360));}
+		TNT1 A 0 A_Explode(6,90,0);
+		*/
+		/*
+	Xdeath:
+		TNT1 A 0 A_SpawnItem("Plasma_Puff", 0);
+		TNT1 AAAA 0 A_CustomMissile("BluePlasmaFireSmall2", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAA 0 A_CustomMissile("SuperPlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAAAA 0 A_CustomMissile("BluePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAAAA 0 A_CustomMissile("CryoRifleTrailSparksSmall", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 A 0 A_Explode(6,90,0);
+		TNT1 A 1 Light("LightningImpactLight");
+		TNT1 B 4;
+		*/
+	XDie:
+		TNT2 AAAA 4 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+		Stop;
+
+		Death:
+		TNT1 A 0 A_SpawnItem("Plasma_Puff", 0);
+		TNT1 A 0 A_Explode(6,90,0);
+		TNT1 AAAA 0 A_CustomMissile("BluePlasmaFireSmall2", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAA 0 A_CustomMissile("SuperPlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAAAAAAAAAAAAAAA 0 A_CustomMissile("BluePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 A 0 A_SpawnItemEx("DetectFloorCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+		TNT1 A 0 A_SpawnItemEx("DetectCeilCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+		TNT1 A 1 Light("LightningImpactLight");
+		TNT1 B 4;
+		Stop;
+	}
+}
+Class PBMarine_HotPlasmaGas: Actor{
+	Default{
+		Mass 0;
+		Gravity 0.8;
+		Damage 1;
+		Damagetype "Plasma";
+		renderstyle "Add";
+		Scale 0.77;
+		Alpha 0.8;
+		Speed 20;
+		Decal "Scorch";
+		SeeSound "PLSTHRW";
+		DeathSound "imp/shotx";
+		Radius 12;
+		Height 12;
+		+Missile
+		+DontSplash
+		+FORCEXYBILLBOARD
+		+NoGravity
+		-DOOMBOUNCE
+		-NOBLOCKMAP
+	}
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){
+		if(victim is "PlayerPawn" || victim is "PBMarine"){return 0;}
+		if(victim.bBOSS){
+			damage *= pb_marine_boss_damage_factor;
+		}
+		return pb_marine_damage_factor * super.DoSpecialDamage(victim, damage, damagetype);
+	}
+	override int SpecialMissileHit(Actor victim){
+		if(victim is "PlayerPawn" || victim is "PBMarine" || !victim.bSHOOTABLE){
+			return 1;
+		}
+		return Super.SpecialMissileHit(victim);
+	}
+	States{
+	Spawn:
+		TNT1 A 0 {A_SetScale(1.20);A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);}
+		FIR6 AAABB 1 BRIGHT Light("M2PlasmaLight1");
+		TNT1 A 0 {A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);A_SetScale(1.35);}
+		FIR6 CDEFGH 1 BRIGHT Light("M2PlasmaLight1") A_CustomMissile("BluePlasmaFireMove", 0, 0, 0, 2, random(-30, 30));
+		TNT1 A 0 {A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);A_SetScale(1.50);}
+		FIR6 IJKL 1 BRIGHT A_CustomMissile("BluePlasmaFireMove3", 0, 0, 0, 2, random(-60, 60));
+		TNT1 A 0 {A_SetScale(1.75);A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);}
+		FIR6 MNOP 1 Bright A_CustomMissile("BluePlasmaFireMove3", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 AAAA 0 A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);
+		Stop;
+	Death:
+		TNT1 A 0 A_Explode(47, 200, 0);
+		TNT1 AAAA 0 A_SpawnItemEx("CryoRifleTrailSparksSmall", random(4,-4), random(4,-4), random(4,-4), 0, 0, 0, 0, 128, 0);
+		FIR6 BCDEFGHIJKLMNOP 1 Bright; //A_CustomMissile("BluePlasmaFireMove3", 0, 0, random(0, 360), 2, random(0, 360))
+		Stop;
+	}
+}
+class PBMarine_PulseCannonBall: PBMarineFastProjectile{
+	Default{
+	Radius 10;
+	Height 2;
+	Speed 60;
+	Damage 9;
+	DamageType "Blackhole";
+	Decal "SmallerScorch";
+	SeeSound "PAILGF3";
+	DeathSound "weapons/plasmax";
+	+RANDOMIZE
+	-NOBLOCKMAP
+	+NOBLOOD
+	+NORADIUSDMG
+	+THRUSPECIES
+	+MTHRUSPECIES
+	Species "Marines";
+	Scale .54;
+	renderstyle "add";
+	Obituary "$OB_MPPLASMARIFLE";
+	}
+	States{
+		DM:
+			TNT1 A 0;
+			TNT1 A 0 A_ChangeFLag("THRUSPECIES", 0);
+			TNT1 A 0 A_ChangeFLag("MTHRUSPECIES", 0);
+			Goto Spawn1;
+		Spawn:
+			TNT1 A 0;
+		Spawn1:
+			PBAL D 2 BRIGHT A_SpawnItem("PinkIonFlare",0,0);
+			TNT1 A 0 A_SpawnItemEx("PurpleTrailSparksSmall", 0, 0, 0, 0, 0, 0, 0, 128);
+			PBAL E 2 BRIGHT A_SpawnItem("PurplePlasmaFlare",0,0);
+			Loop;
+		Xdeath:
+			TNT1 A 0 A_CustomMissile("PurplePlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 AAAAA 0 A_CustomMissile("PurplePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 B 1 A_Explode(8,50,0);
+			TNT1 B 4;
+			TNT2 AAA 9 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+			Stop;
+		Death:
+			TNT1 B 1 A_Explode(8,50,1);
+			TNT1 A 0 A_SpawnItemEx("DetectFloorCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+			TNT1 A 0 A_SpawnItemEx("DetectCeilCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+			TNT1 A 0 A_CustomMissile("PurplePlasmaFire", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 AAAAA 0 A_CustomMissile("PurplePlasmaParticle", 0, 0, random(0, 360), 2, random(0, 360));
+			TNT1 B 4;
+			TNT2 AAAAAAAAA 9 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+			Stop;
+	}
+}
+Class PBMarine_M1_HeatWave: PBMarineProjectile{
+Default{
+	Speed 25;
+	Radius 12;
+	Height 12;
+	Damage 10;
+	Decal "none";
+	damagetype "Plasma";
+	RenderStyle "Add";
+	Alpha .4;
+	+RIPPER
+	-NOBOSSRIP
+	-CANNOTPUSH
+	-NODAMAGETHRUST
+	+RollSprite
+	+NOGRAVITY
+	ReactionTime 7;
+	Scale 0.3;
+	}
+	states{
+	Spawn:
+		TNT1 A 1 NoDelay A_RadiusThrust(5000, 150, 0, 100);
+		Q05S BCDEF 1 BRIGHT Light("M1HeatWave") {
+			A_Setroll(roll-0.5);
+			A_SetScale(ScaleX+0.02, ScaleY+0.02);
+			A_Explode(60,180,0,0,150);
+			A_SpawnItemEx("HeatBlastEffect2", 0, 0, 0, 0, 0, 0, 0, 128);
+			A_SpawnItemEx("HeatBlastEffect2", 0, 0, 0, 0, 0, 0, 0, 128);
+			A_CustomMissile("RailGunTrailSpark_Fast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("RailGunTrailSpark_Fast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("RailGunTrailSpark_Fast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("RailGunTrailSpark_Fast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("RailGunTrailSpark_Fast", 0, 0, random(0, 360), 2, random(0, 360));
+		}
+	Fly:
+		TNT1 A 1 BRIGHT Light("M1HeatWave"){
+			A_Setroll(roll-0.5);
+			A_SetScale(ScaleX+0.02, ScaleY+0.02);
+			A_CountDown();
+			A_Explode(60,180,0,0,150);
+			A_SpawnItemEx("HeatBlastEffect1", 0, 0, 0, 0, 0, 0, 0, 128);
+			A_SpawnItemEx("HeatBlastEffect2", 0, 0, 0, 0, 0, 0, 0, 128);
+			A_CustomMissile("RailGunTrailSpark_Fast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("RailGunTrailSpark_Fast", 0, 0, random(0, 360), 2, random(0, 360));
+		}
+		Loop;
+	Death:
+		TNT1 A 1 BRIGHT Light("M1HeatWave") A_FadeOut(0.1);
+		Loop;
+	}
+}
+class PBMarine_DTechBurningPiece : DTechBurningPiece{Default{Species "Marines"; +THRUSPECIES +MTHRUSPECIES +DONTHARMSPECIES}}
+class PBMarine_DTechBurningPiece2 : PBMarine_DTechBurningPiece{default{Scale 0.24;}}
+class PBMarine_HellBullet: PBMarineFastProjectile{
+	Default{
+	+FORCEXYBILLBOARD
+	+BLOODSPLATTER
+	+NOEXTREMEDEATH
+	damage 12;
+	damagetype "fire";
+	radius 2;
+	height 1;
+	renderstyle "add";
+	scale .3;
+	speed 130;
+	Decal "Scorch";
+	Deathsound "Weapons/Demontech/Crash";
+	}
+	states{
+	Spawn:
+		PBAL H 1 BRIGHT ;
+		TNT1 A 0 A_CustomMissile("RedTracerSmall", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 A 0 A_SpawnItemEx("ObeliskTrailSpark", random(5,-5), random(5,-5), random(5,-5), 0, 0, 0, 0, 128, 0);
+		PBAL I 1 BRIGHT;
+		TNT1 A 0 A_SpawnItem("RedFlare",0);
+		Loop;
+	Xdeath:
+		TNT1 A 0 A_SpawnItem("HellRifle_Puff",0);
+		TNT1 A 0 A_SpawnItem("PBMarine_DTechBurningPiece",0);
+		TNT1 AAA 0 A_SpawnItemEx("ObeliskTrailSpark", random(-8, 8), random(-8, 8), random(-2,2), 0, 0, 0, 0, 128, 0);
+		TNT1 A 4 BRIGHT A_SpawnItem("RedFlare",0);
+		TNT2 AAA 3 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+		Stop;
+	Death:
+		TNT1 A 0 A_SpawnItem("HellRifle_Puff2",0);
+		TNT1 A 0 A_SpawnItem("PBMarine_DTechBurningPiece2",0);
+		TNT1 AAA 0 A_SpawnItemEx("ExplosionParticleVerySlow", random(-8, 8), random(-8, 8), random(-2,2), 0, 0, 0, 0, 128, 0);
+		TNT1 AAA 0 A_SpawnItemEx("ObeliskTrailSpark", random(-8, 8), random(-8, 8), random(-2,2), 0, 0, 0, 0, 128, 0);
+		TNT1 A 4 BRIGHT A_SpawnItem("RedFlare",0);
+		TNT2 AAAAA 4 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+		Stop;
+	}
+}
+class PBMarine_Hellbullet2: PBMarineFastProjectile{
+	Default{
+	+FORCEXYBILLBOARD
+	+BLOODSPLATTER 
+	+NOEXTREMEDEATH
+	damage 13;
+	damagetype "Disintegrate";
+	radius 2;
+	height 1;
+	renderstyle "add";
+	scale .19;
+	speed 100;
+	Decal "Scorch";
+	Deathsound "Weapons/Demontech/Crash";
+	}
+	states{
+	Spawn:
+		TNT1 AA 0 A_SpawnItem("GreenFlareSmall",0);
+		DB57 AB 1 BRIGHT Light("CausticProjectile");
+		TNT1 A 0 A_CustomMissile("GreenTracerSmall", 0, 0, random(0, 360), 2, random(0, 360));
+		TNT1 A 0 A_SpawnItemEx("GreenTrailSparks", random(5,-5), random(5,-5), random(5,-5), 0, 0, 0, 0, 128, 0);
+		DB57 C 1 BRIGHT;
+		Loop;
+	Xdeath:
+	Death:
+		TNT1 A 0 A_SpawnItem("GreenPlasma_Puff_Medium",0);
+		TNT1 A 4 A_CustomMissile("PlasmaParticleSpawner", 0, 0, random(0, 180), 2, random(0, 360));
+		Stop;
+	}
+}

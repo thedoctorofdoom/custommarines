@@ -1,0 +1,11 @@
+class PBMarine_FastTracer : PB_Projectile abstract{
+	Default{
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}

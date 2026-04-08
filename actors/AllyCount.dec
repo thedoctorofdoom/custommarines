@@ -1,0 +1,66 @@
+Actor NumberOfAllies : Inventory {inventory.maxamount 10
+Inventory.InterHubAmount 10
++INVENTORY.UNCLEARABLE}
+Actor NumberOfAlliesRifle : NumberOfAllies{}
+Actor NumberOfAlliesHDMR : NumberOfAllies{}
+Actor NumberOfAlliesCarbine : NumberOfAllies{}
+Actor NumberOfAlliesLMG : NumberOfAllies{}
+Actor NumberOfAlliesMG42 : NumberOfAllies{}
+Actor NumberOfAlliesRevolver : NumberOfAllies{}
+Actor NumberOfAlliesDeagle : NumberOfAllies{}
+Actor NumberOfAlliesSMG : NumberOfAllies{}
+Actor NumberOfAlliesMP40 : NumberOfAllies{}
+Actor NumberOfAlliesShotgun : NumberOfAllies{}
+Actor NumberOfAlliesSuperShotgun : NumberOfAllies{}
+Actor NumberOfAlliesAutoShotgun : NumberOfAllies{}
+Actor NumberOfAlliesMinigun : NumberOfAllies{}
+Actor NumberOfAlliesNailgun : NumberOfAllies{}
+Actor NumberOfAlliesRocket : NumberOfAllies{}
+Actor NumberOfAlliesGL : NumberOfAllies{}
+Actor NumberOfAlliesPlasmaGun : NumberOfAllies{}
+Actor NumberOfAlliesM2Plasma : NumberOfAllies{}
+Actor NumberOfAlliesPulseCannon : NumberOfAllies{}
+Actor NumberOfAlliesFlamethrower : NumberOfAllies{}
+Actor NumberOfAlliesRailgun : NumberOfAllies{}
+Actor NumberOfAlliesBFG : NumberOfAllies{}
+Actor NumberOfAlliesDemonTech : NumberOfAllies{}
+Actor NumberOfAlliesMarine : NumberOfAllies{inventory.maxamount 7}
+Actor NumberOfAlliesEliteCarbine : NumberOfAllies{}
+Actor NumberOfAlliesEliteMinigun : NumberOfAllies{}
+Actor NumberOfAlliesEliteShotgun : NumberOfAllies{}
+Actor NumberOfAlliesEliteAutoshotgun : NumberOfAllies{}
+Actor NumberOfAlliesEliteRifle : NumberOfAllies{}
+Actor NumberOfAlliesMarshall : NumberOfAllies{inventory.maxamount 1}
+
+Actor NumberOfAlliesThisMap : NumberOfAllies{Inventory.InterHubAmount 0
++INVENTORY.INTERHUBSTRIP}
+Actor NumberOfAlliesRifleThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesHDMRThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesCarbineThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesLMGThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesMG42ThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesRevolverThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesDeagleThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesSMGThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesMP40ThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesShotgunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesSuperShotgunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesAutoShotgunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesMinigunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesNailgunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesRocketThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesGLThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesPlasmaGunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesM2PlasmaThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesPulseCannonThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesFlamethrowerThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesRailgunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesBFGThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesDemonTechThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesMarineThisMap : NumberOfAlliesThisMap{inventory.maxamount 7}
+Actor NumberOfAlliesEliteCarbineThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesEliteMinigunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesEliteShotgunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesEliteAutoshotgunThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesEliteRifleThisMap : NumberOfAlliesThisMap{}
+Actor NumberOfAlliesMarshallThisMap : NumberOfAlliesThisMap{inventory.maxamount 1}

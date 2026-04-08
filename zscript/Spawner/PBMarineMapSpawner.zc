@@ -1,0 +1,100 @@
+Class PBMarineMapSpawner : PBMarineSpawner{
+	States{
+	Tier4:
+		TNT1 A 0 A_Jump(4, "SpawnMarineDoom");
+		TNT1 A 0 A_Jump(256, "SpawnTier4Randomizer");
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnTier3Randomizer");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnTier2Randomizer");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnTier1Randomizer");
+	SpawnTier1Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerT1");
+		Stop;
+	SpawnTier2Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerT2");
+		Stop;
+	SpawnTier3Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerT3");
+		Stop;
+	SpawnTier4Randomizer:
+		TNT1 A 0 A_SpawnMarineActorEx("PB_MarineMapSpawnerT4");
+		Stop;
+	}
+}
+
+class PB_MarineMapSpawnerT1 : PB_MarineSpawner{
+	Default{
+		DropItem 'Marine_SpawnRifle', 255, 1;
+		DropItem 'Marine_SpawnSMG', 255, 1;
+		DropItem 'Marine_SpawnMinigun', 255, 1;
+		DropItem 'Marine_SpawnShotgun', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerT2 : PB_MarineSpawner{
+	Default{
+		DropItem 'PB_MarineMapSpawnerT1', 255, 4;
+		DropItem 'Marine_SpawnRevolver', 255, 1;
+		DropItem 'Marine_SpawnCarbine', 255, 1;
+		DropItem 'Marine_SpawnAutoShotgun', 255, 1;
+		DropItem 'Marine_SpawnSuperShotgun', 255, 1;
+		DropItem 'Marine_SpawnPlasmaGun', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerT3B : PB_MarineSpawner{
+	Default{
+		DropItem 'PB_MarineMapSpawnerT2', 255, 9;
+		DropItem 'Marine_SpawnRevolver', 255, 1;
+		DropItem 'Marine_SpawnSuperShotgun', 255, 1;
+		DropItem 'Marine_SpawnNailgun', 255, 1;
+		DropItem 'Marine_SpawnM2Plasma', 255, 1;
+		DropItem 'Marine_SpawnFlamethrower', 255, 1;
+	}
+}
+class PB_MarineMapSpawnerT3 : PB_MarineSpawner{
+	Default{
+		DropItem 'PB_MarineMapSpawnerT2', 255, 9;
+		DropItem 'Marine_SpawnRevolver', 255, 1;
+		DropItem 'Marine_SpawnDeagle', 255, 1;
+		DropItem 'Marine_SpawnSuperShotgun', 255, 1;
+		DropItem 'Marine_SpawnNailgun', 255, 1;
+		DropItem 'Marine_SpawnM2Plasma', 255, 1;
+		DropItem 'Marine_SpawnFlamethrower', 255, 1;
+		DropItem 'Marine_SpawnRocket', 255, 1;
+		DropItem 'Marine_SpawnGL', 255, 1;
+	}
+	/*
+	static const String PB_MarineSpawnerT3List[] = {"Marine_SpawnDeagle","Marine_SpawnSuperShotgun","Marine_SpawnNailgun","Marine_SpawnM2Plasma","Marine_SpawnFlamethrower"};
+	override void HandleSpawnExeptions(in out name toSpawn){
+		if(pb_explosivemarines && (toSpawn == "Marine_SpawnRocket" || toSpawn == "Marine_SpawnGL"))
+			toSpawn = PB_MarineSpawnerT3List[random(0,PB_MarineSpawnerT3List.Size()-1)];
+	}
+	*/
+}
+class PB_MarineMapSpawnerT4 : PB_MarineSpawner{
+	Default{
+		//DropItem 'PB_EliteMarineSpawner',255,1;
+		DropItem 'Marine_SpawnRifle', 255, 1;
+		DropItem 'Marine_SpawnSMG', 255, 1;
+		DropItem 'Marine_SpawnMinigun', 255, 1;
+		DropItem 'Marine_SpawnShotgun', 255, 1;
+		DropItem 'Marine_SpawnRevolver', 255, 1;
+		DropItem 'Marine_SpawnCarbine', 255, 1;
+		DropItem 'Marine_SpawnAutoShotgun', 255, 1;
+		DropItem 'Marine_SpawnSuperShotgun', 255, 1;
+		DropItem 'Marine_SpawnPlasmaGun', 255, 1;
+		DropItem 'Marine_SpawnRevolver', 255, 1;
+		DropItem 'Marine_SpawnSuperShotgun', 255, 1;
+		DropItem 'Marine_SpawnNailgun', 255, 1;
+		DropItem 'Marine_SpawnM2Plasma', 255, 1;
+		DropItem 'Marine_SpawnFlamethrower', 255, 1;
+		DropItem 'Marine_SpawnRocket', 255, 1;
+		DropItem 'Marine_SpawnGL', 255, 1;
+		DropItem 'Marine_SpawnLMG', 255, 2;
+		DropItem 'Marine_SpawnDemontech', 255, 2;
+		DropItem 'Marine_SpawnPulseCannon', 255, 2;
+		DropItem 'Marine_SpawnRailgun', 255, 2;
+		DropItem 'Marine_SpawnBFG', 255, 1;
+	}
+}

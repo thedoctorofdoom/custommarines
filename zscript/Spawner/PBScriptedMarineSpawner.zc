@@ -1,0 +1,162 @@
+Class PBMarinePistolSpawner : PBMarineSpawner replaces MarinePistol{
+	States{
+	Tier4:
+		TNT1 A 0 A_Jump(256, "SpawnMarineCarbine", "SpawnMarineSMG", "SpawnMarineRevolver","SpawnMarineDeagle");
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnMarineCarbine", "SpawnMarineSMG", "SpawnMarineRevolver","SpawnMarineDeagle");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineCarbine", "SpawnMarineRevolver");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarineRifle", "SpawnMarineRevolver");
+	SpawnMarineRevolver:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnRevolver");
+		Stop;
+	SpawnMarineRevolver:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnRevolver");
+		Stop;
+	SpawnMarineDeagle:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnDeagle");
+		Stop;
+	SpawnMarineCarbine:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnCarbine");
+		Stop;
+	SpawnMarineSMG:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnSMG");
+		Stop;
+	}
+}
+Class PBMarineFistSpawner : PBMarinePistolSpawner replaces MarineFist{}
+Class PBMarineBerserkSpawner : PBMarinePistolSpawner replaces MarineBerserk{}
+Class PBMarineChainsawSpawner : PBMarinePistolSpawner replaces MarineChainsaw{}
+Class PBMarineShotgunSpawner : PBMarineSpawner replaces MarineShotgun{
+	States{
+	Tier4:
+		TNT1 A 0 A_Jump(256, "SpawnMarineAutoShotgun", "SpawnMarineAutoShotgun", "SpawnMarineShotgun");
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnMarineAutoShotgun", "SpawnMarineShotgun");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineAutoShotgun", "SpawnMarineShotgun", "SpawnMarineShotgun");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarineShotgun");
+	SpawnMarineShotgun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnShotgun");
+		Stop;
+	SpawnMarineAutoShotgun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnAutoShotgun");
+		Stop;
+	}
+}
+Class PBMarineSSGSpawner : PBMarineSpawner replaces MarineSSG{
+	States{
+	Tier4:
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnMarineAutoShotgun", "SpawnMarineSuperShotgun");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineAutoShotgun", "SpawnMarineSuperShotgun", "SpawnMarineSuperShotgun");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarineSuperShotgun");
+	SpawnMarineSuperShotgun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnSuperShotgun");
+		Stop;
+	SpawnMarineAutoShotgun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnAutoShotgun");
+		Stop;
+	}
+}
+Class PBMarineChaingunSpawner : PBMarineSpawner replaces MarineChaingun{
+	States{
+	Tier4:
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnMarineNailgun", "SpawnMarineLMG", "SpawnMarineCarbine");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineNailgun", "SpawnMarineCarbine");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarineMinigun", "SpawnMarineCarbine");
+	SpawnMarineCarbine:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnCarbine");
+		Stop;
+	SpawnMarineMinigun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnMinigun");
+		Stop;
+	SpawnMarineNailgun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnNailgun");
+		Stop;
+	SpawnMarineLMG:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnLMG");
+		Stop;
+	}
+}
+Class PBMarineRocketSpawner : PBMarineSpawner replaces MarineRocket{
+	States{
+	Tier4:
+	Tier3:
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineRocket", "SpawnMarineGL");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarineRocket");
+	SpawnMarineGL:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnGL");
+		Stop;
+	SpawnMarineRocket:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnRocket");
+		Stop;
+	}
+}
+Class PBMarinePlasmaSpawner : PBMarineSpawner replaces MarinePlasma{
+	States{
+	Tier4:
+		TNT1 A 0 A_Jump(256, "SpawnMarineDemonTech", "SpawnMarineRailgun", "SpawnMarinePulseCannon");
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnMarineM2Plasma", "SpawnMarineRailgun","SpawnMarineFlamethrower");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineM2Plasma", "SpawnMarinePlasmagun");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarinePlasmagun");
+	SpawnMarinePulseCannon:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnPulseCannon");
+		Stop;
+	SpawnMarinePlasmagun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnPlasmagun");
+		Stop;
+	SpawnMarineFlamethrower:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnFlamethrower");
+		Stop;
+	SpawnMarineM2Plasma:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnM2Plasma");
+		Stop;
+	SpawnMarineRailgun:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnRailgun");
+		Stop;
+	SpawnMarineDemonTech:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnDemonTech");
+		Stop;
+	}
+}
+Class PBMarineRailgunSpawner : PBMarinePlasmaSpawner replaces MarineRailgun{
+	States{
+	Tier4:
+		TNT1 A 0 A_Jump(256, "SpawnMarineDemonTech", "SpawnMarineRailgun", "SpawnMarinePulseCannon");
+	Tier3:
+		TNT1 A 0 A_Jump(256, "SpawnMarineDemonTech", "SpawnMarineRailgun","SpawnMarineFlamethrower");
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineRailgun", "SpawnMarineFlamethrower");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarineRailgun");
+	}
+}
+Class PBMarineBFGSpawner : PBMarineSpawner replaces MarineBFG{
+	States{
+	Tier4:
+	Tier3:
+	Tier2:
+		TNT1 A 0 A_Jump(256, "SpawnMarineDoom", "SpawnMarineBFG");
+	Tier1:
+		TNT1 A 0 A_Jump(256, "SpawnMarineBFG");
+	SpawnMarineBFG:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnBFG");
+		Stop;
+	SpawnMarineDoom:
+		TNT1 A 0 A_SpawnMarineActorEx("Marine_SpawnDoom");
+		Stop;
+	}
+}

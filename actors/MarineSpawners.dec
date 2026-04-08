@@ -1,0 +1,91 @@
+actor Marine_SpawnRifle : Marine_Spawn replaces MarineRifle{
+	Marine_Spawn.MarineType "Marine_Rifle"
+}
+actor Marine_SpawnHDMR : Marine_Spawn replaces MarineHDMR{
+	Marine_Spawn.MarineType "Marine_HDMR"
+}
+actor Marine_SpawnCarbine : Marine_Spawn replaces MarineCarbine{
+	Marine_Spawn.MarineType "Marine_Carbine"
+}
+actor Marine_SpawnSMG : Marine_Spawn replaces MarineSMG{
+	Marine_Spawn.MarineType "Marine_SMG"
+}
+actor Marine_SpawnMP40 : Marine_Spawn replaces MarineMP40{
+	Marine_Spawn.MarineType "Marine_MP40"
+}
+actor Marine_SpawnMG42 : Marine_Spawn replaces MarineMG42{
+	Marine_Spawn.MarineType "Marine_MG42"
+}
+actor Marine_SpawnLMG : Marine_Spawn replaces MarineLMG{
+	Marine_Spawn.MarineType "Marine_LMG"
+}
+actor Marine_SpawnRevolver : Marine_Spawn replaces MarineRevolver{
+	Marine_Spawn.MarineType "Marine_Revolver"
+}
+actor Marine_SpawnDeagle : Marine_Spawn replaces MarineDeagle{
+	Marine_Spawn.MarineType "Marine_Deagle"
+}
+actor Marine_SpawnShotgun : Marine_Spawn replaces MarinePumpSG{
+	Marine_Spawn.MarineType "Marine_Shotgun"
+}
+actor Marine_SpawnAutoShotgun : Marine_Spawn replaces MarineAutoShotgun{
+	Marine_Spawn.MarineType "Marine_AutoShotgun"
+}
+actor Marine_SpawnSuperShotgun : Marine_Spawn replaces MarineSuperShotgun{
+	Marine_Spawn.MarineType "Marine_SuperShotgun"
+}
+actor Marine_SpawnMinigun : Marine_Spawn replaces MarineMinigun{
+	Marine_Spawn.MarineType "Marine_Minigun"
+}
+actor Marine_SpawnNailgun : Marine_Spawn replaces MarineNailgun{
+	Marine_Spawn.MarineType "Marine_Nailgun"
+}
+actor Marine_SpawnRocket : Marine_Spawn{
+	Marine_Spawn.MarineType "Marine_Rocket"
+}
+actor Marine_SpawnGL : Marine_Spawn replaces MarineSGL{
+	Marine_Spawn.MarineType "Marine_GrenadeLauncher"
+}
+actor Marine_SpawnPlasmagun : Marine_Spawn replaces MarineM1Plasma{
+	Marine_Spawn.MarineType "Marine_Plasmagun"
+}
+actor Marine_SpawnM2Plasma : Marine_Spawn replaces MarineM2Plasma{
+	Marine_Spawn.MarineType "Marine_M2Plasma"
+}
+actor Marine_SpawnPulseCannon : Marine_Spawn replaces MarinePulseCannon{
+	Marine_Spawn.MarineType "Marine_PulseCannon"
+}
+actor Marine_SpawnFlamethrower : Marine_Spawn replaces MarineFlamethrower{
+	Marine_Spawn.MarineType "Marine_Flamethrower"
+}
+actor Marine_SpawnDemontech : Marine_Spawn replaces MarineDemontech{
+	Marine_Spawn.MarineType "Marine_Demontech"
+}
+actor Marine_SpawnRailgun : Marine_Spawn{
+	Marine_Spawn.MarineType "Marine_Railgun"
+}
+actor Marine_SpawnBFG : Marine_Spawn{
+	Marine_Spawn.MarineType "Marine_BFG"
+}
+actor Marine_SpawnDoom : Marine_Spawn replaces ScriptedMarine{
+	Marine_Spawn.MarineType "Marine_Doom"
+}
+//Elites
+actor Marine_SpawnEliteASG : Marine_Spawn{
+	Marine_Spawn.MarineType "EliteMarine_AutoShotgun"
+}
+actor Marine_SpawnEliteCarbine : Marine_Spawn{
+	Marine_Spawn.MarineType "EliteMarine_Carbine"
+}
+actor Marine_SpawnEliteRifle : Marine_Spawn{
+	Marine_Spawn.MarineType "EliteMarine_Rifle"
+}
+actor Marine_SpawnEliteMinigun : Marine_Spawn{
+	Marine_Spawn.MarineType "EliteMarine_Minigun"
+}
+actor Marine_SpawnEliteShotgun : Marine_Spawn{
+	Marine_Spawn.MarineType "EliteMarine_Shotgun"
+}
+actor Marine_SpawnMarshall : Marine_Spawn{
+	Marine_Spawn.MarineType "TheMarshall"
+}

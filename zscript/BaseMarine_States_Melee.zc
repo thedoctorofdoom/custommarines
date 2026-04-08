@@ -1,0 +1,76 @@
+extend class PBMarine{
+	States{
+		AttackMelee:
+			#### # 0 A_Jump(32, "AttackKick");
+			#### # 0 A_Jump(256,"AttackPunch");
+		AttackPunch:
+			#### # 0 PBMarine_Execute;
+			PLA1 A 4 A_FaceTarget;
+			#### # 0 A_Recoil(-4);
+			PLA1 A 1 A_FaceTarget;
+			goto DoAttackPunch;
+		DoAttackPunch:
+			#### # 0 {
+				if(FindInventory("PB_PowerStrength")){
+					A_CustomMissile("MarineMeleeStrike",40,0,0,0);
+				}
+				else{
+					A_CustomMissile("MarineMeleeStrikeSuper",40,0,0,0);
+				}
+			}
+			#### # 0 A_Jump(256,"FinishAttackPunch");
+		FinishAttackPunch:
+			PLA1 E 6 ;
+			goto AttackPunchEnd;
+		Execution_Generic:
+		AttackExecute:
+			PLA1 H 6 ;
+			PLA1 E 2 A_StartSound("weapons/ultrwhoosh", CHAN_AUTO);
+			PLA1 E 8 {
+				A_SpawnProjectile("ShakeYourAss",40,0,0,0,0,0);
+				A_StartSound("execution/impact", CHAN_AUTO);
+			}
+			PLA1 BC 2;
+			PLA1 I 6;
+			PLA1 F 2 A_StartSound("weapons/ultrwhoosh", CHAN_AUTO);
+			PLA1 F 8 {
+				A_SpawnProjectile("ShakeYourAss",0,0,0,0,0,0);
+				A_StartSound("gore/heavyimpact", CHAN_AUTO);
+			}
+			PLA1 DA 3;
+			#### # 0 A_Jump(256,"See");
+		AttackPunchEnd:
+			#### # 0 A_JumpIfInventory("ZombiemanFatality3", 1, "FatalityZombieman");
+			#### # 0 A_JumpIfInventory("ImpFatality3", 1, "FatalityImp");
+			#### # 0 A_JumpIfInventory("SergeantFatality", 1, "FatalitySergeant");
+			#### # 0 A_JumpIfInventory("RevenantFatality", 1, "FatalityRevenant");
+			#### # 0 A_Jump(256,"See");
+		AttackKick:
+			#### # 0 PBMarine_Execute;
+			PLAY A 1 A_FaceTarget;
+			#### # 0 ThrustThingZ(0,40,0,1);
+			#### # 0 A_Recoil(-8);
+			MARJ A 6 A_FaceTarget;
+			goto DoAttackKick;
+		DoAttackKick:
+			#### # 0 {
+				if(FindInventory("PB_PowerStrength")){
+					A_CustomMissile("MarineKickAttack",40,0,0,0);
+				}
+				else{
+					A_CustomMissile("MarineSuperKickAttack",40,0,0,0);
+				}
+			}
+			#### # 0 A_Jump(256,"FinishAttackKick");
+		FinishAttackKick:
+			PKIK A 1 ;
+			PKIK A 6 A_Stop;
+			goto AttackKickEnd;
+		AttackKickEnd:
+			#### # 0 A_JumpIfInventory("ZombiemanFatality3", 1, "FatalityZombieman");
+			#### # 0 A_JumpIfInventory("ImpFatality3", 1, "FatalityImp");
+			#### # 0 A_JumpIfInventory("SergeantFatality", 1, "FatalitySergeant");
+			#### # 0 A_JumpIfInventory("RevenantFatality", 1, "FatalityRevenant");
+			#### # 0 A_Jump(256,"See");
+	}
+}

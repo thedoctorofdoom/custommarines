@@ -1,0 +1,270 @@
+
+Class PBMarine_SuperBFGBall_Player : PB_SuperBFGBall{
+	Default{
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+}
+Class PBMarine_BFGBeamProjectile : MageWandMissile{
+	Default{
+		Speed 400;
+		Radius 13;
+		Height 8;
+		Decal "none";
+		damagetype "Disintegrate";
+		RenderStyle "Add";
+		Alpha .85;
+		Translation "0:255=%[0,0,0]:[0,1,0]";
+		-RIPPER
+		-NOBOSSRIP
+		-CANNOTPUSH
+		-NODAMAGETHRUST
+		+BLOODLESSIMPACT
+		+FORCERADIUSDMG
+		-BLOODSPLATTER
+		+DontHurtSpecies
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	mixin PB_HitHandler;
+	override int DoSpecialDamage(Actor victim, int damage, Name damagetype){return CM_Damage(victim, damage, damagetype);}
+	override int SpecialMissileHit(Actor victim){return CM_ProjHit(victim);}
+	states{
+	Death:
+		TNT1 B 0 A_Explode(10,80,0, 1, 80);
+		tnt1 a 0 A_SpawnItem("GreenFlare",0,0);
+		TNT1 A 0 A_SpawnItemEx("SmallGreenFlameTrails", 0, 0, 0, 0, 0, 0, 0, 128);
+		TNT1 A 0 A_SpawnItem("BFGAltShockWave",0,0);
+		TNT1 A 0 A_SpawnItemEx("BFGLightningTrial", 0, random(-1,1), random(4,6));
+		TNT1 A 0 A_SpawnItemEx("NewBFGTrailGreen", 0, random(8,-8), random(8,-8), 0, 0, 0, 0, 128, 0);
+		TNT1 A 0 A_SpawnItemEx("BFGFOG", 0, 0);
+		HSPL ABCDEFGHIJ 1 bright Light("BFGALT") A_SetScale(ScaleX -0.1, ScaleY -0.1);
+		stop;
+	}
+}
+Class PBMarine_BFGSmallSphere : PBMarineProjectile{
+	Default{
+		Radius 10;
+		Height 8;
+		Speed 40;
+		FastSpeed 50;
+		Projectile;
+		+FORCEXYBILLBOARD
+		-THRUGHOST
+		Damage 30;
+		RenderStyle "Add";
+		Alpha 1;
+		Scale 0.45;
+		DeathSound "BFGALPP";
+		SeeSound "None";
+		Decal "Scorch";
+		Species "Marines";
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHURTSPECIES
+	}
+	States{
+		Spawn:
+			TNT1 A 0 NODELAY A_Startsound("BGFLMBL", CHAN_BODY, CHANF_LOOPING);
+			//goto Fly;
+		//Fly:
+			DB57 ABC 1 BRIGHT {
+				A_SpawnItemEx("BFGLightningTrial_Small", 20, 0, 0, 0, 0, 0, 0, 128);
+				A_SpawnItemEx("SmallGreenFlameTrails", 0, 0, 0, 0, 0, 0, 0, 128);
+				A_SpawnItemEx("BFGAltTrail", Random(-13, 13), Random(-13, 13), Random(0, 18), Random(1, 3), 0,(0.1)*Random(-10, 10), Random(-20, 20), 128);
+			}
+			goto Spawn+1;
+			Loop;
+		Death:
+			TNT1 A 0 {
+				A_StopSound(CHAN_BODY);
+				A_SpawnItemEx("PlasmaParticleSpawner", 0, 0, 0, 6, 6, 6, 0, 128);
+				A_SpawnItemEx("PlasmaParticleSpawner", 0, 0, 0, 6, 6, 6, 0, 128);
+				A_Explode(100,150);
+				//A_SpawnItemEx("BFGAltExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+				A_SpawnItem("BFGAltShockWave",0,0);
+			}
+			EXPG ABCDEFG 2 BRIGHT A_SpawnItem("GreenFlare",0,0);
+			TNT1 AAAAA 19 A_CustomMissile("PlasmaSmoke", 1, 0, random(0, 360), 2, random(0, 160));
+			TNT1 A 1;
+			Stop;
+		XDeath:
+			TNT1 A 0 {
+				A_StopSound(CHAN_BODY);
+				A_SpawnItemEx("PlasmaParticleSpawner", 0, 0, 0, 6, 6, 6, 0, 128);
+				A_SpawnItemEx("PlasmaParticleSpawner", 0, 0, 0, 6, 6, 6, 0, 128);
+				A_SpawnItemEx("BFGAltExplosion",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+				A_SpawnItem("PBMarine_BFGAltShockWave",0,0);
+				A_SpawnItemEx("DetectFloorCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+				A_SpawnItemEx("DetectCeilCraterSmall",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+			}
+			EXPG ABCDEFG 2 A_SpawnItem("GreenFlare",0,0);
+			TNT1 A 1;
+			Stop;
+	}
+}
+Class PBMarine_BFGAltShockWave : actor{
+	Default{
+		Speed 0;
+		Height 1;
+		Radius 1;
+		Scale 1.0;
+		RenderStyle "add";
+		Alpha 0.9;
+		Species "Marines";
+		Damagetype "Disintegrate";
+		+DONTHURTSPECIES
+		+DROPOFF
+		+FORCEXYBILLBOARD
+		+NOBLOCKMAP 
+		+NOGRAVITY
+		+BLOODLESSIMPACT
+		+Friendly
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+	}
+	States{
+	Spawn:
+		SHOK A 1 BRIGHT;
+		Goto Death;
+	Death:
+		SHOK CEGIKMOQS 1 BRIGHT A_FadeOut(0.11);
+		Stop;
+	}
+}
+Class PBMarine_SuperBFGBall : PBMarineProjectile{
+	Default{
+		Projectile; 
+		Speed 24;
+		RenderStyle "Normal";
+		Scale 0.9;
+		Radius 4;
+		Height 8;
+		Damage 500;
+		Decal "BFGLightning";
+		DeathSound "BFGEXPLO";
+		DamageType "Disintegrate";
+		Species "Marines";
+		+SEEKERMISSILE
+		+Friendly
+		+THRUSPECIES
+		+MTHRUSPECIES
+		+DONTHARMSPECIES
+		+FORCEXYBILLBOARD
+	}
+	States{
+		Spawn:
+			TNT1 A 0 NODELAY A_StartSound("Bfgfly1", CHAN_BODY, CHANF_OVERLAP|CHANF_LOOPING);
+		Flying:
+		098G ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 BRIGHT Light("BFGBALL") {
+			A_SpawnItemEx("PBMarine_BFGTrailParticle", Random(-13, 13), Random(-13, 13), Random(7, 22), Random(-8, 8), Random(-3, 3),(0.1)*Random(-10, 10), Random(-20, 20), 128);
+			A_SpawnItemEx("BFGLightningTrial", 15, random(-1,1), random(-6,-4), 20);
+		}
+		099G ABCD 1 BRIGHT Light("BFGBALL") {
+			A_SpawnItemEx("PBMarine_BFGTrailParticle", Random(-13, 13), Random(-13, 13), Random(7, 22), Random(-8, 8), Random(-3, 3),(0.1)*Random(-10, 10), Random(-20, 20), 128);
+			A_SpawnItemEx("BFGLightningTrial", 15, random(-1,1), random(-6,-4), 20);
+		}
+		Loop;
+	 Death:
+		TNT1 A 0 NODELAY {A_StopSound(6);A_SpawnItem("GreenShockWave",0,0,0);Radius_Quake(5, 16, 0, 20, 0);}//(intensity, duration, damrad, tremrad, tid)
+		EXPL AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 {
+			A_CustomMissile("BFGBIGFOG", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("BFGDeathParticleFast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("BFGDeathParticleSuperFast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("BFGDeathParticleFast", 0, 0, random(0, 360), 2, random(0, 360));
+			A_CustomMissile("BFGDeathParticleFast", 0, 0, random(0, 360), 2, random(0, 360));
+		}
+		TNT1 A 0 {A_SpawnItem("MegaGibRemoving");A_Playsound("BFGAR", 3);A_Explode(400,500,0,0,true);}
+		BFGB ABCDE 1 Bright Light("BFGBALL") A_SpawnItem("GreenFlare",0,0) ;
+		BFE1 F 1 Bright Light("BFGBALL")A_BFGSpray("PBMarine_SuperBFGExtra", 40, 35);
+		TNT1 A 0 A_SpawnItem("PBMarine_SuperBFGExtraGiant");
+		BFE1 GGHHIIJJKK 1 Bright Light("BFGBALL") A_SpawnItem("GreenFlare",0,0);
+		Stop;
+	}
+}
+
+Class PBMarine_BFGTrailParticle : Actor{
+	Default{
+		Height 0;
+		Radius 0;
+		Mass 0;
+		Speed 8;
+		+Missile
+		+NoBlockMap
+		+NoGravity
+		+DontSplash
+		RenderStyle "Add";
+		Scale 0.02;
+	}
+	States{
+	Spawn:
+		SPKG A 1 Bright A_FadeOut(0.02);
+		Loop;
+	}
+}
+
+Class PBMarine_SuperBFGExtra : BFGExtra{
+	Default{
+	RenderStyle "Add";
+	Damage 0;
+	Scale 0.5;
+	Radius 1;
+	Height 1;
+	DamageType "Disintegrate";
+	Species "Marines";
+	+NoBlockMap
+	+NoGravity
+	+FORCERADIUSDMG
+	+THRUGHOST
+	+THRUSPECIES
+	+MTHRUSPECIES
+	+DONTHURTSPECIES
+	}
+	States{
+	Spawn:
+		TNT1 A 0 NODELAY A_Playsound("BFGEXTRA");
+		TNT1 A 0 A_Explode(80, 3);
+		TNT1 AAAAAA 0 A_SpawnItemEx("PBMarine_BFGExtraParticle", 0, 0, 14,(0.1)*Random(10, 40), 0,(0.1)*Random(-40, 40), Random(0, 360), 128);
+		TNT1 AAAAAA 0 A_SpawnItemEx("BFGAltTrail", random(8,-8), random(8,-8), random(8,-8), 0, 0, 0, 0, 128, 0);
+		TNT1 AAAAAA 0 A_SpawnItemEx("PBMarine_BFGExtraParticle", 0, 0, 14,(0.1)*Random(10, 40), 0,(0.1)*Random(-40, 40), Random(0, 360), 128);
+		DB45 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright A_SpawnItem("GreenFlareMedium",0,0);
+		stop;
+	}
+}
+
+Class PBMarine_SuperBFGExtraGiant : PBMarine_SuperBFGExtra{
+	Default{Scale 0.85;}
+	States{
+	Spawn:
+		TNT1 A 0 NODELAY A_Playsound("BFGEXTRA");
+		DB45 ABCDEFGHIJKLMNOPQRSTUVWXYZ 1 Bright A_SpawnItem("GreenFlareMedium",0,0);
+		Stop;
+}}
+
+Class PBMarine_BFGExtraParticle : actor {
+	Default{
+		Height 0;
+		Radius 0;
+		Mass 0;
+		RenderStyle "Add";
+		Scale 0.035;
+		+Missile
+		+NoBlockMap
+		+DontSplash
+		+NoInteraction
+	}
+	States{
+		Spawn:
+		Death:
+			SPKG A 2 Bright A_FadeOut(0.1);
+			Loop;
+	}
+}

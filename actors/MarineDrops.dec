@@ -1,0 +1,239 @@
+//SLOT 2
+Actor RevolverMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_Revolver")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_LowCalMag")
+		Stop
+	}
+}
+Actor DeagleMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_Deagle")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_LowCalMag")
+		Stop
+	}
+}
+Actor SMGMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_SMG")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_LowCalMag")
+		Stop
+	}
+}
+Actor MP40MarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_MP40")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_LowCalMag")
+		Stop
+	}
+}
+//SLOT 3
+Actor ShotgunMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_Shotgun")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Shell")
+		Stop
+	}
+}
+Actor SuperShotgunMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("DropedPB_SSG")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Shell")
+		Stop
+	}
+}
+Actor AutoShotgunMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("DropedASG")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Shell")
+		Stop
+	}
+}
+//SLOT 4
+Actor RifleMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_DMR")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_HighCalMag")
+		Stop
+	}
+}
+Actor CarbineMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("DropedCarbine")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_HighCalMag")
+		Stop
+	}
+}
+Actor LMGMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_LMG")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_HighCalMag")
+		Stop
+	}
+}
+Actor MG42MarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_MG42")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_HighCalMag")
+		Stop
+	}
+}
+//SLOT 5
+Actor MinigunMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("DropedMinigun")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_HighCalMag")
+		Stop
+	}
+}
+Actor NailgunMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_Nailgun")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_HighCalMag")
+		Stop
+	}
+}
+//SLOT 6
+Actor RocketMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_RocketLauncher")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_RocketAmmo")
+		Stop
+	}
+}
+Actor GrenadeLauncherMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_SuperGL")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_RocketAmmo")
+		Stop
+	}
+}
+//SLOT 7
+Actor PlasmaMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_M1Plasma")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Cell")
+		Stop
+	}
+}
+Actor M2PlasmaMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_M2Plasma")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Cell")
+		Stop
+	}
+}
+Actor PulseCannonMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_M1Plasma")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Cell")
+		Stop
+	}
+}
+//SLOT 8
+Actor RailgunMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_Railgun")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Cell")
+		Stop
+	}
+}
+Actor BFGMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_BFG9000")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_CellPack")
+		Stop
+	}
+}
+//SLOT 9
+Actor FlamethrowerMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_Flamethrower")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Fuel")
+		Stop
+	}
+}
+Actor DemontechMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("PB_DemonTech")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_Fuel")
+		Stop
+	}
+}
+//DOOOOOOOM
+Actor DoomMarineDrop : Marine_WeaponDrop{
+	States{
+	DropWeapon:
+		TNT1 A 1 A_DropItem("UpgradeSpawner")
+		Stop
+	DropAmmo:
+		TNT1 A 1 A_DropItem("PB_CellPack")
+		Stop
+	}
+}

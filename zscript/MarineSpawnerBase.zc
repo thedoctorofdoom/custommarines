@@ -1,0 +1,88 @@
+class PB_MarineSpawner : PBRandomSpawner abstract{
+	override void PostSpawn(Actor spawned){
+		if(target){spawned.target = target;}
+		if(master){spawned.master = master;}
+	}
+	
+	bool AllowToSpawn(String diName){
+		if(!pb_explosivemarines && (diName == "Marine_SpawnRocket" || diName == "Marine_SpawnGL" || diName == "Marine_Rocket" || diName == "Marine_GL")){return false;}
+		else if(!pb_bfgmarines && (diName == "Marine_SpawnBFG" || diName == "Marine_BFG")){return false;}
+		else{return true;}
+	}
+	/*
+	override void HandleSpawnExeptions(in out name toSpawn)
+	{	
+		if(toSpawn == "PB_MG42" && (DisablePB_MG42 > 1 || (DisablePB_MG42 == 1 && !Handler.WSuSinMap)))	//if the weapon is disabled or only allowed when wolfss in map (and there are none)
+			toSpawn = "PB_BFG9000";
+		if(toSpawn == "PB_MG42" && (DisablePB_MG42 > 1 || (DisablePB_MG42 == 1 && !Handler.WSuSinMap)))	//if the weapon is disabled or only allowed when wolfss in map (and there are none)
+			toSpawn = "PB_BFG9000";
+	}
+	*/
+	Override Name ChooseSpawn()
+	{
+		DropItem di;   // di will be our drop item list iterator
+		DropItem drop; // while drop stays as the reference point.
+		int n = 0;
+		bool nomonsters = sv_nomonsters || level.nomonsters;
+
+		drop = di = GetDropItems();
+		if (di != null)
+		{
+			while (di != null)
+			{
+				bool shouldSkip = (di.Name == 'None') || (nomonsters && IsMonster(di)) && AllowToSpawn(di.name);
+				if (!shouldSkip)
+				{
+					int amt = di.Amount;
+					if (amt < 0) amt = 1; // default value is -1, we need a positive value.
+					n += amt; // this is how we can weight the list.
+				}
+
+				di = di.Next;
+			}
+			if (n == 0)
+			{ // Nothing left to spawn. They must have all been monsters, and monsters are disabled.
+				return 'None';
+			}
+			// Then we reset the iterator to the start position...
+			di = drop;
+			// Take a random number...
+			n = random[randomspawn](0, n-1);
+			// And iterate in the array up to the random number chosen.
+			while (n > -1 && di != null)
+			{
+				if (di.Name != 'None' &&
+					(!nomonsters || !IsMonster(di)))
+				{
+					int amt = di.Amount;
+					if (amt < 0) amt = 1;
+					n -= amt;
+					if ((di.Next != null) && (n > -1))
+						di = di.Next;
+					else
+						n = -1;
+				}
+				else
+				{
+					di = di.Next;
+				}
+			}
+			if (di == null)
+			{
+				return 'Unknown';
+			}
+			else if (random[randomspawn]() <= di.Probability)	// prob 255 = always spawn, prob 0 = almost never spawn.
+			{
+				return di.Name;
+			}
+			else
+			{
+				return 'None';
+			}
+		}
+		else
+		{
+			return 'None';
+		}
+	}
+}

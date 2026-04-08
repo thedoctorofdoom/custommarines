@@ -1,0 +1,124 @@
+class Marine: RedTorch{
+	Default{
+		Radius 10;
+		Height 48;
+		MONSTER;
+		-SHOOTABLE;
+		-COUNTKILL;
+		-FRIENDLY;
+	}
+	States{
+	Spawn:
+		PLA1 A 10;
+		PLA1 A 1 A_CheckSight("DontSpawn");
+		TNT1 A 0 A_Chase;
+		TNT1 A 0 A_Look;
+	See:	
+		TNT1 A 0 ;//A_GiveToTarget("NumberOfAllies", 1);
+		TNT1 A 0 A_SpawnItemEx ("PBMarineSpawner",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION,0);
+		Stop;
+	DontSpawn:
+		PLA1 A 1;
+		Goto Spawn;
+	}
+}
+class MarineRevolver: Marine{}
+class MarineDeagle: Marine{}
+class MarineRifle: Marine{}
+class MarineHDMR: Marine{}
+class MarineCarbine: Marine{}
+class MarineSMG: Marine{}
+class MarineLMG: Marine{}
+class MarineMP40: Marine{}
+//class MarineShotgun: Marine{}
+class MarinePumpSG: Marine{}
+class MarineSuperShotgun: Marine{}
+class MarineAutoShotgun: Marine{}
+//class MarineChaingun: Marine{}
+class MarineMinigun: Marine{}
+class MarineNailgun: Marine{}
+//class MarineRocket: Marine{}
+class MarineGrenadeLauncher: Marine{}
+class MarineGL: Marine replaces MarineGrenadeLauncher{}
+class MarineSGL: Marine replaces MarineGL{}
+class MarineM1Plasma: Marine{}
+//class MarinePlasma: Marine replaces MarineM1Plasma{}
+class MarineMG42: Marine{}
+class MarineM2Plasma: Marine{}
+class MarinePulseCannon: Marine{}
+class MarineFlamethrower: Marine{}
+class MarineHellRifle: Marine{}
+class MarineDemontech: Marine replaces MarineHellRifle{}
+//class MarineRailgun: Marine{}
+//class MarineBFG: Marine{}
+class Marine_Spawn: RedTorch{
+	Class<PBMarine> MarineType;
+	property MarineType:MarineType;
+	Class<Inventory> MapCounter;
+	property MapCounter:MapCounter;
+	Default{
+		Radius 10;
+		Height 48;
+		MONSTER;
+		-SHOOTABLE
+		-COUNTKILL
+		-FRIENDLY
+	}
+	Override Void PostBeginPlay(){
+		if (!target){
+			if(master) target = master;
+			else target = players[0].mo;
+		}
+		let def = GetDefaultByType(MarineType);
+		if (!def){Destroy();return;}
+		self.sprite = def.spawnstate.sprite;
+		self.frame = def.spawnstate.frame;
+		self.scalex = def.scalex;
+		self.scaley = def.scaley;
+		self.translation = def.translation;
+		if (!master){master = players[0].mo;}
+		Super.PostBeginPlay();
+	}
+	void A_SpawnMarine(){
+		if(MarineType){
+			actor MarineActor; bool b;
+			[b, MarineActor] = A_SpawnItemEx(MarineType,0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERTRANSLATION,0);
+			if(MarineActor && self.GetTag() != self.GetClassName()){MarineActor.SetTag(self.GetTag());}
+			let SpawnedMarine = PBMarine(MarineActor);
+			if(SpawnedMarine.AllyCountedInventory){
+				players[0].mo.A_GiveInventory(SpawnedMarine.AllyCountedInventory, 1);
+				//A_GiveToTarget(SpawnedMarine.AllyCountedInventory, 1);
+				if(!pb_autospawnmarines){
+					if (SpawnedMarine.AllyMapCounter){
+						A_GiveToTarget(SpawnedMarine.AllyMapCounter, 1);
+					}
+					else if (MapCounter){
+						A_GiveToTarget(MapCounter, 1);
+					}
+				}
+			}
+			else{A_Log("Failed to give Inv");}
+			let Marine_Manager = MarineManager(players[0].mo.FindInventory("MarineManager"));
+			If(SpawnedMarine){
+				SpawnedMarine.Master = players[0].mo;//SpawnedMarine.A_FaceMaster();
+				let MarinePB = PBMarine(SpawnedMarine);
+				if (Marine_Manager && MarinePB && pb_mapstartnewmarinekeep){Marine_Manager.MarineList.Insert(0,MarinePB);}
+			}
+		}
+	}
+	States{
+	Spawn:
+		PLAY A 0;
+		"----" A 10 ;
+		"----" A 1 A_CheckSight("DontSpawn");
+		"----" A 0 A_Chase;
+		"----" A 0 A_Look;
+		"----" A 0 A_Jump(256,"See");
+	See:
+		TNT1 A 0 A_SpawnMarine;
+		Stop;
+	DontSpawn:
+		"----" A 1;
+		Goto Spawn;
+	}
+}

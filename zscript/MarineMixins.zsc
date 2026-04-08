@@ -1,0 +1,384 @@
+mixin class PB_RandomMarineNameHandler{	
+	static const String PB_MarineFirstNames[] =
+	{
+		"John",
+		"Jeff",
+		"Chris",
+		"Marcus",
+		"Donovan",
+		"Dominic",
+		"Johnny",
+		"Tyrone",
+		"Ashton",
+		"Bob",
+		"Robert",
+		"Patrick",
+		"Richard",
+		"Daniel",
+		"Michael",
+		"Brad",
+		"Jason",
+		"Brandon",
+		"Jared",
+		"Art",
+		"Andrew",
+		"Harrison",
+		"Kevin",
+		"Carl",
+		"Adrian"
+	};
+	static const String PB_MarineLastNames[] =
+	{
+		"Doe",
+		"Ortega",
+		"Ramirez",
+		"Fernandez",
+		"Price",
+		"Huff",
+		"Barley",
+		"Jones",
+		"Johnson",
+		"Cliffe",
+		"Williams",
+		"Jordan",
+		"Martinez",
+		"Jackson",
+		"Hernandez",
+		"Prince",
+		"Lincoln",
+		"Culkin",
+		"Miller",
+		"Gonzalez",
+		"White",
+		"Johnson",
+		"Brown",
+		"Taylor",
+		"Carmack"
+	};
+	
+	static const String PB_CivvieRanks[] = //Jobs??
+	{
+		"Mechanic",
+		"Electrician",
+		"Engineer",
+		"IT Tech"
+	};
+	
+	static const String PB_MarineRanks[] =
+	{
+		"PFC",
+		"SPC",
+		"CPL",
+		"SGT",
+		"MSG",
+		"CSM",
+		"LT",
+		"CPT",
+		"MAJ",
+		"COL",
+		"GEN"
+	};
+	
+	static const String PB_ScientistRanks[] =
+	{
+		"Trainee",
+		"Intern",
+		"Dr."
+	};
+	
+	static const String PB_CultistRanks[] = //will need expanding possibly
+	{
+		"Cultist",
+		"Templar",
+		"Priest",
+		"Inquisitor",
+		"Wizard",
+		"Lord",
+		"Grand Master",
+		"Grand Mage",
+		"Grand Inquisitor",
+		"Grand Lord",
+		"Shadow Wizard" //money gang
+	};
+	
+	Enum EMarineRanks
+	{
+		RANK_CIVILIAN,
+		RANK_MILITARY,
+		RANK_CULTIST,
+		RANK_DOKTOR,
+	}
+	//put in marine's PostBeginPlay() virtual
+	string PickRandomName(EMarineRanks rankType = RANK_MILITARY) //0 civvie, 1 military, 2 cultists, 3 DOKTOR(that is turning off my pain inhibitors)
+	{
+		string mRank;
+		switch(rankType)
+		{
+			default:
+			case RANK_CIVILIAN:
+				mRank = PB_CivvieRanks[random[PBRandomName](0, PB_CivvieRanks.Size() - 1)];
+				break;
+			case RANK_MILITARY:
+				mRank = PB_MarineRanks[random[PBRandomName](0, PB_MarineRanks.Size() - 1)];
+				break;
+			case RANK_CULTIST:
+				mRank = PB_CultistRanks[random[PBRandomName](0, PB_CultistRanks.Size() - 1)];
+				break;
+			case RANK_DOKTOR:
+				mRank = PB_ScientistRanks[random[PBRandomName](0, PB_ScientistRanks.Size() - 1)];
+				break;
+		}
+		string mFirstName = PB_MarineFirstNames[random[PBRandomName](0, PB_MarineFirstNames.Size() - 1)];
+		string mLastName = PB_MarineLastNames[random[PBRandomName](0, PB_MarineLastNames.Size() -1 )];
+		return string.format("%s %s %s. %s",mRank,mFirstName,string.Format("%c", random[PBRandomName]("A", "Z")),mLastName);
+	}
+}
+mixin class PB_MarineSpawnHandler{
+	static const String WeaponNames[] = {"PB_Pistol","PB_Revolver","PB_Deagle","PB_SMG","PB_MP40","PB_Shotgun","PB_SSG","PB_QuadSG","PB_Autoshotgun","PB_Rifle","PB_DMR","PB_Carbine","PB_LMG","PB_Minigun","PB_Nailgun","PB_MG42","PB_RocketLauncher","PB_SuperGL","PB_M1Plasma","PB_M2Plasma","PB_ChexRifle","PB_CryoRifle","PB_Flamethrower","PB_Railgun","PB_BFG9000","PB_Demontech","Hell_Rifle","PB_Unmaker"};
+	static const String Marine_T1_List_Initial[] = {"Marine_Rifle","Marine_Shotgun","Marine_Minigun"};
+	static const String Marine_T2_List_Initial[] = {"Marine_Carbine","Marine_Revolver","Marine_Carbine","Marine_AutoShotgun","Marine_SuperShotgun","Marine_PlasmaGun","Marine_SMG"};
+	static const String Marine_T3_List_Initial[] = {"Marine_SuperShotgun","Marine_Nailgun","Marine_M2Plasma","Marine_Flamethrower","Marine_Deagle","Marine_HDMR"};
+	static const String Marine_Explosive_List_Initial[] = {"Marine_Rocket","Marine_GrenadeLauncher"};
+	static const String Marine_Wolfenstein_List_Initial[] = {"Marine_MP40","Marine_MG42"};
+	static const String Marine_T4_List_Initial[] = {"Marine_LMG","Marine_Demontech","Marine_PulseCannon","Marine_Railgun"};
+	Array <string> Marine_T1_Name_List;
+	Array <string> Marine_T2_Name_List;
+	Array <string> Marine_T3_Name_List;
+	Array <string> Marine_T4_Name_List;
+	Array <string> Marine_Wolfenstein_Name_List;
+	Array <string> Marine_Chaotic_Random_Name_List;
+	bool NazisOnMap(){
+		let handler = AllyMarinesHandler(EventHandler.Find("AllyMarinesHandler"));
+		if(handler && handler is "AllyMarinesHandler"){if(handler.NazisExist)return true;}
+		return false;
+	}
+	void InitializeMarineLists(){
+		for(int i = 0; i < Marine_T1_List_Initial.Size(); i++){
+			class<PBMarine> cls = Marine_T1_List_Initial[i];
+			if(cls){
+				Marine_T1_Name_List.Push(Marine_T1_List_Initial[i]);
+				Marine_Chaotic_Random_Name_List.Push(Marine_T1_List_Initial[i]);
+			}
+		}
+		if(random(0,1)>0){
+			class<PBMarine> cls = "Marine_SMG";
+			if(cls){Marine_T1_Name_List.Push("Marine_SMG");}
+		}
+		for(int i = 0; i < Marine_T2_List_Initial.Size(); i++){
+			class<PBMarine> cls = Marine_T2_List_Initial[i];
+			if(cls){
+				Marine_T2_Name_List.Push(Marine_T2_List_Initial[i]);
+				Marine_Chaotic_Random_Name_List.Push(Marine_T2_List_Initial[i]);
+			}
+		}
+		for(int i = 0; i < Marine_T3_List_Initial.Size(); i++){
+			class<PBMarine> cls = Marine_T3_List_Initial[i];
+			if(cls){
+				Marine_T3_Name_List.Push(Marine_T3_List_Initial[i]);
+				Marine_Chaotic_Random_Name_List.Push(Marine_T3_List_Initial[i]);
+			}
+		}
+		if(pb_explosivemarines){
+			for(int i = 0; i < Marine_Explosive_List_Initial.Size(); i++){
+				class<PBMarine> cls = Marine_Explosive_List_Initial[i];
+				if(cls){
+					Marine_T3_Name_List.Push(Marine_Explosive_List_Initial[i]);
+					Marine_Chaotic_Random_Name_List.Push(Marine_Explosive_List_Initial[i]);
+				}
+			}
+		}
+		for(int i = 0; i < Marine_T4_List_Initial.Size(); i++){
+			class<PBMarine> cls = Marine_T4_List_Initial[i];
+			if(cls){
+				Marine_T4_Name_List.Push(Marine_T4_List_Initial[i]);
+				Marine_T4_Name_List.Push(Marine_T4_List_Initial[i]);
+				Marine_Chaotic_Random_Name_List.Push(Marine_T4_List_Initial[i]);
+			}
+		}
+		if(NazisOnMap()){
+			for(int i = 0; i < Marine_Wolfenstein_List_Initial.Size(); i++){
+				class<PBMarine> cls = Marine_Wolfenstein_List_Initial[i];
+				if(cls){Marine_Wolfenstein_Name_List.Push(Marine_Wolfenstein_List_Initial[i]);}
+			}
+		}
+		if(pb_bfgmarines){
+			string marineTypeToAdd2 = "Marine_BFG";
+			class<PBMarine> cls = marineTypeToAdd2;
+			if(cls){
+				Marine_T4_Name_List.Push("Marine_BFG");
+				Marine_Chaotic_Random_Name_List.Push("Marine_BFG");
+			}
+		}
+	}
+	int getMarineNumberCount(actor pl){
+		int marineCount = 0;
+		marineCount += pl.CountInv("NumberOfAllies");
+		marineCount += pl.CountInv("NumberOfAlliesCarbine");
+		marineCount += pl.CountInv("NumberOfAlliesLMG");
+		marineCount += pl.CountInv("NumberOfAlliesSMG");
+		marineCount += pl.CountInv("NumberOfAlliesMP40");
+		marineCount += pl.CountInv("NumberOfAlliesSuperShotgun");
+		marineCount += pl.CountInv("NumberOfAlliesRevolver");
+		marineCount += pl.CountInv("NumberOfAlliesShotgun");
+		marineCount += pl.CountInv("NumberOfAlliesAutoShotgun");
+		marineCount += pl.CountInv("NumberOfAlliesNailgun");
+		marineCount += pl.CountInv("NumberOfAlliesMinigun");
+		marineCount += pl.CountInv("NumberOfAlliesMG42");
+		marineCount += pl.CountInv("NumberOfAlliesRocket");
+		marineCount += pl.CountInv("NumberOfAlliesGL");
+		marineCount += pl.CountInv("NumberOfAlliesPlasmaGun");
+		marineCount += pl.CountInv("NumberOfAlliesM2Plasma");
+		marineCount += pl.CountInv("NumberOfAlliesPulseCannon");
+		marineCount += pl.CountInv("NumberOfAlliesDemonTech");
+		marineCount += pl.CountInv("NumberOfAlliesRailgun");
+		marineCount += pl.CountInv("NumberOfAlliesFlamethrower");
+		marineCount += pl.CountInv("NumberOfAlliesBFG");
+		marineCount += pl.CountInv("NumberOfAlliesEliteCarbine");
+		marineCount += pl.CountInv("NumberOfAlliesEliteMinigun");
+		marineCount += pl.CountInv("NumberOfAlliesEliteShotgun");
+		marineCount += pl.CountInv("NumberOfAlliesEliteAutoshotgun");
+		marineCount += pl.CountInv("NumberOfAlliesEliteRifle");
+		marineCount += pl.CountInv("NumberOfAlliesMarshall");
+		return marineCount;
+	}
+}
+mixin class PB_MarineHandler{
+	static const String WeaponNames[] = {"PB_Pistol","PB_Revolver","PB_Deagle","PB_SMG","PB_MP40","PB_Shotgun","PB_SSG","PB_QuadSG","PB_Autoshotgun","PB_Rifle","PB_DMR","PB_Carbine","PB_LMG","PB_Minigun","PB_Nailgun","PB_MG42","PB_RocketLauncher","PB_SuperGL","PB_M1Plasma","PB_M2Plasma","PB_ChexRifle","PB_CryoRifle","PB_Flamethrower","PB_Railgun","PB_BFG9000","PB_Demontech","Hell_Rifle","PB_Unmaker"};
+	Array <class<PB_WeaponBase> > WeaponArray;
+	Array <Actor> EnemyArray;
+	Array <string> WeaponNameArray;
+	Array <int> WeaponAmmoLoadedArray;
+	Array <int> MagazineMaxFillArray;
+	class<MarineReloadFX> D_GetReloadFX(class<PB_WeaponBase> WeaponSelected){
+		class<MarineReloadFX> reloadAction;
+		if(WeaponSelected){
+			switch(WeaponSelected.getClassName()){
+			case 'PB_Pistol': {reloadAction = "MarinePistolReload";break;}
+			case 'PB_Revolver': {reloadAction = "MarineRevolverReload";break;}
+			case 'PB_Deagle': {reloadAction = "MarineDeagleReload";break;}
+			case 'PB_SMG': {reloadAction = "MarineSMGReload";break;}
+			case 'PB_Shotgun': {reloadAction = "MarineShotgunReload";break;}
+			case 'PB_SSG': {reloadAction = "MarineSSGReload";break;}
+			case 'PB_Autoshotgun': {
+				if(FindInventory("AutoshotgunDrumMag")){reloadAction = "MarineASGReloadDrum";}
+				else{reloadAction = "MarineASGReload";}
+				break;}
+			case 'PB_Rifle': {reloadAction = "MarineDMRReload";break;}
+			case 'PB_DMR': {reloadAction = "MarineDMRReload";break;}
+			case 'PB_Carbine': {reloadAction = "MarineCarbineReload";break;}
+			case 'PB_LMG': {reloadAction = "MarineLMGReload";break;}
+			case 'PB_MG42': {reloadAction = "MarineMG42BarrelChange";break;}
+			case 'PB_Nailgun': {reloadAction = "MarineNailgunReload";break;}
+			case 'PB_RocketLauncher': {reloadAction = "MarineRocketLauncherReload";break;}
+			case 'PB_SuperGL': {reloadAction = "MarineGrenadeLauncherReload";break;}
+			case 'PB_M1Plasma': {reloadAction = "MarineM1PlasmaReload";break;}
+			case 'PB_M2Plasma': {reloadAction = "MarineM2PlasmaReload";break;}
+			case 'PB_Railgun': {reloadAction = "MarineRailgunReload";break;}
+			case 'PB_FlameThrower': {reloadAction = "MarineFlameThrowerReload";break;}
+			case 'Hell_Rifle': {reloadAction = "MarineDemonTechReload";break;}
+			case 'PB_DemonTech': {reloadAction = "MarineDemonTechReload";break;}
+			default:{reloadAction = null; break;}
+			}
+		}
+		return reloadAction;
+	}
+	class<MarineReloadFX> D_GetPartialReloadFX(class<PB_WeaponBase> WeaponSelected){
+		class<MarineReloadFX> reloadAction;
+		if(WeaponSelected){
+			switch(WeaponSelected.getClassName()){
+			case 'PB_Pistol': {reloadAction = "MarinePistolReload2";break;}
+			case 'PB_Revolver': {reloadAction = "MarineRevolverReload2";break;}
+			case 'PB_Deagle': {reloadAction = "MarineDeagleReload";break;}
+			case 'PB_SMG': {reloadAction = "MarineSMGReload";break;}
+			case 'PB_Shotgun': {reloadAction = "MarineShotgunReload2";break;}
+			case 'PB_SSG': {reloadAction = "MarineSSGReload2";break;}
+			case 'PB_Autoshotgun': {if(FindInventory("AutoshotgunDrumMag")){reloadAction = "MarineASGReloadDrum2";}
+				else{reloadAction = "MarineASGReload2";}
+				break;}
+			case 'PB_Rifle': {reloadAction = "MarineDMRReload2";break;}
+			case 'PB_DMR': {reloadAction = "MarineDMRReload2";break;}
+			case 'PB_Carbine': {reloadAction = "MarineCarbineReload2";break;}
+			case 'PB_LMG': {reloadAction = "MarineLMGReload2";break;}
+			case 'PB_Nailgun': {reloadAction = "MarineNailgunReload";break;}
+			case 'PB_RocketLauncher': {reloadAction = "MarineRocketLauncherReload2";break;}
+			case 'PB_SuperGL': {reloadAction = "MarineGrenadeLauncherReload2";break;}
+			case 'PB_M1Plasma': {reloadAction = "MarineM1PlasmaReload2";break;}
+			case 'PB_M2Plasma': {reloadAction = "MarineM2PlasmaReload2";break;}
+			case 'PB_Railgun': {reloadAction = "MarineRailgunReload2";break;}
+			case 'PB_FlameThrower': {reloadAction = "MarineFlameThrowerReload2";break;}
+			case 'Hell_Rifle': {reloadAction = "MarineDemonTechReload";break;}
+			case 'PB_DemonTech': {reloadAction = "MarineDemonTechReload";break;}
+			default:{reloadAction = null; break;}
+			}
+		}
+		return reloadAction;
+	}
+	int GetWeapIndex(class<PB_WeaponBase> WeaponSelected = null){
+		return WeaponNameArray.Find(WeaponSelected.GetClassName());
+	}
+	void PrintWeaponIndices(){
+		if(debugLog){
+			for(int i = 0; i < WeaponNameArray.Size(); i++){
+				string WeaponClassName = WeaponNameArray[i];//PB_WeaponBase(GetDefaultByType(WeaponArray[i])).GetClassName();
+				int WeapAmmoLoaded = WeaponAmmoLoadedArray[i];
+				int WeapMagMax = MagazineMaxFillArray[i];
+				Console.PrintF(string.format("%s %d/%d",WeaponClassName,WeapAmmoLoaded,WeapMagMax));
+			}
+		}
+	}
+}
+mixin class PB_TierHandler{
+	//PB_GlobalStats Stats;
+	bool SectorIsSecret(Actor act){
+		if(act.CurSector.IsSecret() || act.CurSector.WasSecret()){return true;}
+		return false;
+	}
+	float GetPBTier(){
+		Stats = PB_GlobalStats.Get();
+		int Count = Stats.Counters[PB_GlobalStats.Counter_LevelsCompleted];
+		if(SpawnBalance==663){return 0;}
+		else if(SpawnBalance==666||SpawnBalance<=663&&SpawnBalance>=672){
+			if(Count <(levelsToPlay / 4)) {return 1;}
+			
+			else if(Count ==(levelsToPlay / 4)) {return 1.25;}
+			else if(Count ==((levelsToPlay / 4) + 1)) {return 1.5;}
+			else if(Count ==((levelsToPlay / 4) + 2)) {return 1.75;}
+			
+			else if(Count <((levelsToPlay / 4) * 2)) {return 2;}
+			
+			else if(Count ==((levelsToPlay / 4) * 2)) {return 2.25;}
+			else if(Count ==(((levelsToPlay / 4) * 2) + 1)) {return 2.5;}
+			else if(Count ==(((levelsToPlay / 4) * 2) + 2)) {return 2.75;}
+			
+			else if(Count <((levelsToPlay / 4) * 3)) {return 3;}
+			
+			else if(Count ==((levelsToPlay / 4) * 3)) {return 3.25;}
+			else if(Count ==(((levelsToPlay / 4) * 3) + 1)) {return 3.5;}
+			else if(Count ==(((levelsToPlay / 4) * 3) + 2)) {return 3.75;}
+			
+			else if(Count >(((levelsToPlay / 4) * 3) + 2)) {return 4;}
+		}
+		else if(SpawnBalance==667){return 1;}
+		else if(SpawnBalance==668){return 2;}
+		else if(SpawnBalance==669){return 3;}
+		else if(SpawnBalance==670||SpawnBalance==672){return 4;}
+		else if(SpawnBalance==671){
+			if(Count <=(levelsToPlay / 4)) {return 1;}
+			else if(Count <=(levelsToPlay / 4 * 2)) {return 2;}
+			else if(Count <=(levelsToPlay / 4 * 3)) {return 3;}
+			else if(Count >(levelsToPlay / 4 * 3)) {return 4;}
+		}
+		return 0;
+	}
+}
+mixin class PB_HitHandler{
+	int CM_Damage(Actor victim, int damage, Name damagetype){
+		if(victim is "PlayerPawn" || victim is "PBMarine"){return 0;}
+		if(victim.bBOSS){damage *= pb_marine_boss_damage_factor;}
+		return pb_marine_damage_factor * super.DoSpecialDamage(victim, damage, damagetype);
+	}
+	int CM_ProjHit(Actor victim){
+		if(victim is "PlayerPawn" || victim is "PBMarine" || !victim.bSHOOTABLE){return 1;}
+		return Super.SpecialMissileHit(victim);
+	}
+}
