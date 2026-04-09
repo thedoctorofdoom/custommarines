@@ -281,7 +281,7 @@ Default{
 		TNT1 A 1 NoDelay A_RadiusThrust(5000, 150, 0, 100);
 		Q05S BCDEF 1 BRIGHT Light("M1HeatWave") {
 			A_Setroll(roll-0.5);
-			A_SetScale(ScaleX+0.02, ScaleY+0.02);
+			A_SetScale(Scale.X+0.02, Scale.Y+0.02);
 			A_Explode(60,180,0,0,150);
 			A_SpawnItemEx("HeatBlastEffect2", 0, 0, 0, 0, 0, 0, 0, 128);
 			A_SpawnItemEx("HeatBlastEffect2", 0, 0, 0, 0, 0, 0, 0, 128);
@@ -294,7 +294,7 @@ Default{
 	Fly:
 		TNT1 A 1 BRIGHT Light("M1HeatWave"){
 			A_Setroll(roll-0.5);
-			A_SetScale(ScaleX+0.02, ScaleY+0.02);
+			A_SetScale(Scale.X+0.02, Scale.Y+0.02);
 			A_CountDown();
 			A_Explode(60,180,0,0,150);
 			A_SpawnItemEx("HeatBlastEffect1", 0, 0, 0, 0, 0, 0, 0, 128);

@@ -73,8 +73,8 @@ class Marine_Spawn: RedTorch{
 		if (!def){Destroy();return;}
 		self.sprite = def.spawnstate.sprite;
 		self.frame = def.spawnstate.frame;
-		self.scalex = def.scalex;
-		self.scaley = def.scaley;
+		self.scale.x = def.scale.x;
+		self.scale.y = def.scale.y;
 		self.translation = def.translation;
 		if (!master){master = players[0].mo;}
 		Super.PostBeginPlay();

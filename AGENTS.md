@@ -3,8 +3,32 @@
 This is a GZDoom/UZDoom add-on mod for **Project Brutality** that adds friendly AI marine allies to the player's squad. Marines spawn via tier-based progression, persist across maps, and fight alongside the player using Project Brutality's weapon systems.
 
 **Author:** HyperExia (Elite Marines by AresFallen)
-**Engine:** GZDoom / UZDoom (ZScript version 4.10)
-**Dependency:** Project Brutality (PB classes like `PB_WeaponBase`, `PB_GlobalStats`, `PBRandomSpawner` must be present at runtime)
+**Engine:** GZDoom / UZDoom (ZScript 4.10 baseline; **UZDoom 4.14.x** is the reference for stricter ZScript rules described below)
+**Dependency:** Project Brutality (PB classes like `PB_WeaponBase`, `PB_GlobalStats`, `PBRandomSpawner` must be present at runtime). Use current **[PB_Staging](https://github.com/pa1nki113r/Project_Brutality/tree/PB_Staging)** for upstream API alignment.
+
+---
+
+## UZDoom 4.14+ and PB_Staging compatibility
+
+These constraints come from bringing the add-on back in line with **UZDoom 4.14.3** and **Project Brutality PB_Staging**. Follow them when changing pathfinder actors, reload helpers, or PB weapon integration.
+
+### ZScript compile rules (UZDoom 4.14)
+
+1. **`+FAST` in `Default { }`** — UZDoom’s ZScript parser rejects `+FAST` on classes such as `AllyPathfinder` and `RemoveMarineActivateZScript`. Do not add it to `Default`. Set fast-monster behavior at runtime with `A_ChangeFlag("FAST", true)` from `PostBeginPlay()` (or an early state), consistent with marine DECORATE that toggles `FAST` via `A_ChangeFlag`.
+
+2. **No duplicate method names (no overloads)** — The compiler treats two `bool D_AbortAndReloadIfEmpty(...)` variants in the same class as a **redefinition error**. There must be **one** `D_AbortAndReloadIfEmpty` on `PBMarine` (delegating to `D_AbortAndReloadIfEmpty_Internal`) and **one** `Action bool D_AbortAndReloadIfEmpty` on `MarineFX`. Callers that only need weapon + minimum ammo must pass an explicit null effect actor:  
+   `D_AbortAndReloadIfEmpty("PB_SomeWeapon", null, minAmmo)`  
+   Do not reintroduce a separate `(WeaponSelected, int minAmmo, statelabel)` overload.
+
+### Project Brutality PB_Staging API
+
+1. **`PB_WeaponBase.respectInventoryItem`** — Removed upstream. `A_JumpIfTargetHasNoMarineWeapon` in [`BaseMarine_Functions.zc`](zscript/BaseMarine_Functions.zc) must not reference it. Rely on `PlayerDoingWeaponRespect()` / `PlayerDoingHelmetAnim()` (and similar guards) so weapon handoff does not run during PB respect / helmet flows. Finer checks against PB’s `respected` state would require following PB’s `WeaponRespect` / `PB_RespectIfNeeded` patterns in upstream `BaseWeapon` code.
+
+2. **Optional cleanups** (warnings, not always load-blocking): replace deprecated flags and old member names where the engine warns; align railgun puff / `A_CustomRailgun` actor names with PB_Staging if PB renames puffs; avoid passing `null` where `class<PB_WeaponBase>` is resolved strictly—prefer the concrete weapon class string for that marine file.
+
+### Unrelated log noise
+
+Messages such as `Can't find map TEST`, invalid textures in upstream PB packs, or bad sprite lumps in any pk3 are **outside** this add-on’s ZScript unless the path points at files shipped here.
 
 ---
 
@@ -210,7 +234,7 @@ Marines track ammo per weapon via parallel arrays (`WeaponArray`, `WeaponAmmoLoa
 - `D_DepleteWeaponAmmo()` — decrements ammo on fire
 - `D_StartReloadIfEmpty()` / `D_StartReloadIfNotFullIdle()` — triggers reload FX actor
 - `D_DoMarineReloadFX()` — spawns a `MarineReloadFX` actor as a child, blocks firing until complete
-- `D_AbortAndReloadIfEmpty()` — interrupts attack state to reload
+- `D_AbortAndReloadIfEmpty()` — interrupts attack state to reload. Single signature: `(WeaponSelected, EffectActor, minAmmo, abortState)` with defaults; for “weapon + min ammo only” use `D_AbortAndReloadIfEmpty("PB_WeaponClass", null, minAmmo)`.
 
 Controlled by the `pb_marinesreload` CVAR.
 
@@ -243,7 +267,7 @@ All CVARs are `server` scope and prefixed with `pb_` or `pbmarine_`:
 ## Coding Conventions
 
 ### ZScript Style
-- **ZScript version 4.10** — do not use features from later versions without verifying engine support.
+- **ZScript version 4.10** — do not use features from later versions without verifying engine support. **Do not define two methods with the same name** in one class (UZDoom 4.14 rejects this as redefinition); use one signature and explicit `null` arguments at call sites instead of overloads.
 - Classes use PascalCase (`PBMarine`, `AllyPathfinder`, `MarineReloadFX`).
 - Custom functions use a mix of `A_` prefix (action functions callable from states), `D_` prefix (dynamic/data functions), `PB_` prefix (Project Brutality integration), and `PBCM_` prefix (PB Custom Marines specific).
 - The `extend class PBMarine` pattern is used extensively to split the base marine across multiple files while keeping it as a single class.
@@ -273,7 +297,7 @@ All CVARs are `server` scope and prefixed with `pb_` or `pbmarine_`:
 ## Build & Packaging
 
 This project is source-only (no build scripts). To package for distribution:
-1. Compress the entire directory into a `.pk3` file (ZIP format with `.pk3` extension)
+1. Compress the entire directory into a `.pk3` file (ZIP format with `.pk3` extension). On Windows PowerShell, `Compress-Archive` only accepts a `.zip` destination; create the zip then rename to `.pk3`.
 2. The `.pk3` is loaded after Project Brutality in the GZDoom/UZDoom load order
 3. No compilation step is needed — the engine parses ZScript and DECORATE at runtime
 

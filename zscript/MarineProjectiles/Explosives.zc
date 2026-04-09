@@ -424,7 +424,7 @@ Class MarineThrownGrenade : PBMarineProjectile{
 	-NOBLOCKMAP
 	+MTHRUSPECIES
 	+THRUSPECIES
-	+DontHurtSpecies
+	+DONTHURTSPECIES
 	+DontHarmSpecies
 	+UseBounceState
 	+FORCEXYBILLBOARD

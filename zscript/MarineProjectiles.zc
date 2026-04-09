@@ -2,7 +2,7 @@ Class PBMarineProjectile : actor{
 	Default{
 		Projectile;
 		Species "Marines";
-		+DontHurtSpecies
+		+DONTHURTSPECIES
 		+THRUSPECIES
 		+MTHRUSPECIES
 		+DONTHARMSPECIES

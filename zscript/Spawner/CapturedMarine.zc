@@ -110,8 +110,8 @@ Class PB_CapturedMarine: SwitchableDecoration{
 		if(MarineType){
 			let def = GetDefaultByType(MarineType);
 			if (!def){A_Log("Destroyed");Destroy();return;}
-			self.scalex = def.scalex;
-			self.scaley = def.scaley;
+			self.scale.x = def.scale.x;
+			self.scale.y = def.scale.y;
 			self.translation = def.translation;
 		}
 		A_GiveInventory("TargetIsAMarine");

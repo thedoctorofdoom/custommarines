@@ -47,15 +47,24 @@ For class hierarchy, file layout, and contributor-oriented detail, see [`AGENTS.
 
 | Requirement | Notes |
 |-------------|--------|
-| **Engine** | GZDoom or UZDoom (ZScript 4.10). |
-| **Project Brutality** | Load **before** this add-on. The mod expects PB types at runtime (e.g. `PB_WeaponBase`, `PB_GlobalStats`, `PBRandomSpawner`, `PB_SpawnerBase`). |
+| **Engine** | GZDoom or UZDoom (ZScript 4.10+). **UZDoom 4.14.x** is verified against this tree; older engines may differ in ZScript strictness. |
+| **Project Brutality** | Load **before** this add-on. The mod expects PB types at runtime (e.g. `PB_WeaponBase`, `PB_GlobalStats`, `PBRandomSpawner`, `PB_SpawnerBase`). Track **[PB_Staging](https://github.com/pa1nki113r/Project_Brutality/tree/PB_Staging)** for API changes. |
 | **Load order** | Project Brutality first, then this package (`.pk3`). |
+
+### Compatibility (PB_Staging + UZDoom 4.14)
+
+Recent maintenance restored load and play against **PB_Staging** and **UZDoom 4.14.3**, including:
+
+- **PB API** — `PB_WeaponBase` no longer exposes `respectInventoryItem` on current PB; handoff logic uses PB respect / helmet guards instead of that property.
+- **UZDoom ZScript** — Pathfinder actors cannot use `+FAST` inside ZScript `Default` blocks here; fast behavior is applied with `A_ChangeFlag` in `PostBeginPlay`. Reload helper `D_AbortAndReloadIfEmpty` uses a **single** method signature; states that only pass a weapon and a minimum ammo count use `D_AbortAndReloadIfEmpty("PB_…", null, amount)`.
+
+Details for contributors (overload rules, call patterns, upstream notes) are in **[`AGENTS.md`](AGENTS.md)** under *UZDoom 4.14+ and PB_Staging compatibility*.
 
 ---
 
 ## Installation
 
-There is no separate compile step. Package the mod folder as a **`.pk3`** (ZIP format with a `.pk3` extension), load it **after** Project Brutality in your launcher or command line.
+There is no separate compile step. Package the mod folder as a **`.pk3`** (ZIP format with a `.pk3` extension), load it **after** Project Brutality in your launcher or command line. On Windows, `Compress-Archive` only emits `.zip`; rename the archive to `.pk3` if your tool does not write `.pk3` directly.
 
 ---
 

@@ -124,7 +124,7 @@ extend class PBMarine{
 			}
 		}
 	}
-	bool D_AbortAndReloadIfEmpty(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null, int minAmmo = 1 ,statelabel abortState = "See"){
+	bool D_AbortAndReloadIfEmpty_Internal(class<PB_WeaponBase> WeaponSelected, class<Actor> EffectActor, int minAmmo, statelabel abortState){
 		if(!pb_marinesreload || !setWeaponArray){return false;}
 		if(!WeaponSelected && self.MarineWeapon){WeaponSelected = self.MarineWeapon;}
 		int weapIndex = GetWeapIndex(WeaponSelected);//WeaponArray.Find(WeaponSelected);
@@ -142,6 +142,9 @@ extend class PBMarine{
 			}
 		}
 		return false;
+	}
+	bool D_AbortAndReloadIfEmpty(class<PB_WeaponBase> WeaponSelected = null, class<Actor> EffectActor = null, int minAmmo = 1 ,statelabel abortState = "See"){
+		return D_AbortAndReloadIfEmpty_Internal(WeaponSelected, EffectActor, minAmmo, abortState);
 	}
 	bool PBM_IfAmmo(class<PB_WeaponBase> WeaponSelected = null, int minAmmo = 1 ,statelabel abortState = "See"){
 		if(!pb_marinesreload || !setWeaponArray){return false;}

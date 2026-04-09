@@ -21,7 +21,7 @@ ACTOR EliteMarine_Shotgun: EliteMarine_Base{
 		
 		TNT1 A 0 A_ChangeFlag("NODROPOFF", 0)	
 		TNT1 A 0 A_ChangeFLag("FRIENDLY", 1)
-		TNT1 A 0 D_StartReloadIfEmpty(null,"MarineShotgunMagReload")//A_StartReloadIfEmpty("MarineShotgunReload")
+		TNT1 A 0 D_StartReloadIfEmpty("PB_Shotgun","MarineShotgunMagReload")//A_StartReloadIfEmpty("MarineShotgunReload")
 		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
 				
 		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 1)
@@ -29,7 +29,7 @@ ACTOR EliteMarine_Shotgun: EliteMarine_Base{
 		TNT1 A 0 PB_MarineStep
 		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
 		PLA3 AA 1 A_AllyChaseSee
-		TNT1 A 0 A_ChangeFlag("FASTER", 0)
+		TNT1 A 0 A_ChangeFlag("FAST", 0)
 		TNT1 A 0 PB_MarineStep
 		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
 		PLA3 BB 1 A_AllyChaseSee
@@ -91,7 +91,7 @@ ACTOR EliteMarine_Shotgun: EliteMarine_Base{
 		
 	FollowPlayer:
 		TNT1 A 0 A_ChangeFlag("FRIENDLY", 0)
-		TNT1 A 0 A_ChangeFlag("FASTER", 1)
+		TNT1 A 0 A_ChangeFlag("FAST", 1)
 		TNT1 A 0 A_MakeNotShootable()
 		TNT1 A 0 A_JumpIfCloser(150, "Waits")
 		TNT1 A 0 A_ChangeFlag("MISSILEMORE", 0)
@@ -214,7 +214,7 @@ ACTOR EliteMarine_Shotgun: EliteMarine_Base{
 		TNT1 A 0 A_MakeShootable()
 		TNT1 A 0 A_ChangeFlag("SOLID", 1)
 		PLA3 E 6 A_FaceTarget
-		TNT1 A 0 D_AbortAndReloadIfEmpty(null,"MarineShotgunMagReload")
+		TNT1 A 0 D_AbortAndReloadIfEmpty("PB_Shotgun","MarineShotgunMagReload")
 		TNT1 A 0 {D_DepleteWeaponAmmo;A_PlaySound("DRBTFIRE", 1);A_SpawnProjectile("ShotgunWad", 32);}
 		//TNT1 AAAAAAAA 0 PBCM_SpawnProjectile("PBMarine_DragonsBreathTracer", 32, 0, random(-6, 6), 1, random(-3, 3))
 		PLA3 F 1 BRIGHT PBCM_SpawnProjectiles(8,"PBMarine_DragonsBreathTracer", 32, 0, random(-6, 6), 1, random(-3, 3))

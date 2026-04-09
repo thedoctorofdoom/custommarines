@@ -288,7 +288,7 @@ Class PB_MarineRailTrail2 : actor{
 		YAE5 A 3 bright;
 	Trolololo:
 	 // YAE4 A 0 A_JumpIf(ScaleY <= 0, "NULL")
-		YAE5 A 1 bright {A_SetScale(ScaleX -0.01, ScaleY -0.01);A_FadeOut(0.1);}
+		YAE5 A 1 bright {A_SetScale(Scale.X -0.01, Scale.Y -0.01);A_FadeOut(0.1);}
 		Wait;
 	}
 }
@@ -308,7 +308,7 @@ Class PB_MarineLaserTrail : actor{
 		YAE4 A 3 bright;
 	Trolololo:
 	 // YAE4 A 0 A_JumpIf(ScaleY <= 0, "NULL")
-		YAE4 A 0 A_SetScale(ScaleX -0.01, ScaleY -0.01);
+		YAE4 A 0 A_SetScale(Scale.X -0.01, Scale.Y -0.01);
 		YAE4 A 1 bright A_FadeOut(0.1);
 		Loop;
 	}

@@ -539,10 +539,7 @@ extend class PBMarine{
 	state A_JumpIfTargetHasNoMarineWeapon(statelabel jumpState){
 		State toJump = ResolveState(jumpState);
 		if ( pb_marinesgiveweapons && self.target && self.target is "PlayerPawn" && toJump && MarineTargetWeaponCheck() && !PlayerDoingHelmetAnim() && !PlayerDoingWeaponRespect() && 
-		(
-			!self.target.FindInventory(MarineWeapon) && 
-			!self.target.FindInventory(PB_WeaponBase(GetDefaultByType(MarineWeapon)).respectInventoryItem) 
-		)
+			!self.target.FindInventory(MarineWeapon)
 		){return toJump;}
 		return ResolveState(null);
 	}
