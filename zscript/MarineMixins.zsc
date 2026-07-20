@@ -134,7 +134,7 @@ mixin class PB_RandomMarineNameHandler{
 	}
 }
 mixin class PB_MarineSpawnHandler{
-	static const String WeaponNames[] = {"PB_Pistol","PB_Revolver","PB_Deagle","PB_SMG","PB_MP40","PB_Shotgun","PB_SSG","PB_QuadSG","PB_Autoshotgun","PB_Rifle","PB_DMR","PB_Carbine","PB_LMG","PB_Minigun","PB_Nailgun","PB_MG42","PB_RocketLauncher","PB_SuperGL","PB_M1Plasma","PB_M2Plasma","PB_ChexRifle","PB_CryoRifle","PB_Flamethrower","PB_Railgun","PB_BFG9000","PB_Demontech","Hell_Rifle","PB_Unmaker"};
+	static const String WeaponNames[] = {"PB_Pistol","PB_Revolver","PB_Deagle","PB_SMG","PB_MP40","PB_Shotgun","PB_SSG","PB_QuadSG","PB_Autoshotgun","PB_Rifle","PB_DMR","PB_Carbine","PB_LMG","PB_Minigun","PB_Nailgun","PB_MG42","PB_RocketLauncher","PB_SuperGL","PB_M1Plasma","PB_M2Plasma","PB_ChexRifle","PB_CryoRifle","PB_Flamethrower","PB_Railgun","PB_BFG9000","PB_DTechRifle","Hell_Rifle","PB_Unmaker"};
 	static const String Marine_T1_List_Initial[] = {"Marine_Rifle","Marine_Shotgun","Marine_Minigun"};
 	static const String Marine_T2_List_Initial[] = {"Marine_Carbine","Marine_Revolver","Marine_Carbine","Marine_AutoShotgun","Marine_SuperShotgun","Marine_PlasmaGun","Marine_SMG"};
 	static const String Marine_T3_List_Initial[] = {"Marine_SuperShotgun","Marine_Nailgun","Marine_M2Plasma","Marine_Flamethrower","Marine_Deagle","Marine_HDMR"};
@@ -243,7 +243,7 @@ mixin class PB_MarineSpawnHandler{
 	}
 }
 mixin class PB_MarineHandler{
-	static const String WeaponNames[] = {"PB_Pistol","PB_Revolver","PB_Deagle","PB_SMG","PB_MP40","PB_Shotgun","PB_SSG","PB_QuadSG","PB_Autoshotgun","PB_Rifle","PB_DMR","PB_Carbine","PB_LMG","PB_Minigun","PB_Nailgun","PB_MG42","PB_RocketLauncher","PB_SuperGL","PB_M1Plasma","PB_M2Plasma","PB_ChexRifle","PB_CryoRifle","PB_Flamethrower","PB_Railgun","PB_BFG9000","PB_Demontech","Hell_Rifle","PB_Unmaker"};
+	static const String WeaponNames[] = {"PB_Pistol","PB_Revolver","PB_Deagle","PB_SMG","PB_MP40","PB_Shotgun","PB_SSG","PB_QuadSG","PB_Autoshotgun","PB_Rifle","PB_DMR","PB_Carbine","PB_LMG","PB_Minigun","PB_Nailgun","PB_MG42","PB_RocketLauncher","PB_SuperGL","PB_M1Plasma","PB_M2Plasma","PB_ChexRifle","PB_CryoRifle","PB_Flamethrower","PB_Railgun","PB_BFG9000","PB_DTechRifle","Hell_Rifle","PB_Unmaker"};
 	Array <class<PB_WeaponBase> > WeaponArray;
 	Array <Actor> EnemyArray;
 	Array <string> WeaponNameArray;
@@ -276,7 +276,7 @@ mixin class PB_MarineHandler{
 			case 'PB_Railgun': {reloadAction = "MarineRailgunReload";break;}
 			case 'PB_FlameThrower': {reloadAction = "MarineFlameThrowerReload";break;}
 			case 'Hell_Rifle': {reloadAction = "MarineDemonTechReload";break;}
-			case 'PB_DemonTech': {reloadAction = "MarineDemonTechReload";break;}
+			case 'PB_DTechRifle': {reloadAction = "MarineDemonTechReload";break;}
 			default:{reloadAction = null; break;}
 			}
 		}
@@ -307,7 +307,7 @@ mixin class PB_MarineHandler{
 			case 'PB_Railgun': {reloadAction = "MarineRailgunReload2";break;}
 			case 'PB_FlameThrower': {reloadAction = "MarineFlameThrowerReload2";break;}
 			case 'Hell_Rifle': {reloadAction = "MarineDemonTechReload";break;}
-			case 'PB_DemonTech': {reloadAction = "MarineDemonTechReload";break;}
+			case 'PB_DTechRifle': {reloadAction = "MarineDemonTechReload";break;}
 			default:{reloadAction = null; break;}
 			}
 		}

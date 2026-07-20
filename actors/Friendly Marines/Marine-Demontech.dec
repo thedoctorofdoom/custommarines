@@ -1,7 +1,7 @@
 ACTOR Marine_DemonTech: PBMarine{
 	DropItem "DemontechMarineDrop"
 	Translation  "112:127=32:47", "48:79=64:79"
-	PBMarine.MarineWeapon "PB_DemonTech"//"PB_Demontech"
+	PBMarine.MarineWeapon "PB_DTechRifle"
 	PBMarine.AllyCountedInventory "NumberOfAlliesDemonTech"
 	PBMarine.AllyMapCounter "NumberOfAlliesDemonTechThisMap"
 	Obituary "%o has been gunned down by a Demon Tech Marine."

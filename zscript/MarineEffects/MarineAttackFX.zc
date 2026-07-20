@@ -423,11 +423,11 @@ class MarineFlamethrowerAcid : MarineFireFX{
 class MarineDemonTechFire : MarineFireFX{
 	States{
 	Spawn:
-		PLA6 F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DemonTech")){
+		PLA6 F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DTechRifle")){
 			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
 			master.bBRIGHT=true;
 			master.A_FaceTarget();
-			D_DepleteWeaponAmmo("PB_DemonTech");
+			D_DepleteWeaponAmmo("PB_DTechRifle");
 			PBM_StartSound("HRFire");
 			PBM_MuzzleFlash("PBMarineMuzzleRed",34);
 			PBM_Missile("PBMarine_HellBullet",40,0,0,0);
@@ -443,11 +443,11 @@ class MarineDemonTechFire : MarineFireFX{
 class MarineDemonTechFire2 : MarineFireFX{
 	States{
 	Spawn:
-		PLA6 F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DemonTech")){
+		PLA6 F 2 NODELAY {if(!D_AbortAndReloadIfEmpty("PB_DTechRifle")){
 			A_AllyAlertMonsters(1000,AMF_TARGETEMITTER);
 			master.bBRIGHT=true;
 			master.A_FaceTarget();
-			D_DepleteWeaponAmmo("PB_DemonTech");
+			D_DepleteWeaponAmmo("PB_DTechRifle");
 			PBM_StartSound("8FGGFIRE");
 			PBM_MuzzleFlash("PBMarineMuzzleGreen",34);
 			PBM_Missile("PBMarine_Hellbullet2",40,0,0,0);

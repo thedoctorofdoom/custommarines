@@ -219,7 +219,7 @@ Actor FlamethrowerMarineDrop : Marine_WeaponDrop{
 Actor DemontechMarineDrop : Marine_WeaponDrop{
 	States{
 	DropWeapon:
-		TNT1 A 1 A_DropItem("PB_DemonTech")
+		TNT1 A 1 A_DropItem("PB_DTechRifle")
 		Stop
 	DropAmmo:
 		TNT1 A 1 A_DropItem("PB_Fuel")
