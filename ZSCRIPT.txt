@@ -245,6 +245,7 @@ Class MarineCommandFollow : Inventory{
 #include "zscript/Spawner/PBScriptedMarineSpawner.zc"
 #include "zscript/Spawner/CapturedMarine.zc"
 #include "zscript/EasySpawner.zc"
+#include "zscript/PBCM_CVarCompat.zc"
 #include "zscript/MarineMixins.zsc"
 #include "zscript/MarineSpawnerBase.zc"
 #include "zscript/BaseMarine.zc"

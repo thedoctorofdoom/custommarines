@@ -515,7 +515,7 @@ extend class PBMarine{
 	bool MarineTargetWeaponCheck(){
 	//PB_Carbine
 		bool downgradeCheck;
-		if(!pb_keepweapons && target && self.MarineWeapon){
+		if(!PBCM_CVarCompat.GetBoolOr('pb_keepweapons') && target && self.MarineWeapon){
 			downgradeCheck = (self.MarineWeapon is "PB_Carbine" && target.FindInventory("PB_LMG") || self.MarineWeapon is "PB_Revolver" && target.FindInventory("PB_Deagle") || self.MarineWeapon is "PB_SSG" && target.FindInventory("PB_QuadSG"));
 		}
 		return (target && self.MarineWeapon && !downgradeCheck);

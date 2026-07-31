@@ -622,7 +622,7 @@ class MarineThrownGrenade : PBMarineProjectile
 			
 		roll += frandom(-4.2, 4.2);
 		
-		if(pb_grenadeimpact && target && target.Player)
+		if(PBCM_CVarCompat.GetIntOr('pb_grenadeimpact') && target && target.Player)
 			SetStateLabel("Explode");
 			
 		return Super.SpecialBounceHit(bounceMobj, bounceLine, bouncePlane);
@@ -684,7 +684,7 @@ class MarineThrownGrenade : PBMarineProjectile
 				A_Scream();
 				Radius_Quake(2, 24, 0, 15, 0);
 				
-				if(pb_grenadeshrapnel)
+				if(PBCM_CVarCompat.GetBoolOr('pb_grenadeshrapnel'))
 				{
 					for(int i = 0; i < 20; i++)
 					{

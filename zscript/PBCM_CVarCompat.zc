@@ -1,0 +1,13 @@
+class PBCM_CVarCompat abstract
+{
+	static int GetIntOr(name cvarName, int def = 0)
+	{
+		CVar c = CVar.FindCVar(cvarName);
+		return c ? c.GetInt() : def;
+	}
+	static bool GetBoolOr(name cvarName, bool def = false)
+	{
+		CVar c = CVar.FindCVar(cvarName);
+		return c ? c.GetBool() : def;
+	}
+}
