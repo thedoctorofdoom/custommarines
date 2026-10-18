@@ -190,7 +190,7 @@ ACTOR TheMarshall: EliteMarine_Base{
 		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsACyberdemon", 1, "Missile2")
 		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMastermind", 1, "Missile2")
 		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsABaronOfHell", 1, "EngageWithPulseCannon")
-		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMancubus", 1, "EngageWithAutoShotgun")
+		TNT1 A 0 A_JumpIf(CheckTargetClass("PB_Mancubus"), "EngageWithAutoShotgun")
 		TNT1 A 0 A_JumpIfInTargetInventory("TargetIsAMarine", 1, "FollowPLayer")//
 		TNT1 A 0 A_JumpIfInTargetInventory("IsPlayer", 1, "CheckRangeToWait")
 		TNT1 A 0 A_MakeShootable()

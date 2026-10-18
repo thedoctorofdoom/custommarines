@@ -25,6 +25,8 @@ Class PB_CapturedMarine: SwitchableDecoration{
 	void SelectMarineType(){
 		Stats = PB_GlobalStats.Get();
 		int Count = PB_GlobalStats.Get().Counters[PB_GlobalStats.Counter_LevelsCompleted];
+		int SpawnBalance = PBCM_CVarCompat.GetIntOr('SpawnBalance', 666);
+		int levelsToPlay = PBCM_CVarCompat.GetIntOr('levelsToPlay', 32);
 		if(self.cursector.IsSecret()){
 			Count += (levelsToPlay/4);
 			if(debugLog){A_Log("Is Secret");}
@@ -493,7 +495,7 @@ Class PB_CapturedMarine: SwitchableDecoration{
 		Stop;
 	Death.FatalityMarine:
 		TNT1 A 1 A_PlayerScream();
-		TNT1 A 1 {A_GiveToTarget("GoFatality", 1);{A_NoBlocking();A_SpawnItemEx("PoleWithNothing",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE,0);}}
+		TNT1 A 1 {A_NoBlocking();A_SpawnItemEx("PoleWithNothing",0,0,0,0,0,0,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_TRANSFERSCALE,0);}
 		TNT1 A 0 A_GiveToTarget("Fatality_Marine",1);
 		TNT1 A -1;
 		Stop;

@@ -268,7 +268,7 @@ class MarineSSGReload : MarineReloadFX{
 	States{
 	Spawn:
 		TNT1 A 7 ;
-		TNT1 AA 0 {master.A_SpawnItem("SSGCaseSpawner", 0, 30,0);}
+		TNT1 AA 0 {master.A_SpawnItemEx("ShotgunCasing",0,0,23,frandom(3,5),frandom(3,4),frandom(8,11));}
 		TNT1 E 10 {master.A_PlaySound("weapons/ssg/open");}
 		TNT1 E 5 {master.A_playsound("weapons/ssg/inspect2");}
 		TNT1 E 4 {master.A_PlaySound("weapons/ssg/inspect3");}
@@ -282,7 +282,7 @@ class MarineSSGReload2 : MarineReloadFX{
 	States{
 	Spawn:
 		TNT1 A 7 ;
-		TNT1 E 10 {master.A_SpawnItem("SSGCaseSpawner", 0, 30,0);master.A_PlaySound("weapons/ssg/open");}
+		TNT1 E 10 {master.A_SpawnItemEx("ShotgunCasing",0,0,23,frandom(3,5),frandom(3,4),frandom(8,11));master.A_PlaySound("weapons/ssg/open");}
 		TNT1 E 5 {master.A_playsound("weapons/ssg/inspect2");}
 		TNT1 E 4 {master.A_PlaySound("weapons/ssg/inspect3");}
 		stop;

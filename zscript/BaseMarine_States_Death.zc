@@ -272,7 +272,7 @@ extend class PBMarine{
 		Stop;
 	Death.FatalityMarine:
 		#### # 1 A_PlayerScream;
-		#### # 1 {A_NoBlocking();A_GiveToTarget("GoFatality", 1);}
+		#### # 1 {A_NoBlocking();}
 		#### # -1 A_GiveToTarget("Fatality_Marine",1);	
 		Stop;
 	}

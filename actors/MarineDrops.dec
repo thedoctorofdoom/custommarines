@@ -53,7 +53,7 @@ Actor ShotgunMarineDrop : Marine_WeaponDrop{
 Actor SuperShotgunMarineDrop : Marine_WeaponDrop{
 	States{
 	DropWeapon:
-		TNT1 A 1 A_DropItem("DropedPB_SSG")
+		TNT1 A 1 A_DropItem("PB_SSG")
 		Stop
 	DropAmmo:
 		TNT1 A 1 A_DropItem("PB_Shell")
@@ -63,7 +63,7 @@ Actor SuperShotgunMarineDrop : Marine_WeaponDrop{
 Actor AutoShotgunMarineDrop : Marine_WeaponDrop{
 	States{
 	DropWeapon:
-		TNT1 A 1 A_DropItem("DropedASG")
+		TNT1 A 1 A_DropItem("PB_Autoshotgun")
 		Stop
 	DropAmmo:
 		TNT1 A 1 A_DropItem("PB_Shell")
@@ -84,7 +84,7 @@ Actor RifleMarineDrop : Marine_WeaponDrop{
 Actor CarbineMarineDrop : Marine_WeaponDrop{
 	States{
 	DropWeapon:
-		TNT1 A 1 A_DropItem("DropedCarbine")
+		TNT1 A 1 A_DropItem("PB_Carbine")
 		Stop
 	DropAmmo:
 		TNT1 A 1 A_DropItem("PB_HighCalMag")
@@ -115,7 +115,7 @@ Actor MG42MarineDrop : Marine_WeaponDrop{
 Actor MinigunMarineDrop : Marine_WeaponDrop{
 	States{
 	DropWeapon:
-		TNT1 A 1 A_DropItem("DropedMinigun")
+		TNT1 A 1 A_DropItem("PB_Minigun")
 		Stop
 	DropAmmo:
 		TNT1 A 1 A_DropItem("PB_HighCalMag")

@@ -248,7 +248,7 @@ ACTOR Marine_SuperShotgun: PBMarine{
 		TNT1 A 0 A_Jump(256,"See")
 		
 		PLA9 E 7
-		TNT1 AA 0 A_SpawnItem("SSGCaseSpawner", 0, 30,0)
+		TNT1 AA 0 A_SpawnItemEx("ShotgunCasing",0,0,23,frandom(3,5),frandom(3,4),frandom(8,11))
 		PLA9 E 10 A_PlaySound("weapons/ssg/open")
 		PLA9 E 5 A_playsound("weapons/ssg/inspect2")
 		PLA9 E 4 A_PlaySound("weapons/ssg/inspect3")

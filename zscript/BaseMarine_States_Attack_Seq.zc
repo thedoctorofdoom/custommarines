@@ -88,10 +88,9 @@ extend class PBMarine{
 			#### # 0 A_Jump(256,"FinishAttackPunch");
 		FinishAttackPunch:
 			PLAM B 6 ;
-			#### # 0 A_JumpIfInventory("ZombiemanFatality3", 1, "FatalityZombieman");
-			#### # 0 A_JumpIfInventory("ImpFatality3", 1, "FatalityImp");
+			#### # 0 A_JumpIfInventory("ZombieManFatality", 1, "FatalityZombieman");
+			#### # 0 A_JumpIfInventory("ImpFatality", 1, "FatalityImp");
 			#### # 0 A_JumpIfInventory("SergeantFatality", 1, "FatalitySergeant");
-			#### # 0 A_JumpIfInventory("RevenantFatality", 1, "FatalityRevenant");
 			#### # 0 A_Jump(256,"See");
 		AttackKick:
 			"####" A 1 {PBMarine_Execute();A_FaceTarget();}
@@ -111,10 +110,9 @@ extend class PBMarine{
 		FinishAttackKick:
 			PKIK A 1 ;
 			PKIK A 6 A_Stop;
-			#### # 0 A_JumpIfInventory("ZombiemanFatality3", 1, "FatalityZombieman");
-			#### # 0 A_JumpIfInventory("ImpFatality3", 1, "FatalityImp");
+			#### # 0 A_JumpIfInventory("ZombieManFatality", 1, "FatalityZombieman");
+			#### # 0 A_JumpIfInventory("ImpFatality", 1, "FatalityImp");
 			#### # 0 A_JumpIfInventory("SergeantFatality", 1, "FatalitySergeant");
-			#### # 0 A_JumpIfInventory("RevenantFatality", 1, "FatalityRevenant");
 			#### # 0 A_Jump(256,"See");
 			
 		Missile.NoFire:

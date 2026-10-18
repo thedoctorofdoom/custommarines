@@ -336,6 +336,8 @@ mixin class PB_TierHandler{
 	float GetPBTier(){
 		Stats = PB_GlobalStats.Get();
 		int Count = Stats.Counters[PB_GlobalStats.Counter_LevelsCompleted];
+		int SpawnBalance = PBCM_CVarCompat.GetIntOr('SpawnBalance', 666);
+		int levelsToPlay = PBCM_CVarCompat.GetIntOr('levelsToPlay', 32);
 		if(SpawnBalance==663){return 0;}
 		else if(SpawnBalance==666||SpawnBalance<=663&&SpawnBalance>=672){
 			if(Count <(levelsToPlay / 4)) {return 1;}

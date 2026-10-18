@@ -1,5 +1,5 @@
 ACTOR Marine_HDMR: PBMarine{
-	DropItem "HDMRMarineDrop"
+	DropItem "RifleMarineDrop"
 	PBMarine.AllyCountedInventory "NumberOfAlliesHDMR"
 	PBMarine.AllyMapCounter "NumberOfAlliesHDMRThisMap"
 	PBMarine.MarineWeapon "PB_DMR"
