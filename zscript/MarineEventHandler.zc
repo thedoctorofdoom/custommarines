@@ -20,6 +20,10 @@ Class AllyMarinesHandler : EventHandler{
 			e.replacement = "PB_CapturedMarine";
 	}
 	Override Void WorldThingSpawned(WorldEvent e){
+		// GetSpecies() caches the class name into Species; on a RandomSpawner that
+		// picks nothing, the engine then respawns the spawner itself until it hits
+		// the recursion limit and leaves an "Unknown" marker.
+		if(e.Thing is "RandomSpawner"){return;}
 		/*
 		if(!(e.Thing is "PBMarine" || e.Thing.bFRIENDLY) && e.Thing.bISMONSTER  && e.Thing.bCOUNTKILL ){
 			e.Thing.bSEEFRIENDLYMONSTERS = true;
