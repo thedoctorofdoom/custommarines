@@ -58,7 +58,7 @@ class PB_MarineSpawnerNoKeepT3 : PB_MarineSpawner{
 		DropItem 'Marine_M2Plasma', 255, 1;
 		DropItem 'Marine_Flamethrower', 255, 1;
 		DropItem 'Marine_Rocket', 255, 1;
-		DropItem 'Marine_GL', 255, 1;
+		DropItem 'Marine_GrenadeLauncher', 255, 1;
 	}
 }
 class PB_MarineSpawnerNoKeepT4 : PB_MarineSpawner{

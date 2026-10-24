@@ -5,7 +5,7 @@ class PB_MarineSpawner : PBRandomSpawner abstract{
 	}
 	
 	bool AllowToSpawn(String diName){
-		if(!pb_explosivemarines && (diName == "Marine_SpawnRocket" || diName == "Marine_SpawnGL" || diName == "Marine_Rocket" || diName == "Marine_GL")){return false;}
+		if(!pb_explosivemarines && (diName == "Marine_SpawnRocket" || diName == "Marine_SpawnGL" || diName == "Marine_Rocket" || diName == "Marine_GL" || diName == "Marine_GrenadeLauncher")){return false;}
 		else if(!pb_bfgmarines && (diName == "Marine_SpawnBFG" || diName == "Marine_BFG")){return false;}
 		else{return true;}
 	}

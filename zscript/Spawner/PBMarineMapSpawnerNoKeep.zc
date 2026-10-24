@@ -45,7 +45,7 @@ class PB_MarineMapSpawnerNoKeepT2 : PB_MarineSpawner{
 class PB_MarineMapSpawnerNoKeepExplosives : PB_MarineSpawner{
 	Default{
 		DropItem 'Marine_Rocket', 255, 1;
-		DropItem 'Marine_GL', 255, 1;
+		DropItem 'Marine_GrenadeLauncher', 255, 1;
 	}
 }
 class PB_MarineMapSpawnerNoKeepT3B : PB_MarineSpawner{
@@ -67,7 +67,7 @@ class PB_MarineMapSpawnerNoKeepT3 : PB_MarineSpawner{
 		DropItem 'Marine_M2Plasma', 255, 1;
 		DropItem 'Marine_Flamethrower', 255, 1;
 		DropItem 'Marine_Rocket', 255, 1;
-		DropItem 'Marine_GL', 255, 1;
+		DropItem 'Marine_GrenadeLauncher', 255, 1;
 	}
 }
 class PB_MarineMapSpawnerNoKeepT4 : PB_MarineSpawner{
@@ -88,7 +88,7 @@ class PB_MarineMapSpawnerNoKeepT4 : PB_MarineSpawner{
 		DropItem 'Marine_M2Plasma', 255, 1;
 		DropItem 'Marine_Flamethrower', 255, 1;
 		DropItem 'Marine_Rocket', 255, 1;
-		DropItem 'Marine_GL', 255, 1;
+		DropItem 'Marine_GrenadeLauncher', 255, 1;
 		DropItem 'Marine_Demontech', 255, 2;
 		DropItem 'Marine_LMG', 255, 2;
 		DropItem 'Marine_PulseCannon', 255, 2;
